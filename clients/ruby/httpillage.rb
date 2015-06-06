@@ -3,7 +3,6 @@
 # in the foreground.
 
 require 'mechanize'
-require 'celluloid'
 require 'optparse'
 require 'json'
 require 'base64'

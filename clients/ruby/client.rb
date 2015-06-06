@@ -83,7 +83,7 @@ class Client
 
 	def send_request
 		req = Mechanize.new.tap do |r|
-			r.set_proxy("localhost", 8080)
+			# r.set_proxy("localhost", 8080)
 		end
 
 		if @http_method.downcase == "get"
