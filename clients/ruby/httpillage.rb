@@ -6,6 +6,7 @@ require 'mechanize'
 require 'celluloid'
 require 'optparse'
 require 'json'
+require 'base64'
 require './client.rb'
 
 options = {}
@@ -19,7 +20,7 @@ optparse = OptionParser.new do |opts|
 		options[:verbose] = true
 	end
 
-	options[:threads] = 1
+	options[:threads] = 3
 	opts.on('-t', '--threads THREADS', 'Number of threads to leverage') do |threads|
 		options[:threads] = threads
 	end

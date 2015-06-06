@@ -24,6 +24,7 @@ class DispatcherController < ApplicationController
 			if jobs.count > 0
 				job_idx = rand(jobs.count - 1)
 
+				# TODO: Make this return node_id too
 				render :json => jobs[job_idx].to_json
 			else
 				render :json => '{ "job": "none"}'
