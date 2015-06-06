@@ -30,8 +30,8 @@ class Client
 		@http_method 	= job["http_method"]
 		@http_uri 		= job["http_uri"]
 		@http_host 		= job["http_host"]
-		@http_headers 	= Base64.decode64(job["http_headers"])
-		@http_data 		= Base64.decode64(job["http_data"])
+		@http_headers 	= parse_headers(Base64.decode64(job["http_headers"]))
+		@http_data 		= parse_data(Base64.decode64(job["http_data"]))
 
 		# should probably start computing...
 		kick_off_job!
@@ -47,6 +47,10 @@ class Client
 		if response_parsed["status"] == "active"
 			return response_parsed
 		else
+			# Failed, but let's sleep
+			random_sleep_time = random_polling_interval
+			puts "Sleeping for #{random_sleep_time} seconds"
+			sleep(random_sleep_time)
 			return false
 		end
 	end
@@ -77,7 +81,9 @@ class Client
 	end
 
 	def send_request
-		req = Mechanize.new
+		req = Mechanize.new.tap do |r|
+			r.set_proxy("localhost", 8080)
+		end
 
 		if @http_method.downcase == "get"
 			begin
@@ -88,7 +94,11 @@ class Client
 				puts "Unable to connect."
 			end
 		else
-			# POST
+			begin
+				response = req.post(@http_uri, @http_data, @http_headers)
+			rescue
+				puts "Unable to connect."
+			end
 		end
 	end
 
@@ -133,5 +143,24 @@ class Client
 
 	def random_polling_interval
 		13 + rand(64)
+	end
+
+	# Split data by & and =, returning hash
+	def parse_data(data)
+		return URI.decode_www_form(data)
+	end
+
+	def parse_headers(headers)
+		header_hash = {}
+
+		lines = headers.split("\n")
+
+		lines.each do |line|
+			split_line = line.split(":", 2)
+			h = Hash[*split_line]
+			header_hash.merge!(h)
+		end
+
+		return header_hash
 	end
 end
