@@ -57,6 +57,7 @@ class Client
 
 	def kick_off_job!
 		puts "(+) Job recieved. Kicking it off with #{@thread_count} threads"
+		puts "(+) Currently attacking: #{@http_uri}"
 		monitor_thread_id = @thread_count + 1
 
 		job_threads = (1..monitor_thread_id).map do |i|

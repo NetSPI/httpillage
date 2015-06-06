@@ -98,7 +98,7 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
                     "Version: " + BurpExtender.this.VERSION + "</center><br />");
 
                 String initialText = "<html>\n" +
-                "<em>httpillage is a tool designed to allow the distribution of intruder-based tasks...</em><br /><br />\n" +
+                "<em>httpillage is a tool designed to allow the distribution of victim-based tasks...</em><br /><br />\n" +
                 "<b>Getting started:</b>\n" +
                 "<ul>\n" +
                 "    <li>Ensure an accessible httpillage server is deployed</li>\n" +
@@ -158,5 +158,84 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
         // Do something
         this.stdout.println("Attempting to perform action");
         this.stdout.println("Going to process the following message: " + new String(this.selectedRequestForPillage));
+
+        String http_method = http_method_from_request(new String(this.selectedRequestForPillage));
+        String http_uri = full_uri_from_request(new String(this.selectedRequestForPillage), this.selectedServiceForPillage.getProtocol());
+        String http_headers = "";
+        String http_data = "";
+
+        // Hard coded, for now
+        String attack_type = "bruteforce";
+        String status = "active";
+
+
+        // Start Post
+        HttpPost request = new HttpPost(this.httpillageServerUrl + "/job/create");
+
+        try {
+            List nameValuePairs = new ArrayList(6);
+            nameValuePairs.add(new BasicNameValuePair("http_method",
+                        http_method));
+            nameValuePairs.add(new BasicNameValuePair("http_uri",
+                        http_uri));
+            nameValuePairs.add(new BasicNameValuePair("http_headers",
+                        http_headers));
+            nameValuePairs.add(new BasicNameValuePair("http_data",
+                        http_data));
+            nameValuePairs.add(new BasicNameValuePair("attack_type",
+                        attack_type));
+            nameValuePairs.add(new BasicNameValuePair("status",
+                        status));
+
+            request
+                .setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                HttpResponse response = this.client.execute(request);
+                String responseAsString = EntityUtils.toString(response
+                        .getEntity());
+
+            this.stdout.println("Response recieved from C&C: " + responseAsString);
+        } catch (Exception ex) {
+                this.stderr.println(ex.getMessage());
+        }
+    }
+
+    public String http_method_from_request(String req) {
+        String victimMethod = "";
+
+        String urlPattern = "(GET|POST|PUT|PATCH|DELETE) (.*) H";
+        Pattern url = Pattern.compile(urlPattern);
+        Matcher urlMatcher = url.matcher(req);
+
+        while (urlMatcher.find()) {
+            victimMethod = urlMatcher.group(1);
+        }
+
+        return victimMethod;
+    }
+
+    public String full_uri_from_request(String req, String proto) {
+        String victimUrl = "";
+        String victimHost = "";
+
+        String urlPattern = "(GET|POST|PUT|PATCH|DELETE) (.*) H";
+        Pattern url = Pattern.compile(urlPattern);
+        Matcher urlMatcher = url.matcher(req);
+
+        String hostPattern = "Host: (.*)";
+        Pattern host = Pattern.compile(hostPattern);
+        Matcher hostMatcher = host.matcher(req);
+
+        while (urlMatcher.find()) {
+            victimUrl = urlMatcher.group(2); 
+        }
+
+        while(hostMatcher.find()) {
+            victimHost = hostMatcher.group(1);
+        }
+
+        victimUrl = proto + "://" + victimHost + victimUrl;
+
+        return victimUrl;
     }
 }
