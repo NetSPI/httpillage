@@ -45,13 +45,17 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
     private PrintWriter           stderr;
     private HttpClient            client;
     private static String         httpillageServerUrl           = "http://ec2-52-7-111-135.compute-1.amazonaws.com:3000";
+    private static String         httpillageServerKey           = "gsYr4l70l08bcr77cZJMGrBUMYqhQlnR8KrqZWbI3ehH39OX8qb1hK2EcxkW";
 
     public JLabel                 htmlDescription;
     public JPanel                 mainPanel;
     public JPanel                 serverConfig;
     public JPanel                 notice;
+
     public JTextField             httpillageServer;
     public JLabel                 httpillageServerHeader;
+    public JTextField             httpillageServerKeyText;
+    public JLabel                 httpillageServerKeyHeader;
 
     public JTabbedPane            tabbedPane;
     public JButton                btnAddText;
@@ -112,7 +116,7 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
                 /*
                  Server Config
                  */
-                BurpExtender.this.serverConfig = new JPanel(new GridLayout(1,2));
+                BurpExtender.this.serverConfig = new JPanel(new GridLayout(2,2));
 
                 BurpExtender.this.httpillageServer = new JTextField(20);
                 BurpExtender.this.httpillageServer
@@ -121,9 +125,20 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
 				
                 BurpExtender.this.httpillageServerHeader = new JLabel("httpillage Server URL:");
 
+                BurpExtender.this.httpillageServerKeyText = new JTextField(20);
+                BurpExtender.this.httpillageServerKeyText
+                        .setText(BurpExtender.httpillageServerKey);
+            
+                
+                BurpExtender.this.httpillageServerKeyHeader = new JLabel("httpillage Server KEY:");
+
                 BurpExtender.this.serverConfig
                         .add(BurpExtender.this.httpillageServerHeader);
                 BurpExtender.this.serverConfig.add(BurpExtender.this.httpillageServer);
+
+                 BurpExtender.this.serverConfig
+                        .add(BurpExtender.this.httpillageServerKeyHeader);
+                BurpExtender.this.serverConfig.add(BurpExtender.this.httpillageServerKeyText);
 
                 BurpExtender.this.mainPanel.add(BurpExtender.this.notice);
                 BurpExtender.this.mainPanel.add(BurpExtender.this.serverConfig);
@@ -170,8 +185,11 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
 
 
         // Start Post
-        HttpPost request = new HttpPost(this.httpillageServerUrl + "/job/create");
+        HttpPost request = new HttpPost(BurpExtender.this.httpillageServer.getText() + "/job/create");
 
+        // Add authorization key
+        request.setHeader("X-Auth-Token", BurpExtender.this.httpillageServerKeyText.getText());
+        
         try {
             List nameValuePairs = new ArrayList(6);
             nameValuePairs.add(new BasicNameValuePair("http_method",
