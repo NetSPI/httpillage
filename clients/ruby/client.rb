@@ -93,6 +93,11 @@ class Client
 	end
 
 	def monitor_job_status
+		# Let's sleep for a bit first
+		random_sleep_time = random_polling_interval
+		puts "Sleeping for #{random_sleep_time} seconds"
+		sleep(random_sleep_time)
+
 		puts "Checking job status for job #{@job_id} on node #{@node_id}"
 		endpoint = "#{@server}/poll/#{@node_id}/#{@job_id}"
 
