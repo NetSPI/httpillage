@@ -29,6 +29,16 @@ optparse = OptionParser.new do |opts|
 		options[:server] = server
 	end
 
+	options [:proxy_host] = false
+	opts.on('--proxy-host PROXY', 'Proxy Host') do |proxy|
+		options[:proxy_host] = proxy
+	end
+
+	options [:proxy_port] = false
+	opts.on('--proxy-port PORT', 'Proxy Port') do |port|
+		options[:proxy_port] = port
+	end
+
 	opts.on('-h', '--help', 'Display this screen') do 
 		puts opts
 		exit
@@ -42,5 +52,5 @@ puts "Executing with number of threads: #{options[:threads]}"
 puts "Command and control server: #{options[:server]}"
 
 
-client = Client.new(options[:server], options[:threads])
+client = Client.new(options[:server], options[:threads], options[:proxy_host], options[:proxy_port])
 client.invoke

