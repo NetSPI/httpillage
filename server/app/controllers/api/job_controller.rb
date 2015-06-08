@@ -1,8 +1,8 @@
-class JobController < ApplicationController
+class Api::JobController < ApiController
 	before_filter	:authorized?
 
 	#
-	# burp will point to this endpoint when creating new jobs
+	# Burp will point to this endpoint when creating new jobs
 	#
 	def create
 		job = Job.new
@@ -23,10 +23,4 @@ class JobController < ApplicationController
 
 		render :json => job.to_json
 	end
-
-	private
-	def authorized?
-  	# Check if header matches
-  	raise unless request.headers['X-Auth-Token'] == "gsYr4l70l08bcr77cZJMGrBUMYqhQlnR8KrqZWbI3ehH39OX8qb1hK2EcxkW"
-  end
 end

@@ -185,7 +185,7 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
 
 
         // Start Post
-        HttpPost request = new HttpPost(BurpExtender.this.httpillageServer.getText() + "/job/create");
+        HttpPost request = new HttpPost(BurpExtender.this.httpillageServer.getText() + "/api/job/create");
 
         // Add authorization key
         request.setHeader("X-Auth-Token", BurpExtender.this.httpillageServerKeyText.getText());

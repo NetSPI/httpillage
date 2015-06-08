@@ -1,14 +1,9 @@
-class DispatcherController < ApplicationController
+class Api::DispatcherController < ApiController
 	# 
 	# When polling check to see if there have been any updates
 	# to the current job.
 	#
 	def poll
-
-		if request.headers["x-hacker"]
-			exit
-		end
-
 		node_id = params[:nodeid] ? params[:nodeid] : create_node
 		active_node = Node.find(node_id)
 

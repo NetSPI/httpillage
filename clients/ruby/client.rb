@@ -1,6 +1,6 @@
 class Client
 	def initialize(server, thread_count)
-		@server = server
+		@server = server + "/api"
 		@has_job = false
 		@node_id = 1
 		@thread_count = thread_count
@@ -133,7 +133,7 @@ class Client
 	def cc_stability_test
 		# Check status to C&C
 		cc_agent = Mechanize.new
-		response = cc_agent.head(@server)
+		response = cc_agent.head(@server + "/health")
 
 		if response.code.to_i != 200
 			puts "(!) Unable to communicate with command and control server"
