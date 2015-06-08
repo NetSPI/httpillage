@@ -37,7 +37,7 @@ class Api::DispatcherController < ApiController
 
 	def create_node
 		node = Node.new
-		node.ip_addr = request.env["HTTP_X_FORWARDED_FOR"]
+		node.ip_addr = request.remote_ip
 		node.last_seen = DateTime.now
 		node.save
 

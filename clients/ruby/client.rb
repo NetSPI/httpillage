@@ -93,16 +93,14 @@ class Client
 		if @http_method.downcase == "get"
 			begin
 				response = req.get(@http_uri)
-				# TODO
-				# Need to make this actually handle headers, etc.
 			rescue
-				puts "Unable to connect."
+				puts "Unable to connect with get."
 			end
 		else
 			begin
 				response = req.post(@http_uri, @http_data, @http_headers)
 			rescue
-				puts "Unable to connect."
+				puts "Unable to connect with post."
 			end
 		end
 	end
@@ -144,7 +142,7 @@ class Client
 
 		response = req.head(@server + "/health")
 
-		if response.code.to_i != 200
+		if response.code.to_i >= 400
 			puts "(!) Unable to communicate with command and control server"
 			puts "(!) Please confirm address: #{@server}"
 			exit
