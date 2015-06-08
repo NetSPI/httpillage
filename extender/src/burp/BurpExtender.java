@@ -44,7 +44,7 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
     private PrintWriter           stdout;
     private PrintWriter           stderr;
     private HttpClient            client;
-    private static String         httpillageServerUrl           = "http://ec2-52-7-111-135.compute-1.amazonaws.com:3000";
+    private static String         httpillageServerUrl           = "http://localhost:3000";
     private static String         httpillageServerKey           = "gsYr4l70l08bcr77cZJMGrBUMYqhQlnR8KrqZWbI3ehH39OX8qb1hK2EcxkW";
 
     public JLabel                 htmlDescription;
@@ -170,18 +170,22 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Do something
-        this.stdout.println("Attempting to perform action");
-        this.stdout.println("Going to process the following message: " + new String(this.selectedRequestForPillage));
+        String requestString = new String(this.selectedRequestForPillage);
 
-        String http_method = http_method_from_request(new String(this.selectedRequestForPillage));
-        String http_uri = full_uri_from_request(new String(this.selectedRequestForPillage), this.selectedServiceForPillage.getProtocol());
+        String http_method = http_method_from_request(requestString);
+        String http_uri = full_uri_from_request(requestString, this.selectedServiceForPillage.getProtocol());
         String http_headers = "";
-        String http_data = "";
+        String http_data = new String(Base64.encodeBase64(post_data_from_request(requestString).getBytes()));
 
         // Hard coded, for now
-        String attack_type = "bruteforce";
+        String attack_type = "dos";
         String status = "active";
+
+        this.stdout.println("Going to process the following message:");
+        this.stdout.println("\tDestination Method: " + http_method);
+        this.stdout.println("\tDestination Host: " + http_uri);
+        this.stdout.println("\tDestination Headers: " + http_headers);
+        this.stdout.println("\tDestination data: " + http_data);
 
 
         // Start Post
@@ -255,5 +259,34 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
         victimUrl = proto + "://" + victimHost + victimUrl;
 
         return victimUrl;
+    }
+
+    // @TODO
+    public String http_headers_from_request(String req) {
+        String headers = "";
+
+        String headerPatternString = "\r?\n\r?\n(.*)";
+        Pattern headerPattern = Pattern.compile(headerPatternString);
+        Matcher headerMatcher = headerPattern.matcher(req);
+
+        while (headerMatcher.find()) {
+            headers = headerMatcher.group(1);
+        }
+
+        return headers;
+    }
+
+    public String post_data_from_request(String req) {
+        String postData = "";
+
+        String postPatternString = "\r?\n\r?\n(.*)";
+        Pattern postPattern = Pattern.compile(postPatternString);
+        Matcher postMatcher = postPattern.matcher(req);
+
+        while (postMatcher.find()) {
+            postData = postMatcher.group(1);
+        }
+
+        return postData;
     }
 }
