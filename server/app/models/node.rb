@@ -3,4 +3,5 @@ class Node < ActiveRecord::Base
 		self.last_seen = DateTime.now
 		self.save
 	end
+
 end

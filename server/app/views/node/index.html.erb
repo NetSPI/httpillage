@@ -1,0 +1,18 @@
+<table border="1">
+<tr>
+<th>ID</th>
+<th>IP ADDRESS</th>
+<th>MAC ADDRESS</th>
+<th>LAST SEEN</th>
+<th>CREATED</th>
+</tr>
+<% @nodes.each do |n| %>
+<tr>
+<td><%= n.id %></td>
+<td><%= n.ip_addr %></td>
+<td><%= n.mac_address %></td>
+<td><%= n.last_seen %></td>
+<td><%= n.created_at %></td>
+</tr>
+<% end %>
+</table>

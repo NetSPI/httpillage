@@ -4,7 +4,6 @@ class Client
 		@proxy_host = proxy_host
 		@proxy_port = proxy_port
 		@has_job = false
-		@node_id = 1
 		@thread_count = thread_count
 
 		@job_id = 0
@@ -13,6 +12,7 @@ class Client
 		@http_host = ""
 		@http_headers = ""
 		@http_data = ""
+		@node_id = mac_address
 	end
 
 	def invoke
@@ -28,7 +28,6 @@ class Client
 		end
 
 		@job_id 		= job["id"]
-		#@node_id 		= job["node_id"]
 		@http_method 	= job["http_method"]
 		@http_uri 		= job["http_uri"]
 		@http_host 		= job["http_host"]
@@ -40,7 +39,7 @@ class Client
 	end
 
 	def request_job
-		endpoint = @server + "/poll"
+		endpoint = @server + "/poll/#{@node_id}"
 
 		response = Mechanize.new.get(endpoint)
 		# Parse response
@@ -170,5 +169,18 @@ class Client
 		end
 
 		return header_hash
+	end
+
+	def mac_address
+	  platform = RUBY_PLATFORM.downcase
+	  output = `#{(platform =~ /win32/) ? 'ipconfig /all' : 'ifconfig'}`
+	  case platform
+	    when /darwin/
+	      $1 if output =~ /en1.*?(([A-F0-9]{2}:){5}[A-F0-9]{2})/im
+	    when /win32/
+	      $1 if output =~ /Physical Address.*?(([A-F0-9]{2}-){5}[A-F0-9]{2})/im
+	    # Cases for other platforms...
+	    else nil
+	  end
 	end
 end

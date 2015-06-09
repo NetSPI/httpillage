@@ -4,8 +4,7 @@ class Api::DispatcherController < ApiController
 	# to the current job.
 	#
 	def poll
-		node_id = params[:nodeid] ? params[:nodeid] : create_node
-		active_node = Node.find(node_id)
+		active_node = Node.find_by_mac_address(params[:nodeid]) || create_node
 
 		if params[:jobid]
 			# check status of current job
@@ -36,9 +35,10 @@ class Api::DispatcherController < ApiController
 	end
 
 	def create_node
-		node = Node.new
-		node.ip_addr = request.remote_ip
-		node.last_seen = DateTime.now
+		node 				= Node.new
+		node.ip_addr 		= request.remote_ip
+		node.mac_address 	= params[:nodeid]
+		node.last_seen 		= DateTime.now
 		node.save
 
 		return node

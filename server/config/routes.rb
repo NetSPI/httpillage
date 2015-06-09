@@ -6,4 +6,8 @@ Rails.application.routes.draw do
 	  # Intruder will use the following endpoints to create and manage jobs
 	  post 'job/create', to: 'job#create'
 	end
+
+	get 'jobs', to: 'job#index'
+	get 'nodes', to: 'node#index'
+	delete 'job/:jobid', to: 'job#destroy', as: 'job'
 end
