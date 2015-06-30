@@ -14,6 +14,4 @@ Rails.application.routes.draw do
 	post 'jobs', to: 'job#create'
 	get 'nodes', to: 'node#index'
 	delete 'job/:jobid', to: 'job#destroy', as: 'job'
-
-
 end

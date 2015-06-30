@@ -92,11 +92,13 @@ class Client
 
 	def process_request()
 		# Check job type.. if dos, just send request as is
+
 		if @job_type == "dos"
 			send_request
 		if @job_type == "dictionary"
 			# find placeholders and replace with value
 			# This may not work when threaded, due to race conditions
+
 			payload = @attack_payloads.pop
 
 			if payload.nil?
