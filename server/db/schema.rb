@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605235429) do
+ActiveRecord::Schema.define(version: 20150630013238) do
+
+  create_table "dictionary_chunk_allocations", force: :cascade do |t|
+    t.integer  "job_id"
+    t.integer  "node_id"
+    t.integer  "start_byte"
+    t.integer  "end_byte"
+    t.boolean  "completed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "dictionary_chunk_allocations", ["job_id"], name: "index_dictionary_chunk_allocations_on_job_id"
+  add_index "dictionary_chunk_allocations", ["node_id"], name: "index_dictionary_chunk_allocations_on_node_id"
 
   create_table "jobs", force: :cascade do |t|
     t.string   "http_method"
@@ -21,16 +34,20 @@ ActiveRecord::Schema.define(version: 20150605235429) do
     t.text     "http_data"
     t.string   "attack_type"
     t.string   "status"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "dictionary_file"
   end
 
   create_table "nodes", force: :cascade do |t|
     t.string   "ip_addr"
     t.datetime "last_seen"
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "mac_address"
   end
+
+  add_index "nodes", ["mac_address"], name: "index_nodes_on_mac_address"
 
 end
