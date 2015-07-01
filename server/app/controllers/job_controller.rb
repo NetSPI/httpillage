@@ -1,3 +1,5 @@
+require 'base64'
+
 class JobController < ApiController
 	def index
 		@jobs = Job.all
@@ -8,7 +10,11 @@ class JobController < ApiController
 	end
 
 	def create
-		@job = Job.create(job_params)
+		@job = Job.new(job_params)
+
+		@job.http_headers = Base64.encode64(@job.http_headers)
+		@job.http_data = Base64.encode64(@job.http_data)
+		@job.save
 
 		if @job.valid?
 			render :json => @job.to_json

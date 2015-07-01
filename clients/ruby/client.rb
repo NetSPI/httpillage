@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Client
 	def initialize(server, thread_count, proxy_host, proxy_port)
 		@server = server + "/api"
@@ -12,6 +13,7 @@ class Client
 		@http_uri = ""
 		@http_host = ""
 		@http_headers = ""
+		@http_data_string = ""
 		@http_data = ""
 		@node_id = mac_address
 
@@ -38,8 +40,14 @@ class Client
 		@http_uri 		= job["http_uri"]
 		@http_host 		= job["http_host"]
 		@http_headers 	= parse_headers(Base64.decode64(job["http_headers"]))
+		@http_data_string = Base64.decode64(job["http_data"])
+		@http_data_string.force_encoding 'utf-8'
 		@http_data 		= parse_data(Base64.decode64(job["http_data"]))
 
+		@attack_payloads = parse_work(job["work"])
+
+
+		puts "Payloads recvd: #{@attack_payloads}"
 		# should probably start computing...
 		kick_off_job!
 	end
@@ -95,7 +103,7 @@ class Client
 
 		if @job_type == "dos"
 			send_request
-		if @job_type == "dictionary"
+		elsif @job_type == "dictionary"
 			# find placeholders and replace with value
 			# This may not work when threaded, due to race conditions
 
@@ -107,8 +115,10 @@ class Client
 				return "done"
 			end
 
-			attack_uri = @http_uri.replace("§", payload)
-			attack_data = @http_data.replace("§", payload)
+			puts "About to sub: #{payload} into #{@http_data_string}"
+			attack_uri = @http_uri.gsub("§", payload)
+
+			attack_data = parse_data(@http_data_string.gsub("§", payload))
 			# TODO: Implement header injection
 			send_request(attack_uri, attack_data, @http_headers)
 		end
@@ -120,10 +130,13 @@ class Client
 	# Currently this does not store any responses
 	#
 	def send_request(http_uri=nil,http_data=nil, http_headers=nil)
+		@proxy_host = "localhost"
+		@proxy_port = 8080
 		req = Mechanize.new.tap do |r|
-			if @proxy_host
+			#if @proxy_host
+				puts "Sending req with proxy host: #{@proxy_host}:#{@proxy_port}"
 				r.set_proxy(@proxy_host, @proxy_port)
-			end
+			#end
 		end
 
 		# Set these if they weren't passed in...
@@ -196,15 +209,26 @@ class Client
 		13 + rand(64)
 	end
 
+	def parse_work(work)
+		return work.split("\n")
+	end
+
 	# Split data by & and =, returning hash
 	def parse_data(data)
-		return URI.decode_www_form(data)
+		begin
+			return URI.decode_www_form(data)
+		rescue
+			return {}
+		end
 	end
 
 	def parse_headers(headers)
 		header_hash = {}
 
 		lines = headers.split("\n")
+
+		# IF there's only one line, return it
+		return lines[0] if lines.count > 2
 
 		lines.each do |line|
 			split_line = line.split(":", 2)
