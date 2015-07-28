@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150630013238) do
+ActiveRecord::Schema.define(version: 20150726194238) do
+
+  create_table "dictionaries", force: :cascade do |t|
+    t.string   "filename"
+    t.string   "original_filename"
+    t.text     "description"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
 
   create_table "dictionary_chunk_allocations", force: :cascade do |t|
     t.integer  "job_id"
@@ -34,9 +42,9 @@ ActiveRecord::Schema.define(version: 20150630013238) do
     t.text     "http_data"
     t.string   "attack_type"
     t.string   "status"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.string   "dictionary_file"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "dictionary_id"
   end
 
   create_table "nodes", force: :cascade do |t|

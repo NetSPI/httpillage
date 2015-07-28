@@ -7,6 +7,7 @@ class JobController < ApiController
 
 	def new
 		@job ||= Job.new
+		@dictionaries ||= Dictionary.all
 	end
 
 	def create
@@ -30,6 +31,13 @@ class JobController < ApiController
 
 	private
 	def job_params
-		params.require(:job).permit(:http_method, :http_uri, :http_headers, :http_data, :attack_type, :status)
+		params.require(:job).permit(
+			:http_method, 
+			:http_uri, 
+			:http_headers, 
+			:http_data, 
+			:attack_type, 
+			:status,
+			:dictionary_id)
 	end
 end

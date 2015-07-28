@@ -29,6 +29,10 @@ class Api::DispatcherController < ApiController
 				if job[:attack_type] == "dictionary"
 					# Not elegant, but can't directly assign job[:work] = ...
 					job.work = dictionary_content_for_job(job.id, active_node.id)
+
+					if job.work == ""
+						return :json => '{ "status": "halt"}'
+					end
 				end
 
 				# TODO: Make this return node_id too
@@ -42,10 +46,6 @@ class Api::DispatcherController < ApiController
 		active_node.mark_active
 	end
 
-	def test
-		render :json => dictionary_content_for_job(1, 3).to_json
-	end
-
 	#
 	# This function is responsible for managing the dictionary content allocation for jobs.
 	# Each job allocation will include 100 dictionary items for the
@@ -54,8 +54,9 @@ class Api::DispatcherController < ApiController
 		# check if there is any progress on current job, if not, starts
 		next_byte_start_for_job = DictionaryChunkAllocation.nextChunkForJob(job_id)
 
-		# Total count: 153004874
-		file_info = content_from_dictionary_file("500worstpasswords", next_byte_start_for_job)
+		active_job = Job.find(job_id)
+		used_dictionary = active_job.dictionary
+		file_info = content_from_dictionary_file(used_dictionary.filename, next_byte_start_for_job)
 
 		content = file_info[:content]
 
@@ -90,11 +91,7 @@ class Api::DispatcherController < ApiController
 	end
 
 	def find_path_to_dictionary(dictionary)
-		valid_dictionaries = { "rockyou" => "rockyou.txt", "500worstpasswords" => "500-worst-passwords.txt"}
-
-		dictionary_file = valid_dictionaries[dictionary]
-
-		return Rails.root.join("lib", "dictionaries", dictionary_file)
+		return Rails.root.join("lib", "dictionaries", dictionary)
 	end
 
 	def create_node

@@ -18,6 +18,11 @@ HTTP Data<br />
 Attack Type<br />
 <%= f.select(:attack_type, options_for_select([['Denial of Service', 'dos'], ['Dictionary', 'dictionary']])) %><br /><br />
 
+Dictionary<br />
+<%=
+select("job", "dictionary_id", @dictionaries.all.collect {|d| [ d.original_filename, d.id ] }, {prompt: 'Select Dictionary'})
+%><br /><Br />
+
 Job Status<br />
 <%= f.select(:status, options_for_select([['Start', 'active'], ['Pending', 'pending']])) %><br /><br />
 

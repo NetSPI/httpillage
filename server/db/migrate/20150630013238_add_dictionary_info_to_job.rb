@@ -12,6 +12,6 @@ class AddDictionaryInfoToJob < ActiveRecord::Migration
 	  	  t.timestamps 	null: false
 	  	end
 
-	  	add_column	:jobs, :dictionary_file, :string
+	  	add_column	:jobs, :dictionary_id, :integer
   end
 end
