@@ -30,12 +30,12 @@ optparse = OptionParser.new do |opts|
 	end
 
 	options [:proxy_host] = false
-	opts.on('--proxy-host PROXY', 'Proxy Host') do |proxy|
+	opts.on('--proxy-host PROXY', 'Proxy Host / IP: (127.0.0.1)') do |proxy|
 		options[:proxy_host] = proxy
 	end
 
 	options [:proxy_port] = false
-	opts.on('--proxy-port PORT', 'Proxy Port') do |port|
+	opts.on('--proxy-port PORT', 'Proxy Port (8080)') do |port|
 		options[:proxy_port] = port
 	end
 

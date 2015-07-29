@@ -141,13 +141,10 @@ class Client
 	# Currently this does not store any responses
 	#
 	def send_request(http_uri=nil,http_data=nil, http_headers=nil)
-		@proxy_host = "localhost"
-		@proxy_port = 8080
 		req = Mechanize.new.tap do |r|
-			#if @proxy_host
-				puts "Sending req with proxy host: #{@proxy_host}:#{@proxy_port}"
+			if @proxy_host
 				r.set_proxy(@proxy_host, @proxy_port)
-			#end
+			end
 		end
 
 		# Set these if they weren't passed in...
@@ -241,7 +238,7 @@ class Client
 		lines = headers.split("\n")
 
 		# IF there's only one line, return it
-		return lines[0] if lines.count > 2
+		return lines[0] if lines.count < 2
 
 		lines.each do |line|
 			split_line = line.split(":", 2)
