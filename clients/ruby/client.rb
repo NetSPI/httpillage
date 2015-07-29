@@ -127,7 +127,6 @@ class Client
 				return "done"
 			end
 
-			puts "About to sub: #{payload} into #{@http_data_string}"
 			attack_uri = @http_uri.gsub("§", payload)
 
 			attack_data = parse_data(@http_data_string.gsub("§", payload))
@@ -222,6 +221,8 @@ class Client
 	end
 
 	def parse_work(work)
+		return [] if work.nil?
+
 		return work.split("\n")
 	end
 
