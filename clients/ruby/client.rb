@@ -19,7 +19,7 @@ class Client
 
 		# This var is only used when performing dictionary attacks
 		# It will be populated by the server
-		@attack_payloads = ["password1", "password2", "paylokajajajja"]
+		@attack_payloads = []
 	end
 
 	def invoke
@@ -34,21 +34,21 @@ class Client
 			@has_job = true if job
 		end
 
-		@job_id 		= job["id"]
-		@job_type		= job["attack_type"]
-		@http_method 	= job["http_method"]
-		@http_uri 		= job["http_uri"]
-		@http_host 		= job["http_host"]
-		@http_headers 	= parse_headers(Base64.decode64(job["http_headers"]))
+		@job_id 					= job["id"]
+		@job_type					= job["attack_type"]
+		@http_method 			= job["http_method"]
+		@http_uri 				= job["http_uri"]
+		@http_host 				= job["http_host"]
+		@http_headers 		= parse_headers(Base64.decode64(job["http_headers"]))
 		@http_data_string = Base64.decode64(job["http_data"])
 		@http_data_string.force_encoding 'utf-8'
-		@http_data 		= parse_data(Base64.decode64(job["http_data"]))
+		@http_data 				= parse_data(Base64.decode64(job["http_data"]))
 
-		@attack_payloads = parse_work(job["work"])
+		@attack_payloads 	= parse_work(job["work"])
 
 
 		puts "Payloads recvd: #{@attack_payloads}"
-		# should probably start computing...
+
 		kick_off_job!
 	end
 
@@ -98,15 +98,27 @@ class Client
 		invoke
 	end
 
+	#
+	# This function handles the proper dispatching of request types
+	#
+	# Following is a list of request types and their specification.
+	#
+	# repeat:
+	# => Simply put, repeat will continuously send the provided request
+	# => over and over until the C&C tells it to stop. This is a useful
+	# => DoS testing functionality. It may also be useful for testing
+	# => account lockout.
+	#
+	# dictionary:
+	# => Dictionary attacks will leverage a provided dictionary file,
+	# => distributing work across currently connected nodes in batches.
+	# 
 	def process_request()
-		# Check job type.. if dos, just send request as is
+		# Check job type.. if repeat, just send request as is
 
-		if @job_type == "dos"
+		if @job_type == "repeat"
 			send_request
 		elsif @job_type == "dictionary"
-			# find placeholders and replace with value
-			# This may not work when threaded, due to race conditions
-
 			payload = @attack_payloads.pop
 
 			if payload.nil?
