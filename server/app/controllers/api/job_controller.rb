@@ -16,8 +16,8 @@ class Api::JobController < ApiController
 		# for now we don't care about responses.
 		job.attack_type			= "repeat"
 
-		# Set status to active by default -- this may change in future
-		job.status 			= "active"
+		# Set status to pending by default -- this may change in future
+		job.status 			= "pending"
 
 		job.save
 
