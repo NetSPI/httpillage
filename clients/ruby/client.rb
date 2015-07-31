@@ -17,6 +17,8 @@ class Client
 		@http_data = ""
 		@node_id = mac_address
 
+		@last_status_code = 0
+
 		# This var is only used when performing dictionary attacks
 		# It will be populated by the server
 		@attack_payloads = []
@@ -155,12 +157,14 @@ class Client
 		if @http_method.downcase == "get"
 			begin
 				response = req.get(http_uri)
+				@last_status_code = response.code.to_i
 			rescue
 				puts "Unable to connect with get."
 			end
 		else
 			begin
 				response = req.post(http_uri, http_data, http_headers)
+				@last_status_code = response.code.to_i
 			rescue
 				puts "Unable to connect with post."
 			end
@@ -174,8 +178,13 @@ class Client
 		puts "Sleeping for #{random_sleep_time} seconds"
 		sleep(random_sleep_time)
 
+		# check status code
+		status_code = @last_status_code
+
 		puts "Checking job status for job #{@job_id} on node #{@node_id}"
-		endpoint = "#{@server}/poll/#{@node_id}/#{@job_id}"
+
+		# Todo: Refactor this to also send the most previous http status code
+		endpoint = "#{@server}/checkin/#{@node_id}/#{@job_id}/#{status_code}"
 
 		begin
 			response = Mechanize.new.get(endpoint)

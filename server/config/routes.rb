@@ -1,12 +1,13 @@
 Rails.application.routes.draw do
 	namespace 'api' do
-	  get 'health', 									to: 'health#index'
-	  get 'poll(/:nodeid(/:jobid))', 	to: 'dispatcher#poll'
+	  get 'health', 														to: 'health#index'
+	  get 'poll(/:nodeid(/:jobid))', 						to: 'dispatcher#poll'
+	  get 'checkin/:nodeid/:jobid/:status_code',to: 'dispatcher#checkin'
 
 	  # Intruder will use the following endpoints to create and manage jobs
-	  post 'job/create', 							to: 'job#create'
+	  post 'job/create', 												to: 'job#create'
 
-	  get 'test', 										to: 'dispatcher#test'
+	  get 'test', 															to: 'dispatcher#test'
 	end
 
 	get 'jobs', 									to: 'job#index'
