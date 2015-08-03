@@ -37,6 +37,7 @@ class JobController < ApiController
 			:http_headers, 
 			:http_data, 
 			:attack_type, 
+			:attack_mode,
 			:status,
 			:dictionary_id)
 	end

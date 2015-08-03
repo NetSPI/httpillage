@@ -18,6 +18,9 @@ HTTP Data<br />
 Attack Type<br />
 <%= f.select(:attack_type, options_for_select([['Repeat', 'repeat'], ['Dictionary', 'dictionary']])) %><br /><br />
 
+Response Storage?<br />
+<%= f.select(:attack_mode, options_for_select([['None', 'none'], ['Store Full', 'store']])) %><br /><br />
+
 Dictionary<br />
 <%=
 select("job", "dictionary_id", @dictionaries.all.collect {|d| [ d.original_filename, d.id ] }, {prompt: 'Select Dictionary'})
