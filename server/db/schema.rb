@@ -11,7 +11,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150609001009) do
+ActiveRecord::Schema.define(version: 20150803223227) do
+
+  create_table "dictionaries", force: :cascade do |t|
+    t.string   "filename"
+    t.string   "original_filename"
+    t.text     "description"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  create_table "dictionary_chunk_allocations", force: :cascade do |t|
+    t.integer  "job_id"
+    t.integer  "node_id"
+    t.integer  "start_byte"
+    t.integer  "end_byte"
+    t.boolean  "completed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "dictionary_chunk_allocations", ["job_id"], name: "index_dictionary_chunk_allocations_on_job_id"
+  add_index "dictionary_chunk_allocations", ["node_id"], name: "index_dictionary_chunk_allocations_on_node_id"
+
+  create_table "job_responses", force: :cascade do |t|
+    t.integer  "jobid"
+    t.integer  "nodeid"
+    t.integer  "code"
+    t.text     "response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "jobs", force: :cascade do |t|
     t.string   "http_method"
@@ -21,8 +51,18 @@ ActiveRecord::Schema.define(version: 20150609001009) do
     t.text     "http_data"
     t.string   "attack_type"
     t.string   "status"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "dictionary_id"
+    t.string   "attack_mode"
+  end
+
+  create_table "node_status_checkins", force: :cascade do |t|
+    t.integer  "node_id"
+    t.integer  "job_id"
+    t.integer  "response_code"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "nodes", force: :cascade do |t|

