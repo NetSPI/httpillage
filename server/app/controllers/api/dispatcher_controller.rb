@@ -46,6 +46,23 @@ class Api::DispatcherController < ApiController
 		active_node.mark_active
 	end
 
+	def checkin
+
+		# Test this code in the morning
+		status_code = params[:status_code]
+		node = Node.find(params[:jobid])
+
+		checkin = NodeStatusCheckin.create({
+				:node_id				=> node.id,
+				:job_id 				=> params[:jobid],
+				:response_code 	=> status_code
+		})
+
+		# Check in to provide an update for a particular job
+
+		return poll
+	end
+
 	#
 	# This function is responsible for managing the dictionary content allocation for jobs.
 	# Each job allocation will include 100 dictionary items for the

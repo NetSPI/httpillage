@@ -5,6 +5,10 @@ class JobController < ApiController
 		@jobs = Job.all
 	end
 
+	def show
+		@job = Job.find(params[:jobid])
+	end
+
 	def new
 		@job ||= Job.new
 		@dictionaries ||= Dictionary.all

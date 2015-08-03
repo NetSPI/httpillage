@@ -1,6 +1,6 @@
 class Job < ActiveRecord::Base
 	attr_accessor	:work
-
+  has_many  :node_status_checkins, -> { order(created_at: :ASC) }
 	has_many 	:dictionary_chunk_allocations
 	has_one		:dictionary, :primary_key => "dictionary_id", :foreign_key => "id"
 

@@ -65,6 +65,14 @@ ActiveRecord::Schema.define(version: 20150803223227) do
     t.datetime "updated_at",    null: false
   end
 
+  create_table "node_status_checkins", force: :cascade do |t|
+    t.integer  "node_id"
+    t.integer  "job_id"
+    t.integer  "response_code"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
   create_table "nodes", force: :cascade do |t|
     t.string   "ip_addr"
     t.datetime "last_seen"

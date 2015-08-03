@@ -1,5 +1,6 @@
 <table border="1">
 <tr>
+<th></th>
 <th>METHOD</th>
 <th>URI</th>
 <th>TYPE</th>
@@ -9,12 +10,16 @@
 </tr>
 <% @jobs.each do |j| %>
 <tr>
+<td><%= j.id %></td>
 <td><%= j.http_method %></td>
 <td><%= j.http_uri %></td>
 <td><%= j.attack_type %></td>
 <td><%= j.status %></td>
 <td><%= j.created_at %></td>
-<td><%= button_to 'Destroy', j, :method => :delete, :class=>:destroy, data: { confirm: 'Are you sure?' } %></td>
+<td>
+  <%= button_to 'Status', j, :method => :get, :class=>:show %>
+  <%= button_to 'Destroy', j, :method => :delete, :class=>:destroy, data: { confirm: 'Are you sure?' } %>
+</td>
 </tr>
 <% end %>
 </table>

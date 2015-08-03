@@ -1,0 +1,40 @@
+<b><%= @job.id %></b>:<%= @job.http_uri %><br /><br />
+
+<b>Attack Type:</b> <%= @job.attack_type %><br /><br />
+<b>Job Status: </b> <%= @job.status %><br /><Br />
+
+<b>Headers:</b><br /><br />
+<blockquote>
+  <%= Base64.decode64(@job.http_headers) %>
+</blockquote> 
+<b>Post Data:</b><br /><br />
+<blockquote>
+  <%= @job.http_data %>
+</blockquote> 
+
+<br /><br />
+<% if @job.node_status_checkins %>
+Latest Updates:
+<table>
+<tr>
+<th>
+Node ID
+</th>
+<th>
+Status Code
+</th>
+
+<th>
+Time
+</th>
+</tr>
+
+<% @job.node_status_checkins.each do |status| %>
+<tr>
+<td><%= status.node_id %></td>
+<td><%= status.response_code %></td>
+<td><%= status.created_at %></td>
+</tr>
+<% end %>
+</table>
+<% end %>
