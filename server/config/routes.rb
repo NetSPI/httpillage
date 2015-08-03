@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 	end
 
 	get 'jobs', 									to: 'job#index'
+	get	'job/:jobid',							to: 'job#show'
 	get 'jobs/new', 							to: 'job#new'
 	post 'jobs', 									to: 'job#create'
 	get 'nodes', 									to: 'node#index'

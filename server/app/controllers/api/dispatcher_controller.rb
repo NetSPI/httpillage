@@ -49,10 +49,11 @@ class Api::DispatcherController < ApiController
 	def checkin
 
 		# Test this code in the morning
-
 		status_code = params[:status_code]
+		node = Node.find(params[:jobid])
+
 		checkin = NodeStatusCheckin.create({
-				:node_id				=> params[:nodeid],
+				:node_id				=> node.id,
 				:job_id 				=> params[:jobid],
 				:response_code 	=> status_code
 		})
