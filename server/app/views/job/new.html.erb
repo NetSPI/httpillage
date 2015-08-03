@@ -1,0 +1,31 @@
+Use § as a placeholder<br /><br />
+
+<%= form_for @job do |f| %>
+
+HTTP Method<br />
+<%= f.select("http_method", options_for_select([['GET', 'GET'], ['POST', 'POST'], ["PUT", "PUT"], ["PATCH", "PATCH"], ["DELETE", "DELETE"]])) %><br /><br />
+
+HTTP Uri<br />
+<%= f.text_field :http_uri %><br /><br />
+
+HTTP Headers<br />
+<%= f.text_area :http_headers, :size => "60x10" %><br /><Br />
+
+
+HTTP Data<br />
+<%= f.text_area :http_data, :size => "60x10" %><br /><Br />
+
+Attack Type<br />
+<%= f.select(:attack_type, options_for_select([['Repeat', 'repeat'], ['Dictionary', 'dictionary']])) %><br /><br />
+
+Dictionary<br />
+<%=
+select("job", "dictionary_id", @dictionaries.all.collect {|d| [ d.original_filename, d.id ] }, {prompt: 'Select Dictionary'})
+%><br /><Br />
+
+Job Status<br />
+<%= f.select(:status, options_for_select([['Start', 'active'], ['Pending', 'pending']])) %><br /><br />
+
+
+<%= submit_tag "Create Job" %>
+<% end %>

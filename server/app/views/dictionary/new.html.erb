@@ -1,0 +1,10 @@
+<h1>File Upload</h1>
+
+<%= form_for @dictionary do |f| %>
+	<%= f.file_field	:dictionary_file %><br /><br />
+
+	<%= f.label 		:description %><br />
+	<%= f.text_area		:description %><br /><br />
+
+	<%= f.submit %>
+<% end %>

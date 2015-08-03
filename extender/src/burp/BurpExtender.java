@@ -178,7 +178,7 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
         String http_data = new String(Base64.encodeBase64(post_data_from_request(requestString).getBytes()));
 
         // Hard coded, for now
-        String attack_type = "dos";
+        String attack_type = "repeat";
         String status = "active";
 
         this.stdout.println("Going to process the following message:");

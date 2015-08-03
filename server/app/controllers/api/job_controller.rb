@@ -14,10 +14,10 @@ class Api::JobController < ApiController
 
 		# Set job type to bruteforce by default. This will change, but
 		# for now we don't care about responses.
-		job.attack_type			= "dos"
+		job.attack_type			= "repeat"
 
-		# Set status to active by default -- this may change in future
-		job.status 			= "active"
+		# Set status to pending by default -- this may change in future
+		job.status 			= "pending"
 
 		job.save
 
