@@ -174,8 +174,7 @@ class Client
 	# Communicates with C&C behind the scenes to look for job status changes
 	def monitor_job_status
 		# Let's sleep for a bit first
-		random_sleep_time = random_polling_interval
-		puts "Sleeping for #{random_sleep_time} seconds"
+		random_sleep_time = random_polling_interval / 3
 		sleep(random_sleep_time)
 
 		# check status code
