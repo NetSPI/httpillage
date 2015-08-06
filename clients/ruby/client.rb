@@ -183,11 +183,11 @@ class Client
 		endpoint = "#{@server}/job/#{@job_id}/saveResponse"
 
 		data = { 
-			:response => Base64.encode64(response.body),
-			:code 		=> response.code.to_i
+			:response 				=> Base64.encode64(response.body),
+			:response_code 		=> response.code.to_i
 		}
 		begin
-		Mechanize.new.post(endpoint, data)
+			Mechanize.new.post(endpoint, data)
 		rescue
 			# hmm
 		end
