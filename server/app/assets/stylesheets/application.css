@@ -13,3 +13,23 @@
  *= require_tree .
  *= require_self
  */
+
+$action-primary: #f37025; 						// this is the orange color for links and buttons
+$action-primary-hover: #f4803d; 			// lighten($action-primary, 10%)
+$action-primary-active: #f1600d; 			// darken($action-primary, 5%)
+
+$action-alternative: #3299bb; 				// this is the blue color for links and buttons
+$action-alternative-hover: #50b0d0; 	// lighten($action-alternative, 10%)
+$action-alternative-active: #2d89a7; 	// darken($action-alternative, 5%)
+
+$text-dark: #424242;
+$accent-gray: #bcbcbc;
+$accent-gray-2: #e9e9e9;
+$success-green: #53bd5e;
+$warning-red: #d04b33;
+
+$transition-time: .2s;
+
+$text-size: 16px;
+
+@import "compass/css3";
