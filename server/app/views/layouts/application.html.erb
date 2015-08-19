@@ -2,13 +2,20 @@
 <html>
 <head>
   <title>Server</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= stylesheet_link_tag  'https://nvisium.com/stylesheets/global.css' %>
+  <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
+	<div class="container">
+		<nav class="nav-menu row">
+			<%= image_tag 'nvisium_logo.png', {:class => 'logo', :alt => 'nVisium logo'} %>
+			<%= link_to 'Jobs', '#', {:class => 'nav-link link-primary'} %>
+			<%= link_to 'Nodes', '#', {:class => 'nav-link link-primary'} %>
+		</nav>
+		<%= yield %>
+	</div>
 
 </body>
 </html>

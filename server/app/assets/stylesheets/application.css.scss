@@ -10,8 +10,6 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
- *= require_self
  */
 
 $action-primary: #f37025; 						// this is the orange color for links and buttons
@@ -32,4 +30,12 @@ $transition-time: .2s;
 
 $text-size: 16px;
 
+@import "font-awesome";
+
+@import "normalize";
+@import "bootstrap.min";
 @import "compass/css3";
+
+@import "compass/css3";
+
+@import "base";
