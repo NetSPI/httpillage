@@ -53,3 +53,11 @@
 		margin-top: 1.25em;
 	}
 }
+
+//-- View Jobs --//
+.item {
+	margin-bottom: 2em;
+	&-title {
+		font-weight: bold;
+	}
+}
