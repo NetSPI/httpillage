@@ -15,3 +15,29 @@
 .nav-link {
 	padding-left: 2em;
 }
+
+.page-title {
+	display: inline-block;
+	margin-bottom: 1em;
+}
+
+.page-task-button {
+	float: right;
+	margin-top: 1.5em;
+}
+
+//-- Jobs --//
+
+.search-form {
+	display: inline-block;
+	margin-bottom: 1em;
+	width: 400px;
+	input {
+		width: 400px;
+	}
+}
+
+.search-filter {
+	float: right;
+	display: inline-block;
+}
