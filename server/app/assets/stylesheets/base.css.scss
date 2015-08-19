@@ -41,3 +41,15 @@
 	float: right;
 	display: inline-block;
 }
+
+//-- Create Jobs --//
+.job-form {
+	margin-bottom: 2em;
+	input, textarea, select {
+		display: block;
+		margin-bottom: 2em;
+	}
+	button {
+		margin-top: 1.25em;
+	}
+}

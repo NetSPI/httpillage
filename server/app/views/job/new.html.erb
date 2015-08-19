@@ -1,34 +1,41 @@
-Use § as a placeholder<br /><br />
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-title">Creating New Job</h1>
+	</div>
+</div>
 
-<%= form_for @job do |f| %>
+<p>Use § as a placeholder</p>
 
-HTTP Method<br />
-<%= f.select("http_method", options_for_select([['GET', 'GET'], ['POST', 'POST'], ["PUT", "PUT"], ["PATCH", "PATCH"], ["DELETE", "DELETE"]])) %><br /><br />
+<div class="row">
+	<%= form_for(@job, :html => {class: 'col-lg-6 job-form'}) do |f| %>
 
-HTTP Uri<br />
-<%= f.text_field :http_uri %><br /><br />
+	<label for="method">HTTP Method</label>
+	<%= f.select("http_method", options_for_select([['GET', 'GET'], ['POST', 'POST'], ["PUT", "PUT"], ["PATCH", "PATCH"], ["DELETE", "DELETE"]])) %>
 
-HTTP Headers<br />
-<%= f.text_area :http_headers, :size => "60x10" %><br /><Br />
+	<label for="uri">HTTP URI</label>
+	<%= f.text_field :http_uri, {:class => 'input-field', :name => 'uri'} %>
+
+	<label for="header">HTTP Header</label>
+	<%= f.text_area :http_headers, {:class => 'input-field', :name => 'header', :size => '50x6'} %>
+
+	<label for="data">HTTP Header</label>
+	<%= f.text_area :http_data, {:class => 'input-field', :name => 'data', :size => '50x6'} %>
+
+	<label for="type">Attack Type</label>
+	<%= f.select(:attack_type, options_for_select([['Repeat', 'repeat'], ['Dictionary', 'dictionary']])) %>
+
+	<label for="response">Response Storage?</label>
+	<%= f.select(:attack_mode, options_for_select([['None', 'none'], ['Store Full', 'store']])) %>
+
+	<label for="dictionary">Dictionary</label>
+	<%=
+	select("job", "dictionary_id", @dictionaries.all.collect {|d| [ d.original_filename, d.id ] }, {prompt: 'Select Dictionary'})
+	%>
+
+	<label for="status">Job Status</label>
+	<%= f.select(:status, options_for_select([['Start', 'active'], ['Pending', 'pending']])) %>
 
 
-HTTP Data<br />
-<%= f.text_area :http_data, :size => "60x10" %><br /><Br />
-
-Attack Type<br />
-<%= f.select(:attack_type, options_for_select([['Repeat', 'repeat'], ['Dictionary', 'dictionary']])) %><br /><br />
-
-Response Storage?<br />
-<%= f.select(:attack_mode, options_for_select([['None', 'none'], ['Store Full', 'store']])) %><br /><br />
-
-Dictionary<br />
-<%=
-select("job", "dictionary_id", @dictionaries.all.collect {|d| [ d.original_filename, d.id ] }, {prompt: 'Select Dictionary'})
-%><br /><Br />
-
-Job Status<br />
-<%= f.select(:status, options_for_select([['Start', 'active'], ['Pending', 'pending']])) %><br /><br />
-
-
-<%= submit_tag "Create Job" %>
-<% end %>
+	<%= submit_tag "Create Job", class: 'button-primary' %>
+	<% end %>
+</div>
