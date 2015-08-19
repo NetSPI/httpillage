@@ -1,6 +1,6 @@
 require 'base64'
 
-class JobController < ApiController
+class JobController < ApplicationController
 	def index
 		@jobs = Job.all
 	end
