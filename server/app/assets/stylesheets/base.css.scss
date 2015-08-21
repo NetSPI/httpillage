@@ -1,0 +1,63 @@
+@charset "utf-8";
+
+.nav-menu {
+	border-bottom: 1px solid whitesmoke;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	margin-bottom: 1em;
+}
+
+.logo {
+	padding-left: 1em;
+	max-width: 167px;
+}
+
+.nav-link {
+	padding-left: 2em;
+}
+
+.page-title {
+	display: inline-block;
+	margin-bottom: 1em;
+}
+
+.page-task-button {
+	float: right;
+	margin-top: 1.5em;
+}
+
+//-- Jobs --//
+
+.search-form {
+	display: inline-block;
+	margin-bottom: 1em;
+	width: 400px;
+	input {
+		width: 400px;
+	}
+}
+
+.search-filter {
+	float: right;
+	display: inline-block;
+}
+
+//-- Create Jobs/Dictionary --//
+.create-form {
+	margin-bottom: 2em;
+	input, textarea, select {
+		display: block;
+		margin-bottom: 2em;
+	}
+	button {
+		margin-top: 1.25em;
+	}
+}
+
+//-- View Jobs --//
+.item {
+	margin-bottom: 2em;
+	&-title {
+		font-weight: bold;
+	}
+}

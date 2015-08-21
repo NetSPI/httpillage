@@ -1,25 +1,62 @@
-<table border="1">
-<tr>
-<th></th>
-<th>METHOD</th>
-<th>URI</th>
-<th>TYPE</th>
-<th>STATUS</th>
-<th>CREATED</th>
-<th>&nbsp;</th>
-</tr>
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-title">Jobs</h1>
+		<%= link_to '/jobs/new' do %>
+			<button class="button-primary page-task-button">New Job</button>
+		<% end %>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<form action="" class="search-form">
+			<input type="text" placeholder="Enter keywords to search for jobs..." class="input-field">
+		</form>
+		<div class="dropdown search-filter">
+		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		    Filter by status
+		    <span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+		    <li><a href="#">Active</a></li>
+		    <li><a href="#">Paused</a></li>
+		    <li><a href="#">Pending</a></li>
+		    <li><a href="#">Completed</a></li>
+		  </ul>
+		</div>
+	</div>
+</div>
+
+<table class="jobs-table table table-striped">
+	<tr>
+		<th>ID</th>
+		<th>Method</th>
+		<th>URI</th>
+		<th>Type</th>
+		<th>Created</th>
+		<th>Status</th>
+		<th>Nodes</th>
+		<th>Actions</th>
+	</tr>
 <% @jobs.each do |j| %>
-<tr>
-<td><%= j.id %></td>
-<td><%= j.http_method %></td>
-<td><%= j.http_uri %></td>
-<td><%= j.attack_type %></td>
-<td><%= j.status %></td>
-<td><%= j.created_at %></td>
-<td>
-  <%= button_to 'Status', j, :method => :get, :class=>:show %>
-  <%= button_to 'Destroy', j, :method => :delete, :class=>:destroy, data: { confirm: 'Are you sure?' } %>
-</td>
-</tr>
+	<tr>
+		<td><%= j.id %></td>
+		<td><%= j.http_method %></td>
+		<td><%= j.http_uri %></td>
+		<td><%= j.attack_type %></td>
+		<td><%= j.created_at %></td>
+		<td><%= j.status %></td>
+		<td>PLACEHOLDER</td>
+		<td>
+			<div class="dropdown">
+			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			    <i class="fa fa-cog"></i>
+			  </button>
+			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+			    <li><%= link_to 'View info', j, :method => :get, :class=>:show %></li>
+					<li><%= link_to 'Destroy', j, :method => :delete, :class=>:destroy, data: { confirm: 'Are you sure?' } %></li>
+			  </ul>
+			</div>
+		</td>
+	</tr>
 <% end %>
 </table>
