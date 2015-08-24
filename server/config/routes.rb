@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-	root to: "jobs#index"
+	root to: "job#index"
 
 	namespace 'api' do
 	  get 'health', 														to: 'health#index'
