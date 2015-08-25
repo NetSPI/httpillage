@@ -272,7 +272,12 @@ class Client
 		return lines[0] if lines.count < 2
 
 		lines.each do |line|
+			puts "Line: #{line}"
 			split_line = line.split(":", 2)
+
+			# Skip this line if it isn't splittable
+			return if split_line.count < 2
+			
 			h = Hash[*split_line]
 			header_hash.merge!(h)
 		end

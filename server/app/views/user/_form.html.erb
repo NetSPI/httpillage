@@ -1,0 +1,15 @@
+  <%= form_for(@user, :html => {class: 'col-lg-6 create-form'}) do |f| %>
+
+  <label for="email">Email Address</label>
+  <%= email_field :user, :email %>
+
+  <label for="password">Password</label>
+  <%= password_field :user, :password %>
+
+  <label for="password_confirmation">Password Confirmation</label>
+  <%= password_field :user, :password_confirmation %>
+
+  Admin: <%= f.check_box :admin %>
+
+  <%= submit_tag "Submit", class: 'button-primary' %>
+  <% end %>

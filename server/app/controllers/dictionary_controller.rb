@@ -10,7 +10,7 @@ class DictionaryController < ApplicationController
 	def create
 		dictionary_file = params[:dictionary][:dictionary_file]
 
-		# todo: Error checking
+		# TODO: Error checking
 		generated_name = generate_filename(dictionary_file.original_filename)
 		File.open(Rails.root.join('lib', 'dictionaries', generated_name), 'wb') do |file|
 			file.write(dictionary_file.read)

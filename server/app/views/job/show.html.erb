@@ -1,7 +1,9 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-title">Viewing Job ID #<%= @job.id %></h1>
-		<button class="button-primary page-task-button">Edit Job</button>
+		<%= link_to edit_job_path(@job) do %>
+			<button class="button-primary page-task-button">Edit Job</button>
+		<% end %>
 	</div>
 </div>
 
@@ -25,12 +27,12 @@
 
 		<div class="item">
 			<p class="item-title">HTTP Headers</p>
-			<code><%= Base64.decode64(@job.http_headers) %></code>
+			<pre><%= Base64.decode64(@job.http_headers) %></pre>
 		</div>
 
 		<div class="item">
 			<p class="item-title">Post Data</p>
-			<code><%= @job.http_data %></code>
+			<pre><%= @job.http_data %></pre>
 		</div>
 	</div>
 
