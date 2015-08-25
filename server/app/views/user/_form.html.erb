@@ -1,15 +1,16 @@
-  <%= form_for(@user, :html => {class: 'col-lg-6 create-form'}) do |f| %>
+<%= form_for(@user, :html => {class: 'col-lg-6 create-form'}) do |f| %>
 
-  <label for="email">Email Address</label>
-  <%= email_field :user, :email %>
+<label for="email">Email Address</label>
+<%= email_field :user, :email, {:class => 'input-field'} %>
 
-  <label for="password">Password</label>
-  <%= password_field :user, :password %>
+<label for="password">Password</label>
+<%= password_field :user, :password, {:class => 'input-field'} %>
 
-  <label for="password_confirmation">Password Confirmation</label>
-  <%= password_field :user, :password_confirmation %>
+<label for="password_confirmation">Password Confirmation</label>
+<%= password_field :user, :password_confirmation, {:class => 'input-field'} %>
 
-  Admin: <%= f.check_box :admin %>
+<label for="admin">Admin: </label>
+<%= f.check_box :admin, {:style => 'display: inline'} %>
 
-  <%= submit_tag "Submit", class: 'button-primary' %>
-  <% end %>
+<%= submit_tag "Submit", class: 'button-primary' %>
+<% end %>

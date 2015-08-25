@@ -26,7 +26,7 @@
     <td><%= u.id %></td>
     <td><%= link_to u.email, show_user_path(u.id) %></td>
     <td><%= u.last_sign_in_ip %></td>
-    <td><%= u.admin ? "X" : "" %></td>
+    <td><%= u.admin ? "x" : "" %></td>
   </tr>
 <% end %>
 </table>

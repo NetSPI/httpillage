@@ -1,18 +1,15 @@
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-lg-12 show-user">
     <h1 class="page-title">Viewing <%= @user.email %></h1>
-  </div>
-</div>
-
-<div class="row">
     <%= link_to destroy_user_path(@user), :method => :delete do %>
-      <button class="button-warning page-task-button">Delete</button>
+      <button class="button-primary page-task-button">Delete</button>
     <% end %>
 
-    <%= button_to "Edit User", edit_user_path(@user), 
+    <%= button_to "Edit User", edit_user_path(@user),
       :class => "button-primary page-task-button",
       :method => :get
     %>
+  </div>
 </div>
 
 <h2>Jobs</h2>
