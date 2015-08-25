@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :users
-	root to: "job#index"
+  root to: "job#index"
+
+  devise_for :users 
 
 	namespace 'api' do
 	  get 'health', 														to: 'health#index'
@@ -23,4 +24,11 @@ Rails.application.routes.draw do
 	get 'dictionaries',						to: 'dictionary#index'
 	get 'dictionaries/new',				to: 'dictionary#new'
 	post 'dictionaries',					to: 'dictionary#create'
+
+	get 'users',									to: 'user#index', as: 'users'
+	get 'user/:userid',						to: 'user#show'
+	get 'users/new',							to: 'user#new'
+	post 'users',									to: 'user#create'
+	get 'users/edit/:userid',			to: 'user#edit',	as: 'edit_user'
+	patch 'users/:userid',				to: 'user#update', as: 'user'
 end

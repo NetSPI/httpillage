@@ -6,4 +6,12 @@ class ApplicationController < ActionController::Base
   def update_time_to_prevent_caching
     headers['Last-Modified'] = Time.now.httpdate
   end  
+
+  private
+  def require_admin
+    unless current_user.admin?
+      flash[:alert] = "Page requires admin account"
+      redirect_to root_path
+    end
+  end
 end

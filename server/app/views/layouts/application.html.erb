@@ -16,6 +16,10 @@
   			<%= link_to 'Jobs', '/jobs', {:class => 'nav-link link-primary'} %>
   			<%= link_to 'Nodes', '/nodes', {:class => 'nav-link link-primary'} %>
   			<%= link_to 'Dictionaries', '/dictionaries', {:class => 'nav-link link-primary'} %>
+
+        <% if current_user.try(:admin?) %>
+          <%= link_to 'Users', '/users', { :class => 'nav-link link-primary' } %>
+        <% end %>
         </div>
         <div class="float-right">
           <%= render "layouts/shared/user_menu" if current_user %>

@@ -10,6 +10,7 @@
 admin = User.new({
     :email => 'john@gmail.com',
     :password => 'topsecret',
-    :password_confirmation => 'topsecret'
+    :password_confirmation => 'topsecret',
+    :admin => true
 })
 admin.save!
