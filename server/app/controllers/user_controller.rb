@@ -19,7 +19,10 @@ class UserController < ApplicationController
   def create
     # Todo: verify password's match
 
-    u = User.create(user_params)
+    u = User.new(user_params)
+    u.api_token = gen_api_token
+    u.api_token_changed = DateTime.now
+    u.save
 
     if u.persisted?
       flash[:notice] = "Account #{u.email} created successfully"
@@ -65,5 +68,9 @@ class UserController < ApplicationController
   private
   def user_params
     params.require(:user).permit(:email, :password, :admin)
+  end
+
+  def gen_api_token
+    SecureRandom.base64(64)
   end
 end

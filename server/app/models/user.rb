@@ -5,4 +5,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :jobs
+
+  def self.from_api_token(token)
+    User.find_by_api_token(token)
+  end
 end
