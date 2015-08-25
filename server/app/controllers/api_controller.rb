@@ -1,7 +1,12 @@
 class ApiController < ActionController::Base
 	private
+
+  def current_user
+    User.from_api_token(request.headers['X-Auth-Token'])
+  end
+
 	def authorized?
   	# Check if header matches
-  	raise unless request.headers['X-Auth-Token'] == "gsYr4l70l08bcr77cZJMGrBUMYqhQlnR8KrqZWbI3ehH39OX8qb1hK2EcxkW"
-  	end
+  	raise unless current_user
+  end
 end

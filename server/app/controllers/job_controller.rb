@@ -17,6 +17,8 @@ class JobController < ApplicationController
 	def create
 		@job = Job.new(job_params)
 
+		@job.user_id = current_user.id
+
 		@job.http_headers = Base64.encode64(@job.http_headers)
 		@job.http_data = Base64.encode64(@job.http_data)
 		@job.save
