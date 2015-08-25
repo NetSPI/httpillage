@@ -5,6 +5,10 @@
 </div>
 
 <div class="row">
+    <%= link_to destroy_user_path(@user), :method => :delete do %>
+      <button class="button-warning page-task-button">Delete</button>
+    <% end %>
+
     <%= button_to "Edit User", edit_user_path(@user), 
       :class => "button-primary page-task-button",
       :method => :get
@@ -12,23 +16,28 @@
 </div>
 
 <h2>Jobs</h2>
-<table class="jobs-table table table-striped">
-  <tr>
-    <th>ID</th>
-    <th>Method</th>
-    <th>URI</th>
-    <th>Type</th>
-    <th>Created</th>
-    <th>Status</th>
-  </tr>
-<% @user_jobs.each do |j| %>
-  <tr>
-    <td><%= link_to j.id, show_job_path(j.id) %></td>
-    <td><%= j.http_method %></td>
-    <td><%= j.http_uri %></td>
-    <td><%= j.attack_type %></td>
-    <td><%= j.created_at %></td>
-    <td><%= j.status %></td>
-  </tr>
+
+<% if @user_jobs.length > 0 %>
+  <table class="jobs-table table table-striped">
+    <tr>
+      <th>ID</th>
+      <th>Method</th>
+      <th>URI</th>
+      <th>Type</th>
+      <th>Created</th>
+      <th>Status</th>
+    </tr>
+  <% @user_jobs.each do |j| %>
+    <tr>
+      <td><%= link_to j.id, show_job_path(j.id) %></td>
+      <td><%= j.http_method %></td>
+      <td><%= j.http_uri %></td>
+      <td><%= j.attack_type %></td>
+      <td><%= j.created_at %></td>
+      <td><%= j.status %></td>
+    </tr>
+  <% end %>
+  </table>
+<% else %>
+  This user has not yet created any jobs!
 <% end %>
-</table>

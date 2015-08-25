@@ -1,6 +1,8 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-title">Jobs</h1>
+
+		
 		<%= link_to '/jobs/new' do %>
 			<button class="button-primary page-task-button">New Job</button>
 		<% end %>
@@ -35,6 +37,7 @@
 		<th>Created</th>
 		<th>Status</th>
 		<th>Nodes</th>
+		<th>Created By</th>
 		<th>Actions</th>
 	</tr>
 <% @jobs.each do |j| %>
@@ -46,6 +49,14 @@
 		<td><%= j.created_at %></td>
 		<td><%= j.status %></td>
 		<td>PLACEHOLDER</td>
+		<td>
+		<% unless j.user.nil? %>
+			<%= link_to j.user.email, show_user_path(j.user) %>
+		<% else %>
+			N/A
+		<%end %>
+
+		</td>
 		<td>
 			<div class="dropdown">
 			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

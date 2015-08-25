@@ -48,6 +48,20 @@ class UserController < ApplicationController
     end
   end
 
+  def destroy
+    @user = User.find(params[:userid])
+
+    @user.destroy
+
+    if @user.destroyed?
+      flash[:notice] = "Account #{@user.email} deleted successfully"
+      redirect_to users_path
+    else
+      flash[:alert] = @user.errors.full_messages.join("\n")
+      redirect_to user_path(@user)
+    end
+  end
+
   private
   def user_params
     params.require(:user).permit(:email, :password, :admin)

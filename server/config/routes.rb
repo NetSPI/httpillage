@@ -31,4 +31,5 @@ Rails.application.routes.draw do
 	post 'users',									to: 'user#create'
 	get 'users/edit/:userid',			to: 'user#edit',	as: 'edit_user'
 	patch 'users/:userid',				to: 'user#update', as: 'user'
+	delete 'user/:userid', 				to: 'user#destroy', as: 'destroy_user'
 end
