@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150824010249) do
+ActiveRecord::Schema.define(version: 20150825003124) do
 
   create_table "dictionaries", force: :cascade do |t|
     t.string   "filename"
@@ -55,7 +55,10 @@ ActiveRecord::Schema.define(version: 20150824010249) do
     t.datetime "updated_at",    null: false
     t.integer  "dictionary_id"
     t.string   "attack_mode"
+    t.integer  "user_id"
   end
+
+  add_index "jobs", ["user_id"], name: "index_jobs_on_user_id"
 
   create_table "node_status_checkins", force: :cascade do |t|
     t.integer  "node_id"

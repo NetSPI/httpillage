@@ -14,8 +14,8 @@ Rails.application.routes.draw do
 	  post 'job/:jobid/saveResponse', to: 'job_response#create'
 	end
 
-	get 'jobs', 									to: 'job#index'
-	get	'job/:jobid',							to: 'job#show'
+	get 'jobs', 									to: 'job#index', as: 'jobs'
+	get	'job/:jobid',							to: 'job#show', as: 'show_job'
 	get 'jobs/new', 							to: 'job#new'
 	post 'jobs', 									to: 'job#create'
 	get 'nodes', 									to: 'node#index'
@@ -26,7 +26,7 @@ Rails.application.routes.draw do
 	post 'dictionaries',					to: 'dictionary#create'
 
 	get 'users',									to: 'user#index', as: 'users'
-	get 'user/:userid',						to: 'user#show'
+	get 'user/:userid',						to: 'user#show', as: 'show_user'
 	get 'users/new',							to: 'user#new'
 	post 'users',									to: 'user#create'
 	get 'users/edit/:userid',			to: 'user#edit',	as: 'edit_user'

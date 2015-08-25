@@ -9,6 +9,7 @@ class UserController < ApplicationController
     @user = User.find(params[:userid])
 
     # Todo: Display jobs created by users
+    @user_jobs = @user.jobs
   end
 
   def new

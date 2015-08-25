@@ -39,7 +39,7 @@
 	</tr>
 <% @jobs.each do |j| %>
 	<tr>
-		<td><%= j.id %></td>
+		<td><%= link_to j.id, show_job_path(j.id) %></td>
 		<td><%= j.http_method %></td>
 		<td><%= j.http_uri %></td>
 		<td><%= j.attack_type %></td>
