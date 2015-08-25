@@ -8,7 +8,7 @@ class UserController < ApplicationController
   def show
     @user = User.find(params[:userid])
 
-    # Todo: Display jobs created by users
+    # TODO: Display jobs created by users
     @user_jobs = @user.jobs
   end
 
@@ -17,7 +17,7 @@ class UserController < ApplicationController
   end
 
   def create
-    # Todo: verify password's match
+    # TODO: verify password's match
 
     u = User.new(user_params)
     u.api_token = gen_api_token
@@ -29,7 +29,7 @@ class UserController < ApplicationController
       redirect_to users_path
     else
       flash[:alert] = u.errors.full_messages.join("\n")
-      # Todo: change this to use creation path
+      # TODO: change this to use creation path
       redirect_to root_path
     end
   end
