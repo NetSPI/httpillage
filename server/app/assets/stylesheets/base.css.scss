@@ -2,7 +2,6 @@
 @import "compass/css3";
 
 .notification-box {
-	background-color: #D04B33;
 	text-align: center;
 	color: white;
 	width: 100%;
@@ -12,6 +11,9 @@
 	border: none;
 	@include border-radius(4px, 4px);
 }
+
+.alert .notification-box { background-color: #D04B33; }
+.notice .notification-box { background-color: #009900; }
 
 .nav-menu {
 	border-bottom: 1px solid whitesmoke;
