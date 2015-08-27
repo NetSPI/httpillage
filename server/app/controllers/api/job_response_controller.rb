@@ -6,7 +6,7 @@ class Api::JobResponseController < ApiController
     response.jobid = params[:jobid]
     response.nodeid = params[:nodeid]
     response.code = params[:response_code]
-    response.response = params[:response]
+    response.response = Base64.decode64(params[:response])
 
     response.save
 

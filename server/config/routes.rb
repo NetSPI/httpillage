@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 	get 'job/edit/:jobid',				to: 'job#edit', as: 'edit_job'
 	patch 'job/:jobid',						to: 'job#update', as: 'update_job'
 
+	get 'job/response/:responseid', to: 'job_response#show', as: 'show_job_response'
+
 	get 'nodes', 									to: 'node#index'
 	delete 'job/:jobid', 					to: 'job#destroy', as: 'job'
 

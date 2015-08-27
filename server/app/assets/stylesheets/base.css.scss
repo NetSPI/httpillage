@@ -15,6 +15,9 @@
 .alert .notification-box { background-color: #D04B33; }
 .notice .notification-box { background-color: #009900; }
 
+.active-job-label { color: #009900; }
+.inactive-job-label { color: #d04b33; }
+
 .nav-menu {
 	border-bottom: 1px solid whitesmoke;
 	padding-top: 1em;
@@ -57,6 +60,8 @@
 	float: right;
 	display: inline-block;
 }
+
+.job-responses tbody tr { cursor: pointer; }
 
 //-- Create Jobs/Dictionary --//
 .create-form {

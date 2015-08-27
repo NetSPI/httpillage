@@ -36,7 +36,6 @@
 		<th>Type</th>
 		<th>Created</th>
 		<th>Status</th>
-		<th>Nodes</th>
 		<th>Created By</th>
 		<th>Actions</th>
 	</tr>
@@ -48,7 +47,6 @@
 		<td><%= j.attack_type %></td>
 		<td><%= j.created_at %></td>
 		<td><%= j.status %></td>
-		<td>PLACEHOLDER</td>
 		<td>
 		<% unless j.user.nil? %>
 			<%= link_to j.user.email, show_user_path(j.user) %>

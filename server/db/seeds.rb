@@ -7,10 +7,9 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # Create Admin user for application
-admin = User.new({
+admin = User.create({
     :email => 'john@gmail.com',
     :password => 'topsecret',
     :password_confirmation => 'topsecret',
     :admin => true
 })
-admin.save!

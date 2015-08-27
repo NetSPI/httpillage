@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150825013603) do
+ActiveRecord::Schema.define(version: 20150827181722) do
 
   create_table "dictionaries", force: :cascade do |t|
     t.string   "filename"
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 20150825013603) do
 
   create_table "job_responses", force: :cascade do |t|
     t.integer  "jobid"
-    t.integer  "nodeid"
+    t.text     "nodeid"
     t.integer  "code"
     t.text     "response"
     t.datetime "created_at", null: false

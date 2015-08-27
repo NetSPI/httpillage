@@ -188,7 +188,8 @@ class Client
 
 		data = { 
 			:response 				=> Base64.encode64(response.body),
-			:response_code 		=> response.code.to_i
+			:response_code 		=> response.code.to_i,
+			:nodeid 					=> @node_id	
 		}
 		begin
 			Mechanize.new.post(endpoint, data)

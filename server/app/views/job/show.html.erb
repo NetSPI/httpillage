@@ -1,9 +1,15 @@
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-title">Viewing Job ID #<%= @job.id %></h1>
+		<h1 class="page-title">Viewing 
+			<span class="<%= @job.status == "active" ? "active-job-label" : "inactive-job-label" %>">
+				<%= @job.status %> 
+			</span>
+
+			Job: ID #<%= @job.id %></h1>
 		<%= link_to edit_job_path(@job) do %>
 			<button class="button-primary page-task-button">Edit Job</button>
 		<% end %>
+		<p><%= @job.http_uri %></p>
 	</div>
 </div>
 
@@ -11,18 +17,8 @@
 	<div class="col-lg-6">
 
 		<div class="item">
-			<p class="item-title">HTTP URI</p>
-			<p><%= @job.http_uri %></p>
-		</div>
-
-		<div class="item">
 			<p class="item-title">Attack Type</p>
 			<p><%= @job.attack_type %></p>
-		</div>
-
-		<div class="item">
-			<p class="item-title">Job Status</p>
-			<p><%= @job.status %></p>
 		</div>
 
 		<div class="item">
@@ -30,13 +26,15 @@
 			<pre><%= Base64.decode64(@job.http_headers) %></pre>
 		</div>
 
+		<% if @job.http_data != ""%>
 		<div class="item">
 			<p class="item-title">Post Data</p>
-			<pre><%= @job.http_data %></pre>
+			<pre><%= Base64.decode64(@job.http_data) %></pre>
 		</div>
+		<% end %>
 	</div>
 
-	<% if @job.node_status_checkins %>
+	<% if @job.node_status_checkins.count > 0 %>
 	<div class="col-lg-6">
 		<div class="item">
 			<p class="item-title">Latest Updates on Associated Nodes</p>
@@ -58,4 +56,60 @@
 		</div>
 	</div>
 	<% end %>
+
+	<% if @job.job_responses %>
+	<div class="col-lg-6">
+		<div class="item">
+			<p class="item-title">Job has <%= @job.job_responses.count %> responses</p>
+				<table class="table table-striped job-responses">
+				<thead>
+				<tr>
+					<th>ID</th>
+					<th>Node ID</th>
+					<th>Status Code</th>
+					<th>Time</th>
+				</tr>
+				</thead>
+				<tbody>
+
+				<% 
+				# TODO: Make this use some sort of pagination. For now we're only showing 5.
+				i = 0
+				@job.job_responses.each do |response| %>
+				<tr class='job-response' data-id='<%= response.id %>'>
+					<td><%= response.id %></td>
+					<td><%= response.nodeid %></td>
+					<td><%= response.code %></td>
+					<td><%= response.created_at %></td>
+				</tr>
+				<% 
+				i += 1
+				break if i == 5
+				end %>
+				</tbody>
+				</table>
+		</div>
+	</div>
+
+	<div class="col-lg-6" id="response-container" style="display:none;">
+		Viewing response: <span id="response-id"></span>
+		<pre id="http-response">
+		</pre>
+	</div>
+	<% end %>
 </div>
+
+<script>
+	$(".job-response").click(function () {
+		$("#response-container").show();
+		var responseId = $(this).data("id");
+
+		// Make ajax request
+		$.get("/job/response/" + responseId, function(data) {
+			console.log(data.response);
+			$("#response-id").text(responseId);
+			$("#http-response").text(data.response);
+		});
+
+	});
+</script>
