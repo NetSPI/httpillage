@@ -6,6 +6,7 @@ class Api::JobController < ApiController
 	#
 	def create
 		job = Job.new
+		job.user_id = current_user.id
 		job.http_method 	= params[:http_method]
 		job.http_uri 		= params[:http_uri]
 		job.http_host 		= params[:http_host]

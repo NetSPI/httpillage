@@ -1,40 +1,61 @@
-<b><%= @job.id %></b>:<%= @job.http_uri %><br /><br />
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-title">Viewing Job ID #<%= @job.id %></h1>
+		<%= link_to edit_job_path(@job) do %>
+			<button class="button-primary page-task-button">Edit Job</button>
+		<% end %>
+	</div>
+</div>
 
-<b>Attack Type:</b> <%= @job.attack_type %><br /><br />
-<b>Job Status: </b> <%= @job.status %><br /><Br />
+<div class="row">
+	<div class="col-lg-6">
 
-<b>Headers:</b><br /><br />
-<blockquote>
-  <%= Base64.decode64(@job.http_headers) %>
-</blockquote> 
-<b>Post Data:</b><br /><br />
-<blockquote>
-  <%= @job.http_data %>
-</blockquote> 
+		<div class="item">
+			<p class="item-title">HTTP URI</p>
+			<p><%= @job.http_uri %></p>
+		</div>
 
-<br /><br />
-<% if @job.node_status_checkins %>
-Latest Updates:
-<table>
-<tr>
-<th>
-Node ID
-</th>
-<th>
-Status Code
-</th>
+		<div class="item">
+			<p class="item-title">Attack Type</p>
+			<p><%= @job.attack_type %></p>
+		</div>
 
-<th>
-Time
-</th>
-</tr>
+		<div class="item">
+			<p class="item-title">Job Status</p>
+			<p><%= @job.status %></p>
+		</div>
 
-<% @job.node_status_checkins.each do |status| %>
-<tr>
-<td><%= status.node_id %></td>
-<td><%= status.response_code %></td>
-<td><%= status.created_at %></td>
-</tr>
-<% end %>
-</table>
-<% end %>
+		<div class="item">
+			<p class="item-title">HTTP Headers</p>
+			<pre><%= Base64.decode64(@job.http_headers) %></pre>
+		</div>
+
+		<div class="item">
+			<p class="item-title">Post Data</p>
+			<pre><%= @job.http_data %></pre>
+		</div>
+	</div>
+
+	<% if @job.node_status_checkins %>
+	<div class="col-lg-6">
+		<div class="item">
+			<p class="item-title">Latest Updates on Associated Nodes</p>
+				<table class="table table-striped">
+				<tr>
+					<th>Node ID</th>
+					<th>Status Code</th>
+					<th>Time</th>
+				</tr>
+
+				<% @job.node_status_checkins.each do |status| %>
+				<tr>
+					<td><%= status.node_id %></td>
+					<td><%= status.response_code %></td>
+					<td><%= status.created_at %></td>
+				</tr>
+				<% end %>
+				</table>
+		</div>
+	</div>
+	<% end %>
+</div>

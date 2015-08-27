@@ -1,0 +1,84 @@
+@charset "utf-8";
+@import "compass/css3";
+
+.notification-box {
+	text-align: center;
+	color: white;
+	width: 100%;
+	// padding-top: 0.5em;
+	// padding-bottom: 0.5em;
+	margin: 0;
+	border: none;
+	@include border-radius(4px, 4px);
+}
+
+.alert .notification-box { background-color: #D04B33; }
+.notice .notification-box { background-color: #009900; }
+
+.nav-menu {
+	border-bottom: 1px solid whitesmoke;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+
+.logo {
+	padding-left: 1em;
+	max-width: 167px;
+}
+
+.nav-link {
+	padding-left: 2em;
+}
+
+.page-title {
+	display: inline-block;
+	margin-bottom: 1em;
+}
+
+.page-task-button {
+	float: right;
+	margin-top: 1.5em;
+	margin-left: 1em;
+}
+
+//-- Jobs --//
+
+.search-form {
+	display: inline-block;
+	margin-bottom: 1em;
+	width: 400px;
+	input {
+		width: 400px;
+	}
+}
+
+.search-filter {
+	float: right;
+	display: inline-block;
+}
+
+//-- Create Jobs/Dictionary --//
+.create-form {
+	margin-bottom: 2em;
+	input, textarea, select {
+		display: block;
+		margin-bottom: 2em;
+	}
+	button {
+		margin-top: 1.25em;
+	}
+}
+
+//-- View Jobs --//
+.item {
+	margin-bottom: 2em;
+	&-title {
+		font-weight: bold;
+	}
+}
+
+// -- Show Users --//
+.show-user form {
+	display: inline;
+}

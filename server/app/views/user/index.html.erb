@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-title">Users</h1>
+    <%= link_to '/users/new' do %>
+      <button class="button-primary page-task-button">New User</button>
+    <% end %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <form action="" class="search-form">
+      <input type="text" placeholder="Enter keywords to search for users..." class="input-field">
+    </form>
+  </div>
+</div>
+
+<table class="users-table table table-striped">
+  <tr>
+    <th>ID</th>
+    <th>Email</th>
+    <th>Last IP</th>
+    <th>Admin?</th>
+  </tr>
+<% @users.each do |u| %>
+  <tr>
+    <td><%= u.id %></td>
+    <td><%= link_to u.email, show_user_path(u.id) %></td>
+    <td><%= u.last_sign_in_ip %></td>
+    <td><%= u.admin ? "x" : "" %></td>
+  </tr>
+<% end %>
+</table>

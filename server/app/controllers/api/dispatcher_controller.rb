@@ -50,7 +50,7 @@ class Api::DispatcherController < ApiController
 
 		# Test this code in the morning
 		status_code = params[:status_code]
-		node = Node.find(params[:jobid])
+		node = Node.find_by_mac_address(params[:nodeid])
 
 		checkin = NodeStatusCheckin.create({
 				:node_id				=> node.id,

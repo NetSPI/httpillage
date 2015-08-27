@@ -1,3 +1,20 @@
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-title">Dictionaries</h1>
+		<%= link_to '/dictionaries/new' do %>
+			<button class="button-primary page-task-button">New Dictionary</button>
+		<% end %>
+	</div>
+</div>
+
+<table class="jobs-table table table-striped">
+<tr>
+	<th>Filename</th>
+	<th>Description</th>
+</tr>
 <% @dictionaries.all.each do |d| %>
-	<b><%= d.filename %></b>: <em><%= d.description %></em><br /><br />
+<tr>
+	<td><%= d.original_filename %></td>
+	<td><%= d.description %></td>
+</tr>
 <% end %>

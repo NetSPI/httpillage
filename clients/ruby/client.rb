@@ -45,9 +45,9 @@ class Client
 		@http_uri 				= job["http_uri"]
 		@http_host 				= job["http_host"]
 		@attack_mode 			= job["attack_mode"]
-		@http_headers 		= parse_headers(Base64.decode64(job["http_headers"]))
+		@http_header_string = Base64.decode64(job["http_headers"])
+		@http_headers 		= parse_headers(@http_header_string)
 		@http_data_string = Base64.decode64(job["http_data"])
-		@http_data_string.force_encoding 'utf-8'
 		@http_data 				= parse_data(Base64.decode64(job["http_data"]))
 
 		@attack_payloads 	= parse_work(job["work"])
@@ -133,11 +133,15 @@ class Client
 				return "done"
 			end
 
-			attack_uri = @http_uri.gsub("§", payload)
+			# In this iteration we simply replace all payload markers with the
+			# same payload value. This will likely change, allowing users to
+			# specify different payloads and modes, similar to Burp's intruder.
+			attack_uri = @http_uri.gsub("{P}", payload)
 
-			attack_data = parse_data(@http_data_string.gsub("§", payload))
-			# TODO: Implement header injection
-			send_request(attack_uri, attack_data, @http_headers)
+			attack_data = parse_data(@http_data_string.gsub("{P}", payload))
+
+			payload_headers = Hash[@http_headers.map {|k,v| [k.gsub("{P}", payload), v.gsub("{P}", payload)]}]
+			send_request(attack_uri, attack_data, payload_headers)
 		end
 	end
 
@@ -160,7 +164,7 @@ class Client
 
 		if @http_method.downcase == "get"
 			begin
-				response = req.get(http_uri)
+				response = req.get(http_uri, [], nil, http_headers)
 
 				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
@@ -273,6 +277,13 @@ class Client
 
 		lines.each do |line|
 			split_line = line.split(":", 2)
+
+			# Skip this line if it isn't splittable
+			next if split_line.count < 2
+
+			# Remove trailing whitespace
+			split_line[1].chop!
+			
 			h = Hash[*split_line]
 			header_hash.merge!(h)
 		end
