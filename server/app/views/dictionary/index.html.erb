@@ -9,11 +9,13 @@
 
 <table class="jobs-table table table-striped">
 <tr>
+	<th width="5">&nbsp;</th>
 	<th>Filename</th>
 	<th>Description</th>
 </tr>
 <% @dictionaries.all.each do |d| %>
 <tr>
+	<td><%= link_to '<i class="fa fa-paperclip"></i>'.html_safe, download_dictionary_path(d) %></td>
 	<td><%= d.original_filename %></td>
 	<td><%= d.description %></td>
 </tr>

@@ -3,6 +3,13 @@ class DictionaryController < ApplicationController
 		@dictionaries ||= Dictionary.all
 	end
 
+	def show
+		@dictionary = Dictionary.find(params[:dictionaryid])
+		file_path = Rails.root.join('lib', 'dictionaries', @dictionary.filename)
+		send_file file_path, :filename => @dictionary.original_filename, 
+			:type=>"text/plain", :x_sendfile=>true
+	end
+
 	def new
 		@dictionary ||= Dictionary.new
 	end

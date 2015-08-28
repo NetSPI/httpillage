@@ -27,8 +27,10 @@ Rails.application.routes.draw do
 	delete 'job/:jobid', 					to: 'job#destroy', as: 'job'
 
 	get 'dictionaries',						to: 'dictionary#index'
+	get 'dictionary/:dictionaryid', to: 'dictionary#show', as: 'download_dictionary'
 	get 'dictionaries/new',				to: 'dictionary#new'
 	post 'dictionaries',					to: 'dictionary#create'
+
 
 	get 'users',									to: 'user#index', as: 'users'
 	get 'user/:userid',						to: 'user#show', as: 'show_user'
