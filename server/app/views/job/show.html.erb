@@ -1,26 +1,24 @@
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-title">Viewing 
+		<h1 class="page-title">
+		[<%= @job.attack_type %>]
+		Viewing 
 			<span class="<%= @job.status == "active" ? "active-job-label" : "inactive-job-label" %>">
 				<%= @job.status %> 
 			</span>
 
-			Job: ID #<%= @job.id %></h1>
+			Job: #<%= @job.id %></h1>
 		<%= link_to edit_job_path(@job) do %>
 			<button class="button-primary page-task-button">Edit Job</button>
 		<% end %>
-		<p><%= @job.http_uri %></p>
+		<div style="margin-top:-30px;margin-bottom:30px;">
+		<b><%= @job.http_method %></b> <%= @job.http_uri %>
+		</div>
 	</div>
 </div>
 
 <div class="row">
 	<div class="col-lg-6">
-
-		<div class="item">
-			<p class="item-title">Attack Type</p>
-			<p><%= @job.attack_type %></p>
-		</div>
-
 		<div class="item">
 			<p class="item-title">HTTP Headers</p>
 			<pre><%= Base64.decode64(@job.http_headers) %></pre>
@@ -92,7 +90,9 @@
 	</div>
 
 	<div class="col-lg-6" id="response-container" style="display:none;">
-		Viewing response: <span id="response-id"></span>
+		<div style="width:100%; float:right">
+			<b>Viewing response: <span id="response-id"></span></b>
+		</div>
 		<pre id="http-response">
 		</pre>
 	</div>
@@ -110,6 +110,10 @@
 			$("#response-id").text(responseId);
 			$("#http-response").text(data.response);
 		});
+
+		$('html, body').animate({
+        scrollTop: $(".job-responses").offset().top
+    }, 200);
 
 	});
 </script>
