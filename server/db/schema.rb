@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150827181722) do
+ActiveRecord::Schema.define(version: 20150907225214) do
 
   create_table "dictionaries", force: :cascade do |t|
     t.string   "filename"
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(version: 20150827181722) do
     t.text     "description"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.integer  "file_size"
+    t.string   "preview"
   end
 
   create_table "dictionary_chunk_allocations", force: :cascade do |t|

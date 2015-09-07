@@ -9,14 +9,22 @@
 
 <table class="jobs-table table table-striped">
 <tr>
-	<th width="5">&nbsp;</th>
+	<th>&nbsp;</th>
 	<th>Filename</th>
+	<th>Size</th>
 	<th>Description</th>
+	<th>Preview</th>
+	<th>&nbsp;</th>
 </tr>
 <% @dictionaries.all.each do |d| %>
 <tr>
-	<td><%= link_to '<i class="fa fa-paperclip"></i>'.html_safe, download_dictionary_path(d) %></td>
+	<td>
+		<%= link_to '<i class="fa fa-paperclip"></i>'.html_safe, download_dictionary_path(d) %>
+	</td>
 	<td><%= d.original_filename %></td>
+	<td><%= number_to_human_size(d.file_size) %></td>
 	<td><%= d.description %></td>
+	<td><%= d.preview %></td>
+	<td><%= link_to 'X', destroy_dictionary_path(d), :method => :delete, :class=>:destroy, data: { confirm: 'Are you sure?' } %></td>
 </tr>
 <% end %>

@@ -30,6 +30,7 @@ Rails.application.routes.draw do
 	get 'dictionary/:dictionaryid', to: 'dictionary#show', as: 'download_dictionary'
 	get 'dictionaries/new',				to: 'dictionary#new'
 	post 'dictionaries',					to: 'dictionary#create'
+	delete 'dictionary/:dictionaryid', to: 'dictionary#destroy', as: 'destroy_dictionary'
 
 
 	get 'users',									to: 'user#index', as: 'users'

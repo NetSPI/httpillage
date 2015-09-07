@@ -19,21 +19,57 @@ class DictionaryController < ApplicationController
 
 		# TODO: Error checking
 		generated_name = generate_filename(dictionary_file.original_filename)
-		File.open(Rails.root.join('lib', 'dictionaries', generated_name), 'wb') do |file|
+		file_path = Rails.root.join('lib', 'dictionaries', generated_name)
+		File.open(file_path, 'wb') do |file|
 			file.write(dictionary_file.read)
 		end
+
+		# Grab preview of dictionary
+		total_lines = ""
+		counter = 0
+
+		opened_file = File.open(file_path, 'r')
+		opened_file.each_line do |line|
+			total_lines += line
+
+			counter += 1
+			break if counter == 20
+		end
+
+		# Grab filesize in bytes
+		filesize = File.size(file_path)
+
 
 		dictionary = Dictionary.create(
 			{ 
 				:filename 			=> generated_name,
 				:original_filename	=> dictionary_file.original_filename,
-				:description 		=> params[:dictionary][:description]
+				:description 		=> params[:dictionary][:description],
+				:file_size  		=> filesize,
+				:preview 				=> total_lines
 			}
 		)
 
-		flash[:notice] = "Post successfully created"
+		if dictionary.valid?
+			flash[:notice] = "Dictionary Uploaded Successfully"
+		else
+			flash[:error] = dictionary.errors.messages
+		end
 
-		render action: :index
+		redirect_to dictionaries_path
+	end
+
+	def destroy
+		@dictionary = Dictionary.find(params[:dictionaryid])
+
+		file_path = Rails.root.join('lib', 'dictionaries', @dictionary.filename)
+
+		@dictionary.destroy
+
+		File.delete(file_path) if File.exist?(file_path)
+
+		flash[:notice] = "Dictionary successfully removed"
+		redirect_to dictionaries_path
 	end
 
 	private
@@ -46,6 +82,6 @@ class DictionaryController < ApplicationController
 		filename = "#{filename}:#{SecureRandom.hex(10)}:#{Time.now}"
 
 		digest = Digest::SHA256.new
-		return digest.hexdigest 'filename'
+		return digest.hexdigest filename
 	end
 end
