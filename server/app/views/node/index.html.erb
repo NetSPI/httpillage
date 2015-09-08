@@ -3,6 +3,7 @@
 		<h1 class="page-title">Nodes</h1>
 	</div>
 </div>
+<% if @nodes.count > 0 %>
 <table class="jobs-table table table-striped">
 	<tr>
 		<th>ID</th>
@@ -21,3 +22,7 @@
 	</tr>
 	<% end %>
 </table>
+
+<% else %>
+	<em>It looks like there are no nodes. Be sure to run the client script on the nodes to start the process.</em>
+<% end %>
