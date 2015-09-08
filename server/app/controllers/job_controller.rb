@@ -24,10 +24,12 @@ class JobController < ApplicationController
 		@job.save
 
 		if @job.valid?
-			render :json => @job.to_json
+			flash[:notice] = "Job created successfully"
 		else
-			render :json => @job.errors.messages.to_json
+			flash[:error] = @job.errors
 		end
+
+		redirect_to jobs_path
 	end
 
 	def edit
@@ -62,6 +64,7 @@ class JobController < ApplicationController
 	private
 	def job_params
 		params.require(:job).permit(
+			:description,
 			:http_method, 
 			:http_uri, 
 			:http_headers, 

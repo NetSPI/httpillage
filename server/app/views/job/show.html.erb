@@ -12,6 +12,7 @@
 			<button class="button-primary page-task-button">Edit Job</button>
 		<% end %>
 		<div style="margin-top:-30px;margin-bottom:30px;">
+		<em><%= @job.description %></em><br /><br />
 		<b><%= @job.http_method %></b> <%= @job.http_uri %>
 		</div>
 	</div>
@@ -32,10 +33,11 @@
 		<% end %>
 	</div>
 
-	<% if @job.node_status_checkins.count > 0 %>
 	<div class="col-lg-6">
 		<div class="item">
 			<p class="item-title">Latest Updates on Associated Nodes</p>
+
+			<% if @job.node_status_checkins.count > 0 %>
 				<table class="table table-striped">
 				<tr>
 					<th>Node ID</th>
@@ -51,14 +53,17 @@
 				</tr>
 				<% end %>
 				</table>
+					<% else %>
+		There are no updates for this job
+	<% end %>
 		</div>
 	</div>
-	<% end %>
 
-	<% if @job.job_responses %>
+
 	<div class="col-lg-6">
 		<div class="item">
-			<p class="item-title">Job has <%= @job.job_responses.count %> responses</p>
+			<p class="item-title">Job responses</p>
+				<% if @job.job_responses.count > 0 %>
 				<table class="table table-striped job-responses">
 				<thead>
 				<tr>
@@ -86,6 +91,9 @@
 				end %>
 				</tbody>
 				</table>
+			<% else %>
+				There are no responses for this job
+			<% end %>
 		</div>
 	</div>
 
@@ -96,7 +104,6 @@
 		<pre id="http-response">
 		</pre>
 	</div>
-	<% end %>
 </div>
 
 <script>

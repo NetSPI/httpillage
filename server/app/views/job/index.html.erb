@@ -31,10 +31,10 @@
 <table class="jobs-table table table-striped">
 	<tr>
 		<th>ID</th>
+		<th>Type</th>
 		<th>Method</th>
 		<th>URI</th>
-		<th>Type</th>
-		<th>Created</th>
+		<th>Description</th>
 		<th>Status</th>
 		<th>Created By</th>
 		<th>Actions</th>
@@ -42,10 +42,10 @@
 <% @jobs.each do |j| %>
 	<tr>
 		<td><%= link_to j.id, show_job_path(j.id) %></td>
+		<td><%= j.attack_type %></td>
 		<td><%= j.http_method %></td>
 		<td><%= j.http_uri %></td>
-		<td><%= j.attack_type %></td>
-		<td><%= j.created_at %></td>
+		<td><%= j.description %></td>
 		<td><%= j.status %></td>
 		<td>
 		<% unless j.user.nil? %>
