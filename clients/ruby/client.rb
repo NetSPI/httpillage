@@ -153,7 +153,7 @@ class Client
 	def send_request(http_uri=nil,http_data=nil, http_headers=nil)
 		req = Mechanize.new.tap do |r|
 			if @proxy_host
-				r.set_proxy(@proxy_host, @proxy_port)
+				# r.set_proxy(@proxy_host, @proxy_port)
 			end
 		end
 
@@ -166,9 +166,9 @@ class Client
 			begin
 				response = req.get(http_uri, [], nil, http_headers)
 
-				store_response(response) if @attack_mode == 'store'
+				# store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
-			rescue
+			rescue 
 				puts "Unable to connect with get."
 			end
 		else

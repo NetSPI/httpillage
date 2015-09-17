@@ -11,5 +11,7 @@ admin = User.create({
     :email => 'john@gmail.com',
     :password => 'topsecret',
     :password_confirmation => 'topsecret',
-    :admin => true
+    :admin => true,
+    :api_token => SecureRandom.base64(64),
+    :api_token_changed => DateTime.now
 })
