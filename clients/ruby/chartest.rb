@@ -1,8 +1,8 @@
-charset = "?u?l?d"
-
-CHARSET_LOWER = ('a'..'z')
-CHARSET_UPPER = ('A'..'Z')
-CHARSET_DECIMAL = ('0'..'9')
+KEYSPACEDICT = {
+  'l' => ('a'..'z').to_a,
+  'u' => ('A'..'Z').to_a,
+  'd' => ('0'..'9').to_a
+}
 
 def brute(charset_str)
   charset_range = rangeForCharset(charset_str)
@@ -46,4 +46,65 @@ def rangeForCharset(charset_str)
   end
 end
 
-brute(charset)
+
+def generateKeys(keyspace,indicies,length)
+  keys = []
+  length.times do |i|
+    key = ""
+
+    indicies.count.times do |i|
+      key += KEYSPACEDICT[keyspace[i]][indicies[i]]
+    end
+    keys.push(key)
+
+    indicies.count.times do |i|
+      indicies[i] += 1
+      if indicies[i] == KEYSPACEDICT[keyspace[i]].count
+        indicies[i] = 0
+      else
+        break
+      end
+    end
+  end
+  return keys
+end
+
+def indexToIndicies(keyspace,index)
+  indicies = Array.new(keyspace.count, 0)
+  # keyspaceLengths = [len(keyspaceDict[k]) for k in keyspace]
+  keyspaceLengths = keyspace.map { |k| KEYSPACEDICT[k].count }
+
+  totalKeyspace  = keyspaceLengths.inject(:*)
+
+  if index > totalKeyspace
+    return nil
+  end
+
+  keyspace.count.times do |i|
+    # subkeyspace = functools.reduce(operator.mul, [keyspaceLengths[j] for j in range(i)], 1) #multiply together all previous keyspacelengths e.g. operating on third char of ?d?l?l returns 10*26
+    subkeyspace = keyspaceLengths[0...i].inject(:*)
+    if i == 0
+      indicies[i] = index % keyspaceLengths[i]
+    else
+      indicies[i] = (index/subkeyspace).to_i % keyspaceLengths[i]
+    end
+  end
+
+  return indicies
+end
+
+def generateSubkeyspace(keyspace,index,length)
+  indicies = indexToIndicies(keyspace, index)
+
+  if indicies.nil?
+    return nil
+  else
+    return generateKeys(keyspace, indicies, length)
+  end
+end
+
+keyspace = 'lll'.split(//)
+index = 5230
+length = 10
+
+puts(generateSubkeyspace(keyspace,index,length))
