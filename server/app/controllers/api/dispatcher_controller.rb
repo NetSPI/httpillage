@@ -107,6 +107,12 @@ class Api::DispatcherController < ApiController
 		return { :content => adjusted_return_lines, :new_byte_marker => adjusted_position_marker}
 	end
 
+	def charset_for_bruteforce
+		CHARSET_LOWER = ('a'..'z')
+		CHARSET_UPPER = ('A'..'Z')
+		CHARSET_DECIMAL = ('0'..'9')
+	end
+
 	def find_path_to_dictionary(dictionary)
 		return Rails.root.join("lib", "dictionaries", dictionary)
 	end

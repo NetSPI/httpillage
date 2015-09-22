@@ -20,7 +20,8 @@ def brute(charset_str)
     if indexOfMarker(internal_charset)
       brute(internal_charset)
     else
-          puts "\t" + internal_charset
+      # Process payload..
+      puts "\t" + internal_charset
     end
   end
 end
