@@ -12,6 +12,13 @@ class JobController < ApplicationController
 
 		if @job.attack_type == "bruteforce"
 			@charset = @job.charset
+
+			# keyspace
+			jobKeyspace = Bruteforce::generateSubkeyspace(@job.charset, @job.next_index, 300)
+
+			@keyspace_start_val = jobKeyspace[0]
+			@keyspace_end_val = jobKeyspace[-1]
+
 			@bruteforce_status = @job.next_index
 			@keyspace_size = Bruteforce::totalSize(@charset)
 

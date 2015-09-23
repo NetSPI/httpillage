@@ -6,7 +6,7 @@ module Bruteforce
     'a' => ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a
   }
 
-  def generateKeys(keyspace,indicies,length)
+  def self.generateKeys(keyspace,indicies,length)
     keys = []
     length.times do |i|
       key = ""
@@ -28,7 +28,7 @@ module Bruteforce
     return keys
   end
 
-  def indexToIndicies(keyspace,index)
+  def self.indexToIndicies(keyspace,index)
     indicies = Array.new(keyspace.count, 0)
     keyspaceLengths = keyspace.map { |k| KEYSPACEDICT[k].count }
 
@@ -50,7 +50,7 @@ module Bruteforce
     return indicies
   end
 
-  def generateSubkeyspace(keyspace,index,length)
+  def self.generateSubkeyspace(keyspace,index,length)
     keyspace = keyspace.split(//)
     indicies = indexToIndicies(keyspace, index)
 
