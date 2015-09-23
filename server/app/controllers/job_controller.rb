@@ -78,6 +78,27 @@ class JobController < ApplicationController
 		redirect_to action: "index"
 	end
 
+	# For API Call
+	def bruteforce_progress
+		job = Job.find(params[:jobid])
+
+		jobKeyspace = Bruteforce::generateSubkeyspace(job.charset, job.next_index, 300)
+
+		keyspace_start_val = jobKeyspace[0]
+		keyspace_end_val = jobKeyspace[-1]
+
+		bruteforce_status = job.next_index
+		keyspace_size = Bruteforce::totalSize(job.charset)
+
+		progress_percentage = (bruteforce_status.to_f / keyspace_size.to_f * 100.0).to_i
+	
+		render :json => { 
+			"keyspace_start" 	=> keyspace_start_val,
+			"keyspace_end" 		=> keyspace_end_val,
+			"keyspace_progress" => progress_percentage
+		}
+	end
+
 	private
 	def job_params
 		params.require(:job).permit(
