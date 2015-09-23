@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150907235713) do
+ActiveRecord::Schema.define(version: 20150921211417) do
+
+  create_table "bruteforce_statuses", force: :cascade do |t|
+    t.integer  "node_id"
+    t.integer  "job_id"
+    t.integer  "index"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "dictionaries", force: :cascade do |t|
     t.string   "filename"
@@ -59,6 +67,8 @@ ActiveRecord::Schema.define(version: 20150907235713) do
     t.string   "attack_mode"
     t.integer  "user_id"
     t.string   "description"
+    t.string   "charset"
+    t.integer  "next_index"
   end
 
   add_index "jobs", ["user_id"], name: "index_jobs_on_user_id"

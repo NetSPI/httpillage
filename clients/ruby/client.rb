@@ -1,4 +1,6 @@
 # encoding: utf-8
+require './bruteforce.rb'
+
 class Client
 	def initialize(server, thread_count, proxy_host, proxy_port)
 		@server = server + "/api"
@@ -18,6 +20,7 @@ class Client
 		@node_id = mac_address
 
 		@attack_mode = ""
+		@charset = "" 
 		@last_status_code = 0
 
 
@@ -50,7 +53,13 @@ class Client
 		@http_data_string = Base64.decode64(job["http_data"])
 		@http_data 				= parse_data(Base64.decode64(job["http_data"]))
 
-		@attack_payloads 	= parse_work(job["work"])
+		@bruteforce_index = job["next_index"]
+		if @job_type == "dictionary"
+			@attack_payloads 	= parse_work(job["work"])
+		elsif @job_type == "bruteforce"
+			@charset = job["charset"]
+			@attack_payloads = generateSubkeyspace(@charset, @bruteforce_index, 300)
+		end
 
 
 		puts "Payloads recvd: #{@attack_payloads}"
@@ -136,6 +145,16 @@ class Client
 			# In this iteration we simply replace all payload markers with the
 			# same payload value. This will likely change, allowing users to
 			# specify different payloads and modes, similar to Burp's intruder.
+			attack_uri = @http_uri.gsub("{P}", payload)
+
+			attack_data = parse_data(@http_data_string.gsub("{P}", payload))
+
+			payload_headers = Hash[@http_headers.map {|k,v| [k.gsub("{P}", payload), v.gsub("{P}", payload)]}]
+			send_request(attack_uri, attack_data, payload_headers)
+		elsif @job_type == "bruteforce"
+			# Grab Payload
+			payload = @attack_payloads.pop
+
 			attack_uri = @http_uri.gsub("{P}", payload)
 
 			attack_data = parse_data(@http_data_string.gsub("{P}", payload))

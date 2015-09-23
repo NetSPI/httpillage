@@ -33,6 +33,18 @@ class Api::DispatcherController < ApiController
 					if job.work == ""
 						return :json => '{ "status": "halt"}'
 					end
+				elsif job[:attack_type] == "bruteforce"
+					job.next_index = job.next_index.nil? ? 0 : job.next_index
+
+					bruteforce_status = BruteforceStatus.create({
+						:node_id => active_node.id,
+						:job_id => job.id,
+						:index => job.next_index
+					})
+
+					## Calculate next index. We're just going to increase by 300 for now
+					job.next_index = job.next_index + 300
+					job.save
 				end
 
 				# TODO: Make this return node_id too
@@ -105,12 +117,6 @@ class Api::DispatcherController < ApiController
 		adjusted_position_marker = start_byte + adjusted_byte_size
 
 		return { :content => adjusted_return_lines, :new_byte_marker => adjusted_position_marker}
-	end
-
-	def charset_for_bruteforce
-		CHARSET_LOWER = ('a'..'z')
-		CHARSET_UPPER = ('A'..'Z')
-		CHARSET_DECIMAL = ('0'..'9')
 	end
 
 	def find_path_to_dictionary(dictionary)

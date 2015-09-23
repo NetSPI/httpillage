@@ -72,6 +72,7 @@ class JobController < ApplicationController
 			:attack_type, 
 			:attack_mode,
 			:status,
-			:dictionary_id)
+			:dictionary_id,
+			:charset)
 	end
 end
