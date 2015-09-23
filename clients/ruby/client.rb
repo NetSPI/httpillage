@@ -155,6 +155,12 @@ class Client
 			# Grab Payload
 			payload = @attack_payloads.pop
 
+			if payload.nil?
+				# No more work to do..mark job as complete
+				@has_job = false
+				return "done"
+			end
+
 			attack_uri = @http_uri.gsub("{P}", payload)
 
 			attack_data = parse_data(@http_data_string.gsub("{P}", payload))
