@@ -1,3 +1,4 @@
+<meta http-equiv="refresh" content="1">
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-title">
@@ -13,7 +14,8 @@
 		<% end %>
 		<div style="margin-top:-30px;margin-bottom:30px;">
 		<em><%= @job.description %></em><br /><br />
-		<b><%= @job.http_method %></b> <%= @job.http_uri %>
+		<b><%= @job.http_method %></b> <%= @job.http_uri %><br /><br />
+		Completion Percentage: <%= @bruteforce_percentage %>%
 		</div>
 	</div>
 </div>
@@ -45,7 +47,7 @@
 					<th>Time</th>
 				</tr>
 
-				<% @job.node_status_checkins.each do |status| %>
+				<% @node_statuses.each do |status| %>
 				<tr>
 					<td><%= status.node_id %></td>
 					<td><%= status.response_code %></td>

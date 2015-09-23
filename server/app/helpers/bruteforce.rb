@@ -1,3 +1,4 @@
+module Bruteforce
   KEYSPACEDICT = {
     'l' => ('a'..'z').to_a,
     'u' => ('A'..'Z').to_a,
@@ -61,10 +62,12 @@
   end
 
   # Returns total size of keyspace, used for determinining percentage complete
-  def totalSize(keyspace)
+  def self.totalSize(keyspace)
+    keyspace = keyspace.split(//)
     keyspaceLengths = keyspace.map { |k| KEYSPACEDICT[k].count }
 
     totalKeyspace  = keyspaceLengths.inject(:*)
 
     return totalKeyspace
   end
+end

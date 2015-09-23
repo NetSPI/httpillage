@@ -1,12 +1,22 @@
 require 'base64'
 
 class JobController < ApplicationController
+	helper Bruteforce
 	def index
 		@jobs = Job.all
 	end
 
 	def show
 		@job = Job.find(params[:jobid])
+		@node_statuses = @job.node_status_checkins.limit(5)
+
+		if @job.attack_type == "bruteforce"
+			@charset = @job.charset
+			@bruteforce_status = @job.next_index
+			@keyspace_size = Bruteforce::totalSize(@charset)
+
+			@bruteforce_percentage = (@bruteforce_status.to_f / @keyspace_size.to_f * 100.0).to_i
+		end
 	end
 
 	def new
