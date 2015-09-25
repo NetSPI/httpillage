@@ -13,7 +13,11 @@
 		<% end %>
 		<div style="margin-top:-30px;margin-bottom:30px;">
 		<em><%= @job.description %></em><br /><br />
-		<b><%= @job.http_method %></b> <%= @job.http_uri %>
+		<b><%= @job.http_method %></b> <%= @job.http_uri %><br /><br />
+
+		<% if @job.attack_type == "bruteforce" %>
+		Completion Percentage: <span id="completion-percentage"><%= @bruteforce_percentage %></span>% - Computing <span id="keyspace_start"><%=@keyspace_start_val %></span> to <span id="keyspace_end"><%= @keyspace_end_val %></span>
+		<% end %>
 		</div>
 	</div>
 </div>
@@ -45,7 +49,7 @@
 					<th>Time</th>
 				</tr>
 
-				<% @job.node_status_checkins.each do |status| %>
+				<% @node_statuses.each do |status| %>
 				<tr>
 					<td><%= status.node_id %></td>
 					<td><%= status.response_code %></td>
@@ -107,6 +111,20 @@
 </div>
 
 <script>
+
+<% if @job.attack_type == "bruteforce" %>
+	// Poll for updated bruteforce status
+	window.setInterval(function () {
+		//alert('test');
+		$.get('/job/<%= @job.id %>/progress', function(data) {
+			console.log(data);
+			$("#completion-percentage").text(data.keyspace_progress);
+			$("#keyspace_start").text(data.keyspace_start);
+			$("#keyspace_end").text(data.keyspace_end);
+		});
+	}, 1000)
+<% end %>
+
 	$(".job-response").click(function () {
 		$("#response-container").show();
 		var responseId = $(this).data("id");

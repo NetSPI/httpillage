@@ -33,6 +33,18 @@ class Api::DispatcherController < ApiController
 					if job.work == ""
 						return :json => '{ "status": "halt"}'
 					end
+				elsif job[:attack_type] == "bruteforce"
+					job.next_index = job.next_index.nil? ? 0 : job.next_index
+
+					bruteforce_status = BruteforceStatus.create({
+						:node_id => active_node.id,
+						:job_id => job.id,
+						:index => job.next_index
+					})
+
+					## Calculate next index. We're just going to increase by 300 for now
+					job.next_index = job.next_index + 300
+					job.save
 				end
 
 				# TODO: Make this return node_id too

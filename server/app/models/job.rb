@@ -4,7 +4,7 @@ class Job < ActiveRecord::Base
   belongs_to :user
 
   has_many	:job_responses, :foreign_key => "jobid"
-  has_many  :node_status_checkins, -> { order(created_at: :ASC) }
+  has_many  :node_status_checkins, -> { order(created_at: :DESC) }
 	has_many 	:dictionary_chunk_allocations
 	has_one		:dictionary, :primary_key => "dictionary_id", :foreign_key => "id"
 
