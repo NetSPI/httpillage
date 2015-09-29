@@ -99,6 +99,12 @@ class JobController < ApplicationController
 		}
 	end
 
+	def checkins_since_timestamp
+		new_checkins = NodeStatusCheckin.checkins_since_timestamp(params[:jobid], params[:timestamp])
+
+		render :json => { :newTimestamp => DateTime.now.utc, :checkins => new_checkins }
+	end
+
 	private
 	def job_params
 		params.require(:job).permit(

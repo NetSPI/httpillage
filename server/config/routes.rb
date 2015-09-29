@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 	get 'job/edit/:jobid',				to: 'job#edit', as: 'edit_job'
 	patch 'job/:jobid',						to: 'job#update', as: 'update_job'
 	get 'job/:jobid/progress',		to: 'job#bruteforce_progress'
+	get 'job/:jobid/checkins/poll/:timestamp', to: 'job#checkins_since_timestamp'
 
 	get 'job/response/:responseid', to: 'job_response#show', as: 'show_job_response'
 

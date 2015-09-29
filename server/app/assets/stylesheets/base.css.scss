@@ -15,8 +15,8 @@
 .alert .notification-box { background-color: #D04B33; }
 .notice .notification-box { background-color: #009900; }
 
-.active-job-label { color: #009900; }
-.inactive-job-label { color: #d04b33; }
+.active-job-label, .success-label { color: #009900; }
+.inactive-job-label, .error-label { color: #d04b33; }
 
 .nav-menu {
 	border-bottom: 1px solid whitesmoke;
