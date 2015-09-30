@@ -40,6 +40,12 @@ class JobController < ApplicationController
 		@job.http_data = Base64.encode64(@job.http_data)
 		@job.save
 
+
+		# Create response flag meta information for job
+		if params[:response_flag_metum]
+			fm = ResponseFlagMeta.create(:job_id => @job.id, :match_type => "string", :match_value => params[:response_flag_metum][:match_value])
+		end
+
 		if @job.valid?
 			flash[:notice] = "Job created successfully"
 		else

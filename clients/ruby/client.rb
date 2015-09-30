@@ -23,6 +23,7 @@ class Client
 		@charset = "" 
 		@last_status_code = 0
 
+		@response_flag_meta = []
 
 		# This var is only used when performing dictionary attacks
 		# It will be populated by the server
@@ -61,6 +62,7 @@ class Client
 			@attack_payloads = generateSubkeyspace(@charset, @bruteforce_index, 300)
 		end
 
+		@response_flag_meta = job["response_flag_meta"]
 
 		puts "Payloads recvd: #{@attack_payloads}"
 
@@ -72,6 +74,8 @@ class Client
 
 		response = Mechanize.new.get(endpoint)
 		# Parse response
+
+		puts "Received: #{response.body}"
 		response_parsed = JSON.parse(response.body)
 		
 		if response_parsed["status"] == "active"
@@ -191,19 +195,42 @@ class Client
 			begin
 				response = req.get(http_uri, [], nil, http_headers)
 
+				check_response_for_match(response.body)
+
 				# store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
 			rescue 
-				puts "Unable to connect with get."
+				#puts "Unable to connect with get."
 			end
 		else
 			begin
 				response = req.post(http_uri, http_data, http_headers)
 
+				check_response_for_match(response)
+
 				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
 			rescue
 				puts "Unable to connect with post."
+			end
+		end
+	end
+
+	def check_response_for_match(response)
+		@response_flag_meta.each do |metum|
+			match_value = metum["match_value"]
+			match_type = metum["match_type"]
+
+			if match_type == "string"
+				if response.include?(match_value)
+					send_match_to_api(response, match_value)
+				end
+			else
+				pattern = Regexp.new(match_value)
+
+				if response.match(pattern)
+					send_match_to_api(response, match_value)
+				end
 			end
 		end
 	end
@@ -220,6 +247,23 @@ class Client
 			Mechanize.new.post(endpoint, data)
 		rescue
 			# hmm
+		end
+	end
+
+	def send_match_to_api(response, match_value) 
+		endpoint = "#{@server}/job/#{@job_id}/saveMatch"
+
+		data = { 
+			:response 				=> Base64.encode64(response),
+			:match_value			=> match_value,
+			:nodeid 					=> @node_id	
+		}
+
+		puts "Sending match to server"
+		begin
+			Mechanize.new.post(endpoint, data)
+		rescue
+			puts "Failed sending match to api"
 		end
 	end
 

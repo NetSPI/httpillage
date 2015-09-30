@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150921211417) do
+ActiveRecord::Schema.define(version: 20150929231222) do
 
   create_table "bruteforce_statuses", force: :cascade do |t|
     t.integer  "node_id"
@@ -91,6 +91,29 @@ ActiveRecord::Schema.define(version: 20150921211417) do
   end
 
   add_index "nodes", ["mac_address"], name: "index_nodes_on_mac_address"
+
+  create_table "response_flag_meta", force: :cascade do |t|
+    t.integer  "job_id"
+    t.string   "match_type"
+    t.string   "match_value"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "response_flag_meta", ["job_id"], name: "index_response_flag_meta_on_job_id"
+
+  create_table "response_flags", force: :cascade do |t|
+    t.integer  "job_id"
+    t.integer  "node_id"
+    t.string   "http_request"
+    t.string   "http_response"
+    t.string   "matched_string"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "response_flags", ["job_id"], name: "index_response_flags_on_job_id"
+  add_index "response_flags", ["node_id"], name: "index_response_flags_on_node_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

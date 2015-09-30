@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 	  post 'job/create', 												to: 'job#create'
 
 	  post 'job/:jobid/saveResponse', to: 'job_response#create'
+	  post 'job/:jobid/saveMatch',		to: 'response_flag#create'
 	end
 
 	get 'jobs', 									to: 'job#index', as: 'jobs'

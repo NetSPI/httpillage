@@ -21,6 +21,9 @@
   <label for="response">Response Storage?</label>
   <%= f.select(:attack_mode, options_for_select([['None', 'none'], ['Store Full', 'store']], @job.attack_mode)) %>
 
+  <label>Response Flag</label>
+  <%= text_field(:response_flag_metum, :match_value, class: "input-field", size: '50x6') %>
+
   <label for="type">Attack Type</label>
   <%= f.select(:attack_type, options_for_select([['Repeat', 'repeat'], ['Dictionary', 'dictionary'], ['Brute Force', 'bruteforce']], @job.attack_type)) %>
 

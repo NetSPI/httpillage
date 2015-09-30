@@ -47,8 +47,11 @@ class Api::DispatcherController < ApiController
 					job.save
 				end
 
+				response_flag_meta = job.response_flag_meta.to_json
+
 				# TODO: Make this return node_id too
-				render :json => job, methods: [:work]
+			 # render :json => job, methods: [:work, :response_flag_meta]
+				render :json => job.as_json(:include => [ :work, :response_flag_meta])
 			else
 				render :json => '{ "job": "none"}'
 			end
