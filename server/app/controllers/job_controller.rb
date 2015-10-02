@@ -14,15 +14,17 @@ class JobController < ApplicationController
 			@charset = @job.charset
 
 			# keyspace
-			jobKeyspace = Bruteforce::generateSubkeyspace(@job.charset, @job.next_index, 300)
+			jobKeyspace = Bruteforce::generateSubkeyspace(@job.charset, @job.next_index, 50)
 
-			@keyspace_start_val = jobKeyspace[0]
-			@keyspace_end_val = jobKeyspace[-1]
+			unless jobKeyspace.nil?
+				@keyspace_start_val = jobKeyspace[0]
+				@keyspace_end_val = jobKeyspace[-1]
 
-			@bruteforce_status = @job.next_index
-			@keyspace_size = Bruteforce::totalSize(@charset)
+				@bruteforce_status = @job.next_index
+				@keyspace_size = Bruteforce::totalSize(@charset)
 
-			@bruteforce_percentage = (@bruteforce_status.to_f / @keyspace_size.to_f * 100.0).to_i
+				@bruteforce_percentage = (@bruteforce_status.to_f / @keyspace_size.to_f * 100.0).to_i
+			end
 		end
 	end
 
@@ -88,7 +90,7 @@ class JobController < ApplicationController
 	def bruteforce_progress
 		job = Job.find(params[:jobid])
 
-		jobKeyspace = Bruteforce::generateSubkeyspace(job.charset, job.next_index, 300)
+		jobKeyspace = Bruteforce::generateSubkeyspace(job.charset, job.next_index, 50)
 
 		keyspace_start_val = jobKeyspace[0]
 		keyspace_end_val = jobKeyspace[-1]

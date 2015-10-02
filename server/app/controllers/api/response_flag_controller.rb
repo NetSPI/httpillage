@@ -7,6 +7,7 @@ class Api::ResponseFlagController < ApiController
     response_flag.node_id = params[:nodeid]
     response_flag.matched_string = params[:match_value]
     response_flag.http_response = Base64.decode64(params[:response])
+    response_flag.payload = params[:payload]
 
     response_flag.save
 

@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 	get 'job/:jobid/checkins/poll/:timestamp', to: 'job#checkins_since_timestamp'
 
 	get 'job/response/:responseid', to: 'job_response#show', as: 'show_job_response'
+	get 'job/response/fromMatch/:matchId', to: 'response_flag#show', as: 'show_flagged_response'
 
 	get 'nodes', 									to: 'node#index'
 	delete 'job/:jobid', 					to: 'job#destroy', as: 'job'

@@ -14,6 +14,7 @@ class ResponseFlagging < ActiveRecord::Migration
       t.string      :http_request
       t.string      :http_response
       t.string      :matched_string
+      t.string      :payload
 
       t.timestamps  null: false
     end

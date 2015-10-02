@@ -9,7 +9,7 @@ class Job < ActiveRecord::Base
 	has_one		:dictionary, :primary_key => "dictionary_id", :foreign_key => "id"
 
   has_many  :response_flag_meta, :class_name => "ResponseFlagMeta"
-  has_many  :response_flags
+  has_many  :response_flags, -> { order(created_at: :DESC) }
 
 	validates 	:http_method, inclusion: { in: ["GET", "POST", "PUT", "PATCH", "DELETE"]}
 	

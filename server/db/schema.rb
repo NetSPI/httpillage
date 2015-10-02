@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 20150929231222) do
     t.string   "http_request"
     t.string   "http_response"
     t.string   "matched_string"
+    t.string   "payload"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end

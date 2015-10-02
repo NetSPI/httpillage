@@ -59,12 +59,12 @@ class Client
 			@attack_payloads 	= parse_work(job["work"])
 		elsif @job_type == "bruteforce"
 			@charset = job["charset"]
-			@attack_payloads = generateSubkeyspace(@charset, @bruteforce_index, 300)
+			@attack_payloads = generateSubkeyspace(@charset, @bruteforce_index, 50)
 		end
 
 		@response_flag_meta = job["response_flag_meta"]
 
-		puts "Payloads recvd: #{@attack_payloads}"
+		#puts "Payloads recvd: #{@attack_payloads}"
 
 		kick_off_job!
 	end
@@ -75,7 +75,6 @@ class Client
 		response = Mechanize.new.get(endpoint)
 		# Parse response
 
-		puts "Received: #{response.body}"
 		response_parsed = JSON.parse(response.body)
 		
 		if response_parsed["status"] == "active"
@@ -154,7 +153,7 @@ class Client
 			attack_data = parse_data(@http_data_string.gsub("{P}", payload))
 
 			payload_headers = Hash[@http_headers.map {|k,v| [k.gsub("{P}", payload), v.gsub("{P}", payload)]}]
-			send_request(attack_uri, attack_data, payload_headers)
+			send_request(attack_uri, attack_data, payload_headers,payload)
 		elsif @job_type == "bruteforce"
 			# Grab Payload
 			payload = @attack_payloads.pop
@@ -170,7 +169,7 @@ class Client
 			attack_data = parse_data(@http_data_string.gsub("{P}", payload))
 
 			payload_headers = Hash[@http_headers.map {|k,v| [k.gsub("{P}", payload), v.gsub("{P}", payload)]}]
-			send_request(attack_uri, attack_data, payload_headers)
+			send_request(attack_uri, attack_data, payload_headers,payload)
 		end
 	end
 
@@ -179,12 +178,16 @@ class Client
 	# 
 	# Currently this does not store any responses
 	#
-	def send_request(http_uri=nil,http_data=nil, http_headers=nil)
+	def send_request(http_uri=nil,http_data=nil, http_headers=nil,payload=nil)
 		req = Mechanize.new.tap do |r|
 			if @proxy_host
-				# r.set_proxy(@proxy_host, @proxy_port)
+				r.set_proxy(@proxy_host, @proxy_port)
 			end
+			r.set_proxy("localhost", 8080)
 		end
+		# Need to automatically redirect...
+
+		#puts "Request is: #{req.methods}"
 
 		# Set these if they weren't passed in...
 		http_uri ||= @http_uri
@@ -195,9 +198,8 @@ class Client
 			begin
 				response = req.get(http_uri, [], nil, http_headers)
 
-				check_response_for_match(response.body)
-
-				# store_response(response) if @attack_mode == 'store'
+				check_response_for_match(response.body, payload)
+				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
 			rescue 
 				#puts "Unable to connect with get."
@@ -206,30 +208,48 @@ class Client
 			begin
 				response = req.post(http_uri, http_data, http_headers)
 
-				check_response_for_match(response)
+				if response.code =~ /3../
+					# Well fuck. This follows redirect, but cookies don't
+					# response = req.post(response.header['location'], http_data, http_headers)
+					puts "Response: #{response.links}"
+					#response = response.links[0].click
+					#response = req.get response.header['location']
+				end
+
+				if payload == "hn"
+					puts "Response Code: #{response.code}"
+					puts "Okay: This payload should work"
+					puts response.body
+				end
+
+
+				check_response_for_match(response.body, payload)
 
 				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
-			rescue
+			rescue Exception => e
 				puts "Unable to connect with post."
+				puts e.inspect
 			end
 		end
 	end
 
-	def check_response_for_match(response)
+	def check_response_for_match(response, payload)
 		@response_flag_meta.each do |metum|
 			match_value = metum["match_value"]
 			match_type = metum["match_type"]
 
+			#puts "Checking response for #{match_value}"
+
 			if match_type == "string"
 				if response.include?(match_value)
-					send_match_to_api(response, match_value)
+					send_match_to_api(response, match_value, payload)
 				end
 			else
 				pattern = Regexp.new(match_value)
 
 				if response.match(pattern)
-					send_match_to_api(response, match_value)
+					send_match_to_api(response, match_value, payload)
 				end
 			end
 		end
@@ -250,12 +270,13 @@ class Client
 		end
 	end
 
-	def send_match_to_api(response, match_value) 
+	def send_match_to_api(response, match_value, payload=nil) 
 		endpoint = "#{@server}/job/#{@job_id}/saveMatch"
 
 		data = { 
 			:response 				=> Base64.encode64(response),
 			:match_value			=> match_value,
+			:payload 					=> payload,
 			:nodeid 					=> @node_id	
 		}
 
@@ -370,6 +391,8 @@ class Client
 	    when /win32/
 	      $1 if output =~ /Physical Address.*?(([A-F0-9]{2}-){5}[A-F0-9]{2})/im
 	    # Cases for other platforms...
+	    when /linux/
+				$1 if output =~ /HWaddr.*?(([A-F0-9]{2}:){5}[A-F0-9]{2})/im
 	    else nil
 	  end
 	end

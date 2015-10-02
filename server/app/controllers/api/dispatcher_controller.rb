@@ -42,16 +42,24 @@ class Api::DispatcherController < ApiController
 						:index => job.next_index
 					})
 
-					## Calculate next index. We're just going to increase by 300 for now
-					job.next_index = job.next_index + 300
-					job.save
-				end
+					response_flag_meta = job.response_flag_meta.to_json
+					return_json = job.as_json(:include => [ :work, :response_flag_meta])
 
-				response_flag_meta = job.response_flag_meta.to_json
+					## Calculate next index. We're just going to increase by 300 for now
+					job.next_index = job.next_index + 50
+					job.save
+
+					# TODO: Mark job complete if next_index > length
+					keyspace_size = Bruteforce::totalSize(job.charset)
+					if job.next_index > keyspace_size
+						job.status = "completed"
+						job.save
+					end
+				end
 
 				# TODO: Make this return node_id too
 			 # render :json => job, methods: [:work, :response_flag_meta]
-				render :json => job.as_json(:include => [ :work, :response_flag_meta])
+				render :json => return_json
 			else
 				render :json => '{ "job": "none"}'
 			end

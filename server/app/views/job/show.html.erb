@@ -113,6 +113,50 @@
 	</div>
 </div>
 
+	<div class="col-lg-6">
+		<div class="item">
+			<p class="item-title">Job Matches</p>
+				<% if @job.response_flags.count > 0 %>
+				<table class="table table-striped job-responses">
+				<thead>
+				<tr>
+					<th>Payload</th>
+					<th>Matched String</th>
+					<th>Time</th>
+				</tr>
+				</thead>
+				<tbody>
+
+				<% 
+				# TODO: Make this use some sort of pagination. For now we're only showing 5.
+				i = 0
+				@job.response_flags.each do |flag| %>
+				<tr class='job-flag' data-id='<%= flag.id %>'>
+					<td><%= flag.payload %></td>
+					<td><%= flag.matched_string %></td>
+					<td><%= flag.created_at %></td>
+				</tr>
+				<% 
+				i += 1
+				break if i == 5
+				end %>
+				</tbody>
+				</table>
+			<% else %>
+				There are no flags for this job
+			<% end %>
+		</div>
+	</div>
+
+	<div class="col-lg-6" id="response-container" style="display:none;">
+		<div style="width:100%; float:right">
+			<b>Viewing flagged response response: <span id="response-id"></span></b>
+		</div>
+		<pre id="http-response">
+		</pre>
+	</div>
+</div>
+
 <script>
 var lastCheckinTimestamp = "<%= DateTime.now %>";
 <% if @job.attack_type == "bruteforce" %>
@@ -161,11 +205,27 @@ var lastCheckinTimestamp = "<%= DateTime.now %>";
 		$('html, body').animate({
         scrollTop: $(".job-responses").offset().top
     }, 200);
+	});
+
+	$(".job-flag").click(function () {
+		$("#response-container").show();
+		var flagId = $(this).data("id");
+
+		// Make ajax request
+		$.get("/job/response/fromMatch/" + flagId, function(data) {
+			console.log(data.response);
+			$("#response-id").text(flagId);
+			$("#http-response").text(data.http_response);
+		});
+
+		$('html, body').animate({
+        scrollTop: $(".job-responses").offset().top
+    }, 200);
 
 	});
 
+	// Format each response code status
 	$(document).ready(function () {
-		//$(".job-response-code").html(formatResponseCode($(this).html()));
 		$(".job-response-code").each(function () {
 			$(this).html(formatResponseCode($(this).html()));
 		});
