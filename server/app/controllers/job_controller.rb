@@ -72,6 +72,13 @@ class JobController < ApplicationController
 		@job.http_headers = Base64.encode64(@job.http_headers)
 		@job.http_data = Base64.encode64(@job.http_data)
 
+		# Update the Response Flags
+		flag = @job.response_flag_meta[0] || ResponseFlagMeta.new
+		flag.match_value = params[:response_flag_metum][:match_value]
+		flag.job_id = @job.id
+		flag.match_type = "string"
+		flag.save
+
 		if @job.save!
 			flash[:notice] = "Job #{@job.id} updated successfully"
       redirect_to show_job_path(@job)
