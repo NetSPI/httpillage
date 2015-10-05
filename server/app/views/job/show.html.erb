@@ -39,7 +39,7 @@
 
 	<div class="col-lg-6">
 		<div class="item">
-			<p class="item-title">Latest Updates on Associated Nodes</p>
+			<p class="item-title">Latest Updates on Associated Nodes - <%= link_to 'Export All', export_node_status_path(@job, :format => :csv) %></p>
 
 			<% if @job.node_status_checkins.count > 0 %>
 				<table class="table table-striped node-checkins">
@@ -168,9 +168,11 @@ var lastCheckinTimestamp = "<%= DateTime.now %>";
 			$("#keyspace_end").text(data.keyspace_end);
 		});
 	}, 1000)
+<% end %>
 
-	// Poll for updated node checkins
+// Poll for updated node checkins
 	window.setInterval(function () {
+		console.log("triggered");
 		$.get('/job/<%= @job.id %>/checkins/poll/' + lastCheckinTimestamp, function(data) {
 			lastCheckinTimestamp = data.newTimestamp;
 
@@ -189,7 +191,6 @@ var lastCheckinTimestamp = "<%= DateTime.now %>";
 		$(".node-checkins tbody").find("tr:gt(4)").remove();
 		});
 	}, 5000)
-<% end %>
 
 	$(".job-response").click(function () {
 		$("#response-container").show();
