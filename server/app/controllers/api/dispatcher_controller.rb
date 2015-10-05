@@ -41,7 +41,7 @@ class Api::DispatcherController < ApiController
 						:job_id => job.id,
 						:index => job.next_index
 					})
-					## Calculate next index. We're just going to increase by 300 for now
+					## Calculate next index. We're just going to increase by 50 for now
 					job.next_index = job.next_index + 50
 					job.save
 
