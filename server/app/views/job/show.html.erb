@@ -115,7 +115,7 @@
 
 	<div class="col-lg-6">
 		<div class="item">
-			<p class="item-title">Job Matches</p>
+			<p class="item-title">Job Matches -- <%= link_to 'Export All', export_job_matches_path(@job, :format => :csv) %></p>
 				<% if @job.response_flags.count > 0 %>
 				<table class="table table-striped job-responses">
 				<thead>

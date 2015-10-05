@@ -26,6 +26,7 @@ Rails.application.routes.draw do
 
 	get 'job/response/:responseid', to: 'job_response#show', as: 'show_job_response'
 	get 'job/response/fromMatch/:matchId', to: 'response_flag#show', as: 'show_flagged_response'
+	get 'job/matches/:jobid',			to: 'response_flag#index', as: 'export_job_matches'
 
 	get 'nodes', 									to: 'node#index'
 	delete 'job/:jobid', 					to: 'job#destroy', as: 'job'
