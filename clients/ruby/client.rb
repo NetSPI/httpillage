@@ -177,18 +177,15 @@ class Client
 			else
 				response = req.post(http_uri, http_data, http_headers)
 			end
+			check_response_for_match(response.body, payload)
+
+			store_response(response) if @attack_mode == 'store'
+			@last_status_code = response.code.to_i
 		rescue Exception => e
 			puts "Unable to connect"
 			puts e.inspect
-
-			# Let's just mock it for now
-			response = { :body => "Request Failed" }
+			@last_status_code = 0
 		end
-
-		check_response_for_match(response.body, payload)
-
-		store_response(response) if @attack_mode == 'store'
-		@last_status_code = response.code.to_i
 	end
 
 	def check_response_for_match(response, payload)

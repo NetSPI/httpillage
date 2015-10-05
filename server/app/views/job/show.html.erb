@@ -117,7 +117,7 @@
 		<div class="item">
 			<p class="item-title">Job Matches -- <%= link_to 'Export All', export_job_matches_path(@job, :format => :csv) %></p>
 				<% if @job.response_flags.count > 0 %>
-				<table class="table table-striped job-responses">
+				<table class="table table-striped response-matches">
 				<thead>
 				<tr>
 					<th>Payload</th>
@@ -172,23 +172,35 @@ var lastCheckinTimestamp = "<%= DateTime.now %>";
 
 // Poll for updated node checkins
 	window.setInterval(function () {
-		console.log("triggered");
 		$.get('/job/<%= @job.id %>/checkins/poll/' + lastCheckinTimestamp, function(data) {
 			lastCheckinTimestamp = data.newTimestamp;
 
-			console.log("Sending request to: /job/<%= @job.id %>/checkins/poll/" + lastCheckinTimestamp);
-			console.log(data);
 			for (idx in data.checkins) {
 				row = data.checkins[idx];
 
 				row.response_code = formatResponseCode(row.response_code);
-
-				// Iterate over each row, prepending to table in reverse order
 				row = "<tr><td>" + row.node_id + "</td><td>" + row.response_code + "</td><td>" + row.created_at + "</td> </tr>";
 				$(".node-checkins tbody").prepend(row);
 			}
 		// Chop rows to 5.
 		$(".node-checkins tbody").find("tr:gt(4)").remove();
+		});
+	}, 5000)
+
+	// Poll for updated matches
+	window.setInterval(function () {
+		console.log("triggered");
+		$.get('/job/response/<%= @job.id %>/poll/' + lastCheckinTimestamp, function(data) {
+			lastCheckinTimestamp = data.newTimestamp;
+
+			for (idx in data.matches) {
+				row = data.matches[idx];
+
+				row = "<tr><td>" + row.payload + "</td><td>" + row.matched_string + "</td><td>" + row.created_at + "</td> </tr>";
+				$(".response-matches tbody").prepend(row);
+			}
+		// Chop rows to 5.
+		$(".response-matches tbody").find("tr:gt(4)").remove();
 		});
 	}, 5000)
 

@@ -3,6 +3,11 @@ class ResponseFlag < ActiveRecord::Base
   belongs_to :job
   belongs_to :node
 
+  def self.matches_since_timestamp(jobid,timestamp)
+    timestamp = DateTime.parse(timestamp)
+    self.where(job_id: jobid).where("created_at > ?", timestamp)
+  end
+
   def self.to_csv
     CSV.generate do |csv|
       csv << column_names

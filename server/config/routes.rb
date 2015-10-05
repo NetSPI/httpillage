@@ -26,6 +26,7 @@ Rails.application.routes.draw do
 
 	get 'job/response/:responseid', to: 'job_response#show', as: 'show_job_response'
 	get 'job/response/fromMatch/:matchId', to: 'response_flag#show', as: 'show_flagged_response'
+	get 'job/response/:jobid/poll/:timestamp', to: 'response_flag#responses_since_timestamp'
 	get 'job/matches/:jobid',			to: 'response_flag#index', as: 'export_job_matches'
 	get 'job/statuses/:jobid',		to: 'node_status#index',	as: 'export_node_status'
 

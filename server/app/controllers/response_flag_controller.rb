@@ -14,4 +14,10 @@ class ResponseFlagController < ApplicationController
 
     render :json => @response
   end
+
+  def responses_since_timestamp
+    matches = ResponseFlag.matches_since_timestamp(params[:jobid], params[:timestamp])
+
+    render :json => { :newTimestamp => DateTime.now.utc, :matches => matches }
+  end
 end
