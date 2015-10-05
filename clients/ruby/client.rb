@@ -64,6 +64,7 @@ class Client
 
 		@response_flag_meta = job["response_flag_meta"]
 
+		puts "Job: #{job}"
 		#puts "Payloads recvd: #{@attack_payloads}"
 
 		kick_off_job!
@@ -183,7 +184,6 @@ class Client
 			if @proxy_host
 				r.set_proxy(@proxy_host, @proxy_port)
 			end
-			r.set_proxy("localhost", 8080)
 		end
 		# Need to automatically redirect...
 
@@ -201,8 +201,9 @@ class Client
 				check_response_for_match(response.body, payload)
 				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
-			rescue 
-				#puts "Unable to connect with get."
+			rescue Exception => e
+				puts "Unable to connect with get."
+				puts e.inspect
 			end
 		else
 			begin
@@ -373,7 +374,7 @@ class Client
 			next if split_line.count < 2
 
 			# Remove trailing whitespace
-			split_line[1].chop!
+			split_line[1].chomp!
 			
 			h = Hash[*split_line]
 			header_hash.merge!(h)

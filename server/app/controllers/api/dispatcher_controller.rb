@@ -41,10 +41,6 @@ class Api::DispatcherController < ApiController
 						:job_id => job.id,
 						:index => job.next_index
 					})
-
-					response_flag_meta = job.response_flag_meta.to_json
-					return_json = job.as_json(:include => [ :work, :response_flag_meta])
-
 					## Calculate next index. We're just going to increase by 300 for now
 					job.next_index = job.next_index + 50
 					job.save
@@ -55,10 +51,13 @@ class Api::DispatcherController < ApiController
 						job.status = "completed"
 						job.save
 					end
+
 				end
+				response_flag_meta = job.response_flag_meta.to_json
+				return_json = job.as_json(:include => [ :work, :response_flag_meta])
 
 				# TODO: Make this return node_id too
-			 # render :json => job, methods: [:work, :response_flag_meta]
+			 	# render :json => job, methods: [:work, :response_flag_meta]
 				render :json => return_json
 			else
 				render :json => '{ "job": "none"}'
