@@ -64,9 +64,6 @@ class Client
 
 		@response_flag_meta = job["response_flag_meta"]
 
-		puts "Job: #{job}"
-		#puts "Payloads recvd: #{@attack_payloads}"
-
 		kick_off_job!
 	end
 
@@ -133,11 +130,10 @@ class Client
 	# => distributing work across currently connected nodes in batches.
 	# 
 	def process_request()
-		# Check job type.. if repeat, just send request as is
-
+		# If it's repeat, there are no payloads... otherwise process
 		if @job_type == "repeat"
 			send_request
-		elsif @job_type == "dictionary"
+		elsif @job_type == "dictionary" || @job_type == "bruteforce"
 			payload = @attack_payloads.pop
 
 			if payload.nil?
@@ -149,22 +145,6 @@ class Client
 			# In this iteration we simply replace all payload markers with the
 			# same payload value. This will likely change, allowing users to
 			# specify different payloads and modes, similar to Burp's intruder.
-			attack_uri = @http_uri.gsub("{P}", payload)
-
-			attack_data = parse_data(@http_data_string.gsub("{P}", payload))
-
-			payload_headers = Hash[@http_headers.map {|k,v| [k.gsub("{P}", payload), v.gsub("{P}", payload)]}]
-			send_request(attack_uri, attack_data, payload_headers,payload)
-		elsif @job_type == "bruteforce"
-			# Grab Payload
-			payload = @attack_payloads.pop
-
-			if payload.nil?
-				# No more work to do..mark job as complete
-				@has_job = false
-				return "done"
-			end
-
 			attack_uri = @http_uri.gsub("{P}", payload)
 
 			attack_data = parse_data(@http_data_string.gsub("{P}", payload))
@@ -185,62 +165,36 @@ class Client
 				r.set_proxy(@proxy_host, @proxy_port)
 			end
 		end
-		# Need to automatically redirect...
-
-		#puts "Request is: #{req.methods}"
 
 		# Set these if they weren't passed in...
 		http_uri ||= @http_uri
 		http_data ||= @http_data
 		http_headers ||= @http_headers
 
-		if @http_method.downcase == "get"
-			begin
+		begin
+			if @http_method.downcase == "get"
 				response = req.get(http_uri, [], nil, http_headers)
-
-				check_response_for_match(response.body, payload)
-				store_response(response) if @attack_mode == 'store'
-				@last_status_code = response.code.to_i
-			rescue Exception => e
-				puts "Unable to connect with get."
-				puts e.inspect
-			end
-		else
-			begin
+			else
 				response = req.post(http_uri, http_data, http_headers)
-
-				if response.code =~ /3../
-					# Well fuck. This follows redirect, but cookies don't
-					# response = req.post(response.header['location'], http_data, http_headers)
-					puts "Response: #{response.links}"
-					#response = response.links[0].click
-					#response = req.get response.header['location']
-				end
-
-				if payload == "hn"
-					puts "Response Code: #{response.code}"
-					puts "Okay: This payload should work"
-					puts response.body
-				end
-
-
-				check_response_for_match(response.body, payload)
-
-				store_response(response) if @attack_mode == 'store'
-				@last_status_code = response.code.to_i
-			rescue Exception => e
-				puts "Unable to connect with post."
-				puts e.inspect
 			end
+		rescue Exception => e
+			puts "Unable to connect"
+			puts e.inspect
+
+			# Let's just mock it for now
+			response = { :body => "Request Failed" }
 		end
+
+		check_response_for_match(response.body, payload)
+
+		store_response(response) if @attack_mode == 'store'
+		@last_status_code = response.code.to_i
 	end
 
 	def check_response_for_match(response, payload)
 		@response_flag_meta.each do |metum|
 			match_value = metum["match_value"]
 			match_type = metum["match_type"]
-
-			#puts "Checking response for #{match_value}"
 
 			if match_type == "string"
 				if response.include?(match_value)
