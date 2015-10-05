@@ -38,8 +38,8 @@ class JobController < ApplicationController
 
 		@job.user_id = current_user.id
 
-		@job.http_headers = Base64.encode64(@job.http_headers)
-		@job.http_data = Base64.encode64(@job.http_data)
+		@job.http_headers = @job.http_headers
+		@job.http_data = @job.http_data
 		@job.save
 
 
@@ -69,30 +69,33 @@ class JobController < ApplicationController
 		@dictionaries ||= Dictionary.all
 
 		# Decode headers, data, etc....
-		@job.http_headers = Base64.decode64(@job.http_headers)
-		@job.http_data = Base64.decode64(@job.http_data)
+		@job.http_headers = @job.http_headers
+		@job.http_data = @job.http_data
 	end
 
 	def update
 		@job = Job.find(params[:jobid])
 		@job.update_attributes(job_params)
-		@job.http_headers = Base64.encode64(@job.http_headers)
-		@job.http_data = Base64.encode64(@job.http_data)
+		@job.http_headers = @job.http_headers
+		@job.http_data = @job.http_data
 
 		# Update the Response Flags
-		params[:job][:response_flag_meta].each_with_index do |rfm|
-			# TODO: Fix this weird hackery... not sure why params are being passed in weirdly
-			rfm = rfm[1]
 
-			# If it has an id, update, otherwise create
-			if rfm["id"] != nil
-				flag_meta = ResponseFlagMeta.find(rfm["id"])
-			else
-				flag_meta = ResponseFlagMeta.new
+		if params[:job][:response_flag_meta]
+			params[:job][:response_flag_meta].each_with_index do |rfm|
+				# TODO: Fix this weird hackery... not sure why params are being passed in weirdly
+				rfm = rfm[1]
+
+				# If it has an id, update, otherwise create
+				if rfm["id"] != nil
+					flag_meta = ResponseFlagMeta.find(rfm["id"])
+				else
+					flag_meta = ResponseFlagMeta.new
+				end
+				flag_meta.match_value = rfm[:match_value]
+				flag_meta.match_type = rfm[:match_type]
+				flag_meta.save
 			end
-			flag_meta.match_value = rfm[:match_value]
-			flag_meta.match_type = rfm[:match_type]
-			flag_meta.save
 		end
 
 		if @job.save!
