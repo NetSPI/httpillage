@@ -44,8 +44,15 @@ class JobController < ApplicationController
 
 
 		# Create response flag meta information for job
-		if params[:response_flag_metum]
-			fm = ResponseFlagMeta.create(:job_id => @job.id, :match_type => "string", :match_value => params[:response_flag_metum][:match_value])
+		params[:job][:response_flag_meta].each_with_index do |rfm|
+			# TODO: Fix this weird hackery... not sure why params are being passed in weirdly
+			rfm = rfm[1]
+
+			flag_meta = ResponseFlagMeta.new
+			flag_meta.job_id = @job.id
+			flag_meta.match_value = rfm[:match_value]
+			flag_meta.match_type = rfm[:match_type]
+			flag_meta.save
 		end
 
 		if @job.valid?
@@ -73,11 +80,20 @@ class JobController < ApplicationController
 		@job.http_data = Base64.encode64(@job.http_data)
 
 		# Update the Response Flags
-		flag = @job.response_flag_meta[0] || ResponseFlagMeta.new
-		flag.match_value = params[:response_flag_metum][:match_value]
-		flag.job_id = @job.id
-		flag.match_type = "string"
-		flag.save
+		params[:job][:response_flag_meta].each_with_index do |rfm|
+			# TODO: Fix this weird hackery... not sure why params are being passed in weirdly
+			rfm = rfm[1]
+
+			# If it has an id, update, otherwise create
+			if rfm["id"] != nil
+				flag_meta = ResponseFlagMeta.find(rfm["id"])
+			else
+				flag_meta = ResponseFlagMeta.new
+			end
+			flag_meta.match_value = rfm[:match_value]
+			flag_meta.match_type = rfm[:match_type]
+			flag_meta.save
+		end
 
 		if @job.save!
 			flash[:notice] = "Job #{@job.id} updated successfully"

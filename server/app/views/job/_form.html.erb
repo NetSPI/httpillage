@@ -21,8 +21,20 @@
   <label for="response">Response Storage?</label>
   <%= f.select(:attack_mode, options_for_select([['None', 'none'], ['Store Full', 'store']], @job.attack_mode)) %>
 
-  <label>Response Flag</label>
-  <%= text_field(:response_flag_metum, :match_value, class: "input-field", size: '50x6', :value => (@job.response_flag_meta.count > 0) ? @job.response_flag_meta[0].match_value : "") %>
+  <label for="response">Response Matching</label>
+  <fieldset id="response_flags">
+  <% @job.response_flag_meta.each do |rfm| %>
+    <input type="hidden" name="job[response_flag_meta][<%= rfm.id %>][id]" value="<%= rfm.id %>">
+    <input class="input-field" type="text" name="job[response_flag_meta][<%= rfm.id %>][match_value]" value="<%= rfm.match_value %>" style="display:inline">
+
+    <select name="job[response_flag_meta][<%= rfm.id %>][match_type]" style="display:inline">
+      <option value="string" <%= "SELECTED" if rfm.match_type == "string" %>>String</option>
+      <option value="regex" <%= "SELECTED" if rfm.match_type == "regex" %>>Regex</option>
+    </select><br />
+  <% end %>
+  </fieldset>
+
+  <input type="button" id="addNewFlag" value="Add Flag">
 
   <label for="type">Attack Type</label>
   <%= f.select(:attack_type, options_for_select([['Repeat', 'repeat'], ['Dictionary', 'dictionary'], ['Brute Force', 'bruteforce']], @job.attack_type)) %>
@@ -62,5 +74,14 @@ $("#job_attack_type").change(function () {
     $("#charset").hide();
     $("#dictionary").hide();
   }
+});
+
+var clicked = 100;
+$("#addNewFlag").click(function () {
+  clicked++;
+  row = '<input class="input-field" type="text" name="job[response_flag_meta][' + clicked + '][match_value]" style="display:inline"><select name="job[response_flag_meta][' + clicked + '][match_type]" style="display:inline"><option value="string">String</option><option value="regex">Regex</option></select><br />';
+
+    $("#response_flags").append(row);
+    return false;
 });
 </script>
