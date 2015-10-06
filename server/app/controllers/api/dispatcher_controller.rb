@@ -1,4 +1,5 @@
 class Api::DispatcherController < ApiController
+	before_filter	:authorized_node?
 	# 
 	# When polling check to see if there have been any updates
 	# to the current job.

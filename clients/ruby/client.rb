@@ -2,12 +2,13 @@
 require './bruteforce.rb'
 
 class Client
-	def initialize(server, thread_count, proxy_host, proxy_port)
+	def initialize(server, thread_count, proxy_host, proxy_port, api_key)
 		@server = server + "/api"
 		@proxy_host = proxy_host
 		@proxy_port = proxy_port
 		@has_job = false
 		@thread_count = thread_count
+		@node_api_key = api_key
 
 		@job_id = 0
 		@job_type = ""
@@ -49,10 +50,10 @@ class Client
 		@http_uri 				= job["http_uri"]
 		@http_host 				= job["http_host"]
 		@attack_mode 			= job["attack_mode"]
-		@http_header_string = Base64.decode64(job["http_headers"])
+		@http_header_string = job["http_headers"]
 		@http_headers 		= parse_headers(@http_header_string)
-		@http_data_string = Base64.decode64(job["http_data"])
-		@http_data 				= parse_data(Base64.decode64(job["http_data"]))
+		@http_data_string = job["http_data"]
+		@http_data 				= parse_data(job["http_data"])
 
 		@bruteforce_index = job["next_index"]
 		if @job_type == "dictionary"
@@ -70,7 +71,8 @@ class Client
 	def request_job
 		endpoint = @server + "/poll/#{@node_id}"
 
-		response = Mechanize.new.get(endpoint)
+		headers = get_auth_headers
+		response = Mechanize.new.get(endpoint, {}, nil, headers)
 		# Parse response
 
 		response_parsed = JSON.parse(response.body)
@@ -210,13 +212,14 @@ class Client
 	def store_response(response)
 		endpoint = "#{@server}/job/#{@job_id}/saveResponse"
 
+		headers = get_auth_headers
 		data = { 
 			:response 				=> Base64.encode64(response.body),
 			:response_code 		=> response.code.to_i,
 			:nodeid 					=> @node_id	
 		}
 		begin
-			Mechanize.new.post(endpoint, data)
+			Mechanize.new.post(endpoint, data, headers)
 		rescue
 			# hmm
 		end
@@ -225,6 +228,7 @@ class Client
 	def send_match_to_api(response, match_value, payload=nil) 
 		endpoint = "#{@server}/job/#{@job_id}/saveMatch"
 
+		headers = get_auth_headers
 		data = { 
 			:response 				=> Base64.encode64(response),
 			:match_value			=> match_value,
@@ -234,7 +238,7 @@ class Client
 
 		puts "Sending match to server"
 		begin
-			Mechanize.new.post(endpoint, data)
+			Mechanize.new.post(endpoint, data, headers)
 		rescue
 			puts "Failed sending match to api"
 		end
@@ -256,7 +260,7 @@ class Client
 		endpoint = "#{@server}/checkin/#{@node_id}/#{@job_id}/#{status_code}"
 
 		begin
-			response = Mechanize.new.get(endpoint)
+			response = Mechanize.new.get(endpoint, [], nil, headers)
 			# Parse response
 			response_parsed = JSON.parse(response.body)
 			
@@ -289,6 +293,11 @@ class Client
 		end
 	end
 
+	def get_auth_headers
+		# Auth Header
+		headers = { "X-Node-Token" => @node_api_key}
+	end
+
 	# Generate a random integer between 13 and 77.
 	# Used to control polling frequency
 	def random_polling_interval
@@ -315,8 +324,7 @@ class Client
 
 		lines = headers.split("\n")
 
-		# IF there's only one line, return it
-		return lines[0] if lines.count < 2
+		puts lines.inspect
 
 		lines.each do |line|
 			split_line = line.split(":", 2)

@@ -39,6 +39,11 @@ optparse = OptionParser.new do |opts|
 		options[:proxy_port] = port
 	end
 
+	options [:node_api_key] = ""
+	opts.on('--api-key KEY', 'API Key for Nodes') do |key|
+		options[:node_api_key] = key
+	end
+
 	opts.on('-h', '--help', 'Display this screen') do 
 		puts opts
 		exit
@@ -52,5 +57,5 @@ puts "Executing with number of threads: #{options[:threads]}"
 puts "Command and control server: #{options[:server]}"
 
 
-client = Client.new(options[:server], options[:threads], options[:proxy_host], options[:proxy_port])
+client = Client.new(options[:server], options[:threads], options[:proxy_host], options[:proxy_port], options[:node_api_key])
 client.invoke

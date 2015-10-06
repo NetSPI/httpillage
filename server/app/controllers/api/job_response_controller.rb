@@ -1,5 +1,5 @@
 class Api::JobResponseController < ApiController
-
+  before_filter :authorized_node?
   def create
     response = JobResponse.new
 
