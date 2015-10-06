@@ -1,5 +1,5 @@
 class Api::ResponseFlagController < ApiController
-  before_filter   :authorized?
+  before_filter   :authorized_node?
   def create
     response_flag = ResponseFlag.new
 

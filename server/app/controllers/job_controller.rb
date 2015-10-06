@@ -92,6 +92,7 @@ class JobController < ApplicationController
 				else
 					flag_meta = ResponseFlagMeta.new
 				end
+				flag_meta.job_id = @job.id
 				flag_meta.match_value = rfm[:match_value]
 				flag_meta.match_type = rfm[:match_type]
 				flag_meta.save
