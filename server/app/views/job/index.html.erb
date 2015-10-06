@@ -8,27 +8,9 @@
 		<% end %>
 	</div>
 </div>
-<div class="row">
-	<div class="col-lg-12">
-		<form action="" class="search-form">
-			<input type="text" placeholder="Enter keywords to search for jobs..." class="input-field">
-		</form>
-		<div class="dropdown search-filter">
-		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-		    Filter by status
-		    <span class="caret"></span>
-		  </button>
-		  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-		    <li><a href="#">Active</a></li>
-		    <li><a href="#">Paused</a></li>
-		    <li><a href="#">Pending</a></li>
-		    <li><a href="#">Completed</a></li>
-		  </ul>
-		</div>
-	</div>
-</div>
 
 <table class="jobs-table table table-striped">
+	<thead>
 	<tr>
 		<th>ID</th>
 		<th>Type</th>
@@ -39,6 +21,8 @@
 		<th>Created By</th>
 		<th>Actions</th>
 	</tr>
+	</thead>
+	<tbody>
 <% @jobs.each do |j| %>
 	<tr>
 		<td><%= link_to j.id, show_job_path(j.id) %></td>
@@ -68,4 +52,13 @@
 		</td>
 	</tr>
 <% end %>
+</tbody>
 </table>
+
+<script>
+$(document).ready(function(){
+    $('.jobs-table').DataTable( {
+        "order": [[ 5, "asc" ]]
+    } );
+});
+</script>

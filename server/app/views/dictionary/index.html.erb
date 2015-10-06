@@ -7,7 +7,8 @@
 	</div>
 </div>
 
-<table class="jobs-table table table-striped">
+<table class="dictionaries-table table table-striped">
+<thead>
 <tr>
 	<th>&nbsp;</th>
 	<th>Filename</th>
@@ -16,6 +17,8 @@
 	<th>Preview</th>
 	<th>&nbsp;</th>
 </tr>
+</thead>
+<tbody>
 <% @dictionaries.all.each do |d| %>
 <tr>
 	<td>
@@ -28,3 +31,10 @@
 	<td><%= link_to 'X', destroy_dictionary_path(d), :method => :delete, :class=>:destroy, data: { confirm: 'Are you sure?' } %></td>
 </tr>
 <% end %>
+</tbody>
+</table>
+<script>
+$(document).ready(function(){
+    $('.dictionaries-table').DataTable();
+});
+</script>

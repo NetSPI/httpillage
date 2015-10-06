@@ -4,7 +4,8 @@
 	</div>
 </div>
 <% if @nodes.count > 0 %>
-<table class="jobs-table table table-striped">
+<table class="nodes-table table table-striped">
+<thead>
 	<tr>
 		<th>ID</th>
 		<th>IP Address</th>
@@ -12,6 +13,8 @@
 		<th>Last Seen</th>
 		<th>Created</th>
 	</tr>
+	</thead>
+	<tbody>
 	<% @nodes.each do |n| %>
 	<tr>
 		<td><%= n.id %></td>
@@ -21,8 +24,17 @@
 		<td><%= n.created_at %></td>
 	</tr>
 	<% end %>
+	</tbody>
 </table>
 
 <% else %>
 	<em>It looks like there are no nodes. Be sure to run the client script on the nodes to start the process.</em>
 <% end %>
+
+<script>
+$(document).ready(function(){
+    $('.nodes-table').DataTable( {
+        "order": [[ 3, "asc" ]]
+    } );
+});
+</script>

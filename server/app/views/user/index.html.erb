@@ -6,21 +6,17 @@
     <% end %>
   </div>
 </div>
-<div class="row">
-  <div class="col-lg-12">
-    <form action="" class="search-form">
-      <input type="text" placeholder="Enter keywords to search for users..." class="input-field">
-    </form>
-  </div>
-</div>
 
 <table class="users-table table table-striped">
+<thead>
   <tr>
     <th>ID</th>
     <th>Email</th>
     <th>Last IP</th>
     <th>Admin?</th>
   </tr>
+  </thead>
+  <tbody>
 <% @users.each do |u| %>
   <tr>
     <td><%= u.id %></td>
@@ -29,4 +25,11 @@
     <td><%= u.admin ? "x" : "" %></td>
   </tr>
 <% end %>
+</tbody>
 </table>
+
+<script>
+$(document).ready(function(){
+    $('.users-table').DataTable();
+});
+</script>
