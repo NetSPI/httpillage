@@ -25,7 +25,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.JMenuItem;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -174,8 +173,8 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
 
         String http_method = http_method_from_request(requestString);
         String http_uri = full_uri_from_request(requestString, this.selectedServiceForPillage.getProtocol());
-        String http_headers = new String(Base64.encodeBase64(http_headers_from_request(requestString).getBytes()));
-        String http_data = new String(Base64.encodeBase64(post_data_from_request(requestString).getBytes()));
+        String http_headers = new String(http_headers_from_request(requestString).getBytes());
+        String http_data = new String(post_data_from_request(requestString).getBytes());
 
         // Hard coded, for now
         String attack_type = "repeat";

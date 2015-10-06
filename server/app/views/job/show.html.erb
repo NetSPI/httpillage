@@ -26,13 +26,13 @@
 	<div class="col-lg-6">
 		<div class="item">
 			<p class="item-title">HTTP Headers</p>
-			<pre><%= Base64.decode64(@job.http_headers) %></pre>
+			<pre><%= @job.http_headers %></pre>
 		</div>
 
 		<% if @job.http_data != ""%>
 		<div class="item">
 			<p class="item-title">Post Data</p>
-			<pre><%= Base64.decode64(@job.http_data) %></pre>
+			<pre><%= @job.http_data %></pre>
 		</div>
 		<% end %>
 	</div>

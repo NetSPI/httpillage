@@ -258,19 +258,23 @@ class Client
 
 		# Todo: Refactor this to also send the most previous http status code
 		endpoint = "#{@server}/checkin/#{@node_id}/#{@job_id}/#{status_code}"
+		headers = get_auth_headers
 
 		begin
 			response = Mechanize.new.get(endpoint, [], nil, headers)
 			# Parse response
 			response_parsed = JSON.parse(response.body)
-			
+
 			if response_parsed["status"] == "active"
+				@has_job = true
 				return response_parsed
 			else
 				@has_job = false
 				return false
 			end
-		rescue
+		rescue Exception => e
+			puts "unable to check status"
+			puts e.inspect
 			# Ehh, let it slide for now.
 			# Eventually there should be an error counter that kills
 			# jobs based on a certain number of unsuccessful attempts
@@ -323,8 +327,6 @@ class Client
 		header_hash = {}
 
 		lines = headers.split("\n")
-
-		puts lines.inspect
 
 		lines.each do |line|
 			split_line = line.split(":", 2)
