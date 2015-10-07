@@ -2,7 +2,7 @@
 require './bruteforce.rb'
 
 class Client
-	def initialize(server, thread_count, proxy_host, proxy_port, api_key)
+	def initialize(server, thread_count, proxy_host, proxy_port, api_key, cert_path)
 		@server = server + "/api"
 		@proxy_host = proxy_host
 		@proxy_port = proxy_port
@@ -29,6 +29,8 @@ class Client
 		# This var is only used when performing dictionary attacks
 		# It will be populated by the server
 		@attack_payloads = []
+
+		@cert_path = cert_path
 
 	end
 
@@ -72,7 +74,20 @@ class Client
 		endpoint = @server + "/poll/#{@node_id}"
 
 		headers = get_auth_headers
-		response = Mechanize.new.get(endpoint, {}, nil, headers)
+		puts "Requesting Job"
+
+		req = Mechanize.new.tap do |r|
+				if @server.match(/^https/)  # enable SSL/TLS
+				  r.agent.ca_file = @cert_path
+				end
+			end
+
+		begin
+			response = req.get(endpoint, {}, nil, headers)
+		rescue Exception => e
+			puts e.inspect
+		end
+		puts "Job requested"
 		# Parse response
 
 		response_parsed = JSON.parse(response.body)
@@ -166,6 +181,9 @@ class Client
 			if @proxy_host
 				r.set_proxy(@proxy_host, @proxy_port)
 			end
+
+			# Disabling verification.. we don't really care
+			r.verify_mode = OpenSSL::SSL::VERIFY_NONE
 		end
 
 		# Set these if they weren't passed in...
@@ -219,9 +237,14 @@ class Client
 			:nodeid 					=> @node_id	
 		}
 		begin
-			Mechanize.new.post(endpoint, data, headers)
+			req = Mechanize.new.tap do |r|
+				if @server.match(/^https/)  # enable SSL/TLS
+				  r.agent.ca_file = @cert_path
+				end
+			end
+			response = req.post(endpoint, data, headers)
 		rescue
-			# hmm
+			puts "Failed sending response to api"
 		end
 	end
 
@@ -238,7 +261,12 @@ class Client
 
 		puts "Sending match to server"
 		begin
-			Mechanize.new.post(endpoint, data, headers)
+			req = Mechanize.new.tap do |r|
+				if @server.match(/^https/)  # enable SSL/TLS
+				  r.agent.ca_file = @cert_path
+				end
+			end
+			response = req.post(endpoint, data, headers)
 		rescue
 			puts "Failed sending match to api"
 		end
@@ -261,7 +289,13 @@ class Client
 		headers = get_auth_headers
 
 		begin
-			response = Mechanize.new.get(endpoint, [], nil, headers)
+			req = Mechanize.new.tap do |r|
+				if endpoint.match(/^https/)  # enable SSL/TLS
+				  r.agent.ca_file = @cert_path
+				end
+			end
+
+			response = req.get(endpoint, [], nil, headers)
 			# Parse response
 			response_parsed = JSON.parse(response.body)
 
@@ -286,10 +320,13 @@ class Client
 			if @proxy_host
 				r.set_proxy(@proxy_host, @proxy_port)
 			end
+
+			if @server.match(/^https/)  # enable SSL/TLS
+			  r.agent.ca_file = @cert_path
+			end
 		end
 
 		response = req.head(@server + "/health")
-
 		if response.code.to_i >= 400
 			puts "(!) Unable to communicate with command and control server"
 			puts "(!) Please confirm address: #{@server}"

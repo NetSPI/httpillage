@@ -44,6 +44,11 @@ optparse = OptionParser.new do |opts|
 		options[:node_api_key] = key
 	end
 
+	options [:cert_path] = ""
+	opts.on('--cert_path PATH', 'Path for .crt/.cer file for verification') do |path|
+		options[:cert_path] = path
+	end
+
 	opts.on('-h', '--help', 'Display this screen') do 
 		puts opts
 		exit
@@ -57,5 +62,5 @@ puts "Executing with number of threads: #{options[:threads]}"
 puts "Command and control server: #{options[:server]}"
 
 
-client = Client.new(options[:server], options[:threads], options[:proxy_host], options[:proxy_port], options[:node_api_key])
+client = Client.new(options[:server], options[:threads], options[:proxy_host], options[:proxy_port], options[:node_api_key], options[:cert_path])
 client.invoke
