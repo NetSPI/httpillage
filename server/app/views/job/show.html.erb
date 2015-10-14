@@ -16,7 +16,10 @@
 		<b><%= @job.http_method %></b> <%= @job.http_uri %><br /><br />
 
 		<% if @job.attack_type == "bruteforce" %>
-		Completion Percentage: <span id="completion-percentage"><%= @bruteforce_percentage %></span>% - Computing <span id="keyspace_start"><%=@keyspace_start_val %></span> to <span id="keyspace_end"><%= @keyspace_end_val %></span>
+		Completion Percentage: <span id="completion-percentage"><%= @bruteforce_percentage %></span>% 
+			<% unless @keyspace_start_val.nil? %>
+			- Computing <span id="keyspace_start"><%=@keyspace_start_val %></span> to <span id="keyspace_end"><%= @keyspace_end_val %></span>
+			<% end %>
 		<% end %>
 		</div>
 	</div>

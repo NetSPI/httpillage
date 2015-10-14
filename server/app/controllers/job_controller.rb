@@ -24,6 +24,8 @@ class JobController < ApplicationController
 				@keyspace_size = Bruteforce::totalSize(@charset)
 
 				@bruteforce_percentage = (@bruteforce_status.to_f / @keyspace_size.to_f * 100.0).to_i
+			else
+				@bruteforce_percentage = 0
 			end
 		end
 	end
@@ -44,15 +46,17 @@ class JobController < ApplicationController
 
 
 		# Create response flag meta information for job
-		params[:job][:response_flag_meta].each_with_index do |rfm|
-			# TODO: Fix this weird hackery... not sure why params are being passed in weirdly
-			rfm = rfm[1]
+		if params[:job][:response_flag_meta]
+			params[:job][:response_flag_meta].each_with_index do |rfm|
+				# TODO: Fix this weird hackery... not sure why params are being passed in weirdly
+				rfm = rfm[1]
 
-			flag_meta = ResponseFlagMeta.new
-			flag_meta.job_id = @job.id
-			flag_meta.match_value = rfm[:match_value]
-			flag_meta.match_type = rfm[:match_type]
-			flag_meta.save
+				flag_meta = ResponseFlagMeta.new
+				flag_meta.job_id = @job.id
+				flag_meta.match_value = rfm[:match_value]
+				flag_meta.match_type = rfm[:match_type]
+				flag_meta.save
+			end
 		end
 
 		if @job.valid?

@@ -15,6 +15,8 @@ Rails.application.routes.draw do
 	  post 'job/:jobid/saveMatch',		to: 'response_flag#create'
 	end
 
+	get 'settings',								to: 'setting#index', as: 'settings'
+
 	get 'jobs', 									to: 'job#index', as: 'jobs'
 	get	'job/:jobid',							to: 'job#show', as: 'show_job'
 	get 'jobs/new', 							to: 'job#new'

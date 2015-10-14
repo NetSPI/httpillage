@@ -34,7 +34,7 @@ module Bruteforce
 
     totalKeyspace  = keyspaceLengths.inject(:*)
 
-    if index > totalKeyspace
+    if index.nil? || index > totalKeyspace
       return nil
     end
 
