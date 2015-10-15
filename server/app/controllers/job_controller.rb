@@ -51,11 +51,15 @@ class JobController < ApplicationController
 				# TODO: Fix this weird hackery... not sure why params are being passed in weirdly
 				rfm = rfm[1]
 
-				flag_meta = ResponseFlagMeta.new
-				flag_meta.job_id = @job.id
-				flag_meta.match_value = rfm[:match_value]
-				flag_meta.match_type = rfm[:match_type]
-				flag_meta.save
+				# Ignore if the string is empty
+				if rfm[:match_value] != ""
+
+					flag_meta = ResponseFlagMeta.new
+					flag_meta.job_id = @job.id
+					flag_meta.match_value = rfm[:match_value]
+					flag_meta.match_type = rfm[:match_type]
+					flag_meta.save
+				end
 			end
 		end
 

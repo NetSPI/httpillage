@@ -31,6 +31,8 @@ class Api::DispatcherController < ApiController
 					# Not elegant, but can't directly assign job[:work] = ...
 					job.work = dictionary_content_for_job(job.id, active_node.id)
 
+					job.status = "completed"
+					job.save
 					if job.work == ""
 						return :json => '{ "status": "halt"}'
 					end
