@@ -153,8 +153,10 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, A
     public ArrayList<JMenuItem> createMenuItems(IContextMenuInvocation invocation) {
         ArrayList<JMenuItem> menu = new ArrayList<JMenuItem>();
         byte ctx = invocation.getInvocationContext();
-        // Only show context menu for scanner results...
-        if (ctx == IContextMenuInvocation.CONTEXT_PROXY_HISTORY) {
+        
+        if (ctx == IContextMenuInvocation.CONTEXT_PROXY_HISTORY ||
+            ctx == IContextMenuInvocation.CONTEXT_MESSAGE_VIEWER_REQUEST ||
+            ctx == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST) {
             IHttpRequestResponse[] request = invocation.getSelectedMessages();
 
             this.selectedServiceForPillage = request[0].getHttpService();
