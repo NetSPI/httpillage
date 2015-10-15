@@ -1,6 +1,8 @@
 # encoding: utf-8
 require './bruteforce.rb'
 
+SLEEP_TIME = 3
+
 class Client
 	def initialize(server, thread_count, proxy_host, proxy_port, api_key, cert_path)
 		@server = server + "/api"
@@ -92,20 +94,20 @@ class Client
 		rescue Exception => e
 			puts e.inspect
 		end
-		puts "Job requested"
+
 		# Parse response
 
-		response_parsed = JSON.parse(response.body)
+		unless response.nil? || response.body.nil?
+			response_parsed = JSON.parse(response.body)
 		
-		if response_parsed["status"] == "active"
-			return response_parsed
-		else
-			# Failed, but let's sleep
-			random_sleep_time = random_polling_interval
-			puts "Sleeping for #{random_sleep_time} seconds"
-			sleep(random_sleep_time)
-			return false
+			if response_parsed["status"] == "active"
+				return response_parsed
+			end
 		end
+		# Failed, but let's sleep
+		puts "Sleeping for #{SLEEP_TIME} seconds"
+		sleep(SLEEP_TIME)
+		return false
 	end
 
 	def kick_off_job!
@@ -290,8 +292,7 @@ class Client
 
 	def monitor_job_status
 		# Let's sleep for a bit first
-		random_sleep_time = random_polling_interval / 3
-		sleep(random_sleep_time)
+		sleep(SLEEP_TIME)
 
 		# check status code
 		status_code = @last_status_code
