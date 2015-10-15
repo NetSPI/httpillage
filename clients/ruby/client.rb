@@ -297,11 +297,6 @@ class Client
 		# check status code
 		status_code = @last_status_code
 
-		# Basically checking if the payloads have been sent
-		if @has_job == false
-			return false
-		end
-
 		puts "Checking job status for job #{@job_id} on node #{@node_id}"
 
 		# Todo: Refactor this to also send the most previous http status code
@@ -316,6 +311,13 @@ class Client
 			end
 
 			response = req.get(endpoint, [], nil, headers)
+
+			# Basically checking if the payloads have been sent
+			# This occurrs after checkin
+			if @has_job == false
+				return false
+			end
+
 			# Parse response
 			response_parsed = JSON.parse(response.body)
 
@@ -363,12 +365,6 @@ class Client
 	def get_auth_headers
 		# Auth Header
 		headers = { "X-Node-Token" => @node_api_key}
-	end
-
-	# Generate a random integer between 13 and 77.
-	# Used to control polling frequency
-	def random_polling_interval
-		13 + rand(64)
 	end
 
 	def parse_work(work)
