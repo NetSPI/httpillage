@@ -192,7 +192,6 @@ var lastCheckinTimestamp = "<%= DateTime.now %>";
 
 	// Poll for updated matches
 	window.setInterval(function () {
-		console.log("triggered");
 		$.get('/job/response/<%= @job.id %>/poll/' + lastCheckinTimestamp, function(data) {
 			lastCheckinTimestamp = data.newTimestamp;
 

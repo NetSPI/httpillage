@@ -31,7 +31,7 @@
 		<span class="notice" style="padding: 0; margin: 0; border: none"><p class="notification-box"><%= notice %></p></span>
 		<span class="alert" style="padding: 0; margin: 0; border: none"><p class="notification-box"><%= alert %></p></span>
 		<%= yield %>
+    <center><em>Version: <%=`git rev-parse --abbrev-ref HEAD`%>-<%= `git rev-parse --short HEAD` %></em></center>
 	</div>
-
 </body>
 </html>
