@@ -211,11 +211,6 @@ class Client
 				response = req.post(http_uri, http_data, http_headers)
 			end
 
-			if payload == "forcedrequest"
-				puts "\n\nHERE:\n\n"
-				puts response.body
-			end
-
 			check_response_for_match(response.body, payload)
 
 			store_response(response) if @attack_mode == 'store'
