@@ -36,7 +36,10 @@ class Client
 
 	def invoke
 		# Make sure we can reach C&C
-		cc_stability_test
+		cc_server_reachable = false
+		while cc_server_reachable == false
+			cc_server_reachable = cc_stability_test
+		end
 
 		puts "(+) Polling for Job..."
 		while @has_job == false
@@ -108,7 +111,7 @@ class Client
 	def kick_off_job!
 		puts "(+) Job recieved. Kicking it off with #{@thread_count} threads"
 		puts "(+) Currently attacking: #{@http_uri}"
-		monitor_thread_id = @thread_count + 1
+		monitor_thread_id = @thread_count.to_i + 1
 
 		job_threads = (1..monitor_thread_id).map do |i|
 			Thread.new(i) do |i|
@@ -207,6 +210,12 @@ class Client
 			else
 				response = req.post(http_uri, http_data, http_headers)
 			end
+
+			if payload == "forcedrequest"
+				puts "\n\nHERE:\n\n"
+				puts response.body
+			end
+
 			check_response_for_match(response.body, payload)
 
 			store_response(response) if @attack_mode == 'store'
@@ -340,11 +349,18 @@ class Client
 			end
 		end
 
-		response = req.head(@server + "/health")
-		if response.code.to_i >= 400
+		begin
+			response = req.head(@server + "/health")
+			if response.code.to_i >= 400
+				puts "(!) Unable to communicate with command and control server"
+				puts "(!) Please confirm address: #{@server}"
+			else
+				return true
+			end
+		rescue Exception => e
 			puts "(!) Unable to communicate with command and control server"
 			puts "(!) Please confirm address: #{@server}"
-			exit
+			return false
 		end
 	end
 

@@ -19,7 +19,7 @@ optparse = OptionParser.new do |opts|
 		options[:verbose] = true
 	end
 
-	options[:threads] = 3
+	options[:threads] = 5
 	opts.on('-t', '--threads THREADS', 'Number of threads to leverage') do |threads|
 		options[:threads] = threads
 	end
