@@ -67,6 +67,8 @@ class Client
 
 		@response_flag_meta = job["response_flag_meta"]
 
+
+		puts "Work: #{@attack_payloads}"
 		kick_off_job!
 	end
 
@@ -118,7 +120,11 @@ class Client
 					while @has_job
 						# Ideally we would check if process_request returns done
 						# If it does, let the C&C know...
-						process_request
+						res = process_request
+
+						if res == "done"
+							@has_job = false
+						end
 					end
 				end
 			end
@@ -153,7 +159,11 @@ class Client
 		elsif @job_type == "dictionary" || @job_type == "bruteforce"
 			payload = @attack_payloads.pop
 
-			if payload.nil?
+			if payload == ""
+				payload = @attack_payloads.pop
+			end
+
+			if payload.nil? 
 				# No more work to do..mark job as complete
 				@has_job = false
 				return "done"
@@ -282,6 +292,11 @@ class Client
 		# check status code
 		status_code = @last_status_code
 
+		# Basically checking if the payloads have been sent
+		if @has_job == false
+			return false
+		end
+
 		puts "Checking job status for job #{@job_id} on node #{@node_id}"
 
 		# Todo: Refactor this to also send the most previous http status code
@@ -301,7 +316,6 @@ class Client
 
 			if response_parsed["status"] == "active"
 				@has_job = true
-				return response_parsed
 			else
 				@has_job = false
 				return false
@@ -348,7 +362,7 @@ class Client
 	def parse_work(work)
 		return [] if work.nil?
 
-		return work.split("\n")
+		return URI.unescape(work).split("\n")
 	end
 
 	# Split data by & and =, returning hash

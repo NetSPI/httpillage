@@ -45,7 +45,7 @@ optparse = OptionParser.new do |opts|
 	end
 
 	options [:cert_path] = ""
-	opts.on('--cert_path PATH', 'Path for .crt/.cer file for verification') do |path|
+	opts.on('--cert-path PATH', 'Path for .crt/.cer file for verification') do |path|
 		options[:cert_path] = path
 	end
 
