@@ -352,10 +352,13 @@ class Client
 			if response.code.to_i >= 400
 				puts "(!) Unable to communicate with command and control server"
 				puts "(!) Please confirm address: #{@server}"
+				puts "(!) Code: #{response.code.to_s}"
+				return false
 			else
 				return true
 			end
 		rescue Exception => e
+			puts "#{e.inspect}"
 			puts "(!) Unable to communicate with command and control server"
 			puts "(!) Please confirm address: #{@server}"
 			return false

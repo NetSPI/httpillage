@@ -15,3 +15,9 @@
 /log/*
 !/log/.keep
 /tmp
+
+*.zip
+
+# Ignore SSL Cert data
+*.crt
+*.csr
