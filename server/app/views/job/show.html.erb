@@ -55,17 +55,20 @@
 				</thead>
 				<tbody>
 				<% @node_statuses.each do |status| %>
+					<tr>
+						<td><%= status.node_id %></td>
+						<td class="job-response-code"><%= status.response_code %></td>
+						<td><%= status.created_at %></td>
+					</tr>
+				<% end %>
+
+				<% else %>
 				<tr>
-					<td><%= status.node_id %></td>
-					<td class="job-response-code"><%= status.response_code %></td>
-					<td><%= status.created_at %></td>
+					<td id="node-checkin-row-placeholder" colspan="3"><center><em>No Match</em></center></td>
 				</tr>
 				<% end %>
 				</tbody>
 				</table>
-					<% else %>
-		There are no updates for this job
-	<% end %>
 		</div>
 	</div>
 
@@ -73,7 +76,6 @@
 	<div class="col-lg-6">
 		<div class="item">
 			<p class="item-title">Job responses</p>
-				<% if @job.job_responses.count > 0 %>
 				<table class="table table-striped job-responses">
 				<thead>
 				<tr>
@@ -84,7 +86,7 @@
 				</tr>
 				</thead>
 				<tbody>
-
+				<% if @job.job_responses.count > 0 %>
 				<% 
 				# TODO: Make this use some sort of pagination. For now we're only showing 5.
 				i = 0
@@ -99,11 +101,13 @@
 				i += 1
 				break if i == 5
 				end %>
+				<% else %>
+				<tr>
+					<td id="row-placeholder" colspan="5"><center><em>No Match</em></center></td>
+				</tr>
+				<% end %>
 				</tbody>
-				</table>
-			<% else %>
-				There are no responses for this job
-			<% end %>
+			</table>
 		</div>
 	</div>
 
@@ -119,7 +123,6 @@
 	<div class="col-lg-6">
 		<div class="item">
 			<p class="item-title">Job Matches -- <%= link_to 'Export All', export_job_matches_path(@job, :format => :csv) %></p>
-				<% if @job.response_flags.count > 0 %>
 				<table class="table table-striped response-matches">
 				<thead>
 				<tr>
@@ -129,7 +132,7 @@
 				</tr>
 				</thead>
 				<tbody>
-
+				<% if @job.response_flags.count > 0 %>
 				<% 
 				# TODO: Make this use some sort of pagination. For now we're only showing 5.
 				i = 0
@@ -143,11 +146,14 @@
 				i += 1
 				break if i == 5
 				end %>
+				<% else %>
+				<tr>
+					<td id="response-matches-row-placeholder" colspan="3"><center><em>No Match</em></center></td>
+				</tr>
+				<% end %>
 				</tbody>
 				</table>
-			<% else %>
-				There are no flags for this job
-			<% end %>
+
 		</div>
 	</div>
 
@@ -185,6 +191,12 @@ var lastCheckinTimestamp = "<%= DateTime.now %>";
 				row = "<tr><td>" + row.node_id + "</td><td>" + row.response_code + "</td><td>" + row.created_at + "</td> </tr>";
 				$(".node-checkins tbody").prepend(row);
 			}
+
+		// If there was data, delete place holder
+		if (data.count > 0) {
+			$("#node-checkin-row-placeholder").remove();
+		}
+
 		// Chop rows to 5.
 		$(".node-checkins tbody").find("tr:gt(4)").remove();
 		});
@@ -201,6 +213,12 @@ var lastCheckinTimestamp = "<%= DateTime.now %>";
 				row = "<tr><td>" + row.payload + "</td><td>" + row.matched_string + "</td><td>" + row.created_at + "</td> </tr>";
 				$(".response-matches tbody").prepend(row);
 			}
+
+					// If there was data, delete place holder
+		if (data.count > 0) {
+			$("#response-matches-row-placeholder").remove();
+		}
+
 		// Chop rows to 5.
 		$(".response-matches tbody").find("tr:gt(4)").remove();
 		});
