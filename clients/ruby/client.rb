@@ -213,6 +213,8 @@
 					response = req.post(http_uri, http_data, http_headers)
 				end
 
+				req.shutdown
+
 				check_response_for_match(response.body, payload)
 
 				store_response(response) if @attack_mode == 'store'
