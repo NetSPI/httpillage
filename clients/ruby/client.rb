@@ -61,6 +61,8 @@
 			@http_headers 		= parse_headers(@http_header_string)
 			@http_data_string = job["http_data"]
 			@http_data 				= parse_data(job["http_data"])
+			@temp_thread_count = 0
+
 
 			@bruteforce_index = job["next_index"]
 			if @job_type == "dictionary"
@@ -72,6 +74,11 @@
 
 			@response_flag_meta = job["response_flag_meta"]
 
+			# If the job type is repeat without response_flag_meta, set threads to 100
+			if @job_type == "repeat" && (@response_flag_meta.nil? || @response_flag_meta.count == 0)
+				puts "(+) DoS attack detected. Increasing thread count"
+				@temp_thread_count = 500
+			end
 
 			puts "Work: #{@attack_payloads}"
 			kick_off_job!
@@ -111,9 +118,17 @@
 		end
 
 		def kick_off_job!
-			puts "(+) Job recieved. Kicking it off with #{@thread_count} threads"
+			if @temp_thread_count
+				thread_count = @temp_thread_count
+			else
+				thread_count = @thread_count.to_i
+			end
+
+			puts "(+) Job recieved. Kicking it off with #{thread_count} threads"
 			puts "(+) Currently attacking: #{@http_uri}"
-			monitor_thread_id = @thread_count.to_i + 1
+
+
+			monitor_thread_id = thread_count + 1
 
 			job_threads = (1..monitor_thread_id).map do |i|
 				Thread.new(i) do |i|
@@ -215,8 +230,10 @@
 
 				req.shutdown
 
-				check_response_for_match(response.body, payload)
-
+				# Let's ignore unless there are matches
+				unless @response_flag_meta.nil?
+					check_response_for_match(response.body, payload)
+				end
 				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
 			rescue Exception => e
