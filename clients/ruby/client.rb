@@ -118,7 +118,7 @@
 		end
 
 		def kick_off_job!
-			if @temp_thread_count
+			if @temp_thread_count > 0
 				thread_count = @temp_thread_count
 			else
 				thread_count = @thread_count.to_i
