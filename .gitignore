@@ -4,3 +4,9 @@
 
 # Test files
 server/lib/dictionaries/*
+
+# Certs
+*.key
+*.crt
+*.csr
+
