@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006121706) do
+ActiveRecord::Schema.define(version: 20151027000334) do
 
   create_table "bruteforce_statuses", force: :cascade do |t|
     t.integer  "node_id"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 20151006121706) do
     t.string   "description"
     t.string   "charset"
     t.integer  "next_index"
+    t.integer  "node_limit"
   end
 
   add_index "jobs", ["user_id"], name: "index_jobs_on_user_id"

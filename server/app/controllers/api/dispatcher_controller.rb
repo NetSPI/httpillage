@@ -18,13 +18,10 @@ class Api::DispatcherController < ApiController
 			end
 		else
 			# check if there are any ongoing jobs
-			jobs = Job.active
+			job = get_active_job(active_node.id)
 
 			# If there are any, choose one randomly
-			if jobs.count > 0
-				job_idx = rand(jobs.count - 1)
-
-				job = jobs[job_idx]
+			unless job.nil?
 
 				# If it's a dictionary job let's find the work
 				if job[:attack_type] == "dictionary"
@@ -140,5 +137,21 @@ class Api::DispatcherController < ApiController
 		node.save
 
 		return node
+	end
+
+	def get_active_job(node_id)
+		jobs = Job.active
+
+		jobs.each do |job|
+			# Check if job has node_limit, if so, ensure it's not too high
+			node_checkins = NodeStatusCheckin.where("node_id != ?", node_id).checkins_since_timestamp(job.id, 5.minutes.ago.to_s)
+			if job.node_limit != 0 && node_checkins.count > job.node_limit
+				next
+			else
+				return job
+			end
+		end
+
+		return nil
 	end
 end
