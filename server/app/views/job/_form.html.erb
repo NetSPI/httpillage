@@ -6,6 +6,9 @@
   <label for="description">Job Description</label>
   <%= f.text_area :description, {:class => 'input-field', :size => '50x6'} %>
 
+  <label for="node_limit">Node Allocation Limit (0 for no limit)</label>
+  <%= f.text_field :node_limit, {:class => 'input-field' } %>
+
   <label for="method">HTTP Method</label>
   <%= f.select("http_method", options_for_select([['GET', 'GET'], ['POST', 'POST'], ["PUT", "PUT"], ["PATCH", "PATCH"], ["DELETE", "DELETE"]], @job.http_method)) %>
 

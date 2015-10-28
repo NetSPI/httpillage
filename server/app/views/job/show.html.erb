@@ -13,7 +13,7 @@
 		<% end %>
 		<div style="margin-top:-30px;margin-bottom:30px;">
 		<em><%= @job.description %></em><br /><br />
-		<b><%= @job.http_method %></b> <%= @job.http_uri %><br /><br />
+		<b><%= @job.http_method %></b> <%= @job.http_uri %> with <%= @job.node_limit.nil? ? "unlimited" : @job.node_limit %> nodes<br /><br />
 
 		<% if @job.attack_type == "bruteforce" %>
 		Completion Percentage: <span id="completion-percentage"><%= @bruteforce_percentage %></span>% 

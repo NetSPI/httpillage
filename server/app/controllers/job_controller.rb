@@ -160,6 +160,7 @@ class JobController < ApplicationController
 			:attack_mode,
 			:status,
 			:dictionary_id,
+			:node_limit,
 			:charset)
 	end
 end
