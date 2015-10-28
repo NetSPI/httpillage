@@ -30,6 +30,7 @@ $transition-time: .2s;
 
 $text-size: 16px;
 
+@import "global";
 @import "font-awesome-sprockets";
 @import "font-awesome";
 
@@ -38,5 +39,7 @@ $text-size: 16px;
 @import "compass/css3";
 
 @import "compass/css3";
+
+@import "normalize";
 
 @import "base";

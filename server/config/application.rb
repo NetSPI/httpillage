@@ -22,5 +22,10 @@ module Server
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    config.action_dispatch.default_headers.merge!(
+        'X-Frame-Options'   => 'DENY',
+        'Content-Security-Policy' => "default-src *; style-src 'self' https://nvisium.com http://fonts.googleapis.com 'unsafe-inline'; script-src 'self'"
+    )
   end
 end
+

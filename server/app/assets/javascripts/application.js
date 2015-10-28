@@ -12,5 +12,6 @@
 //
 //= require jquery.min.js
 //= require jquery_ujs
+//= require jquery.dataTables.min.js
 //= require bootstrap.min.js
 //= require_tree .

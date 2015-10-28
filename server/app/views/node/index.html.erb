@@ -30,11 +30,3 @@
 <% else %>
 	<em>It looks like there are no nodes. Be sure to run the client script on the nodes to start the process.</em>
 <% end %>
-
-<script>
-$(document).ready(function(){
-    $('.nodes-table').DataTable( {
-        "order": [[ 3, "desc" ]]
-    } );
-});
-</script>
