@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 	end
 
 	get 'settings',								to: 'setting#index', as: 'settings'
+	put 'settings/update/:settings_type',				to: 'setting#update', as: 'update_settings'
 
 	get 'jobs', 									to: 'job#index', as: 'jobs'
 	get	'job/:jobid',							to: 'job#show', as: 'show_job'

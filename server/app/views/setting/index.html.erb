@@ -8,18 +8,20 @@
   <tr>
     <th>Setting</th>
     <th>Value</th>
+    <th>&nbsp;</th>
   </tr>
   </thead>
   <tbody>
   <tr>
     <td>User API Token</td>
     <td><%= @user_token %></td>
+    <td><%= button_to "Generate New Token", update_settings_path("user"), method: :put, class: 'button-alternative' %></td>
   </tr>
   <tbody>
   <tr>
     <td>Node API Key</td>
     <td><%= @node_key %></td>
-
+    <td><%= button_to "Generate New Token", update_settings_path("node"), method: :put, class: 'button-alternative' %></td>
   </tr>
   </tbody>
 </table> 
