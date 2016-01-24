@@ -207,28 +207,41 @@
 		# Currently this does not store any responses
 		#
 		def send_request(http_uri=nil,http_data=nil, http_headers=nil,payload=nil)
-			req = Mechanize.new.tap do |r|
-				if @proxy_host
-					r.set_proxy(@proxy_host, @proxy_port)
-				end
-
-				# Disabling verification.. we don't really care
-				r.verify_mode = OpenSSL::SSL::VERIFY_NONE
-			end
-
-			# Set these if they weren't passed in...
-			http_uri ||= @http_uri
-			http_data ||= @http_data
-			http_headers ||= @http_headers
-
 			begin
-				if @http_method.downcase == "get"
-					response = req.get(http_uri, [], nil, http_headers)
-				else
-					response = req.post(http_uri, http_data, http_headers)
-				end
+				# Set these if they weren't passed in...
+				http_uri ||= @http_uri
+				http_data ||= @http_data
+				http_headers ||= @http_headers
 
-				req.shutdown
+				uri = URI(http_uri)
+				if @http_method.downcase == "get"
+					Net::HTTP.start(uri.host, uri.port) do |http|
+						http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+						req = Net::HTTP::Get.new(uri)
+
+						http_headers.each do |header_key, header_val|
+							req.add_field(header_key, header_val)
+						end
+
+						response = http.request req
+						http.finish
+					end
+				else
+					Net::HTTP.start(uri.host, uri.port) do |http|
+						http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+						# Convert data from hash -> string
+						req = Net::HTTP::Post.new(uri)
+						req.set_form_data(http_data)
+
+						http_headers.each do |header_key, header_val|
+							req.add_field(header_key, header_val)
+						end
+
+						response = http.request req
+						http.finish
+					end
+				end
 
 				# Let's ignore unless there are matches
 				unless @response_flag_meta.nil?
@@ -237,7 +250,8 @@
 				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
 			rescue Exception => e
-				puts "Unable to connect"
+				# TODO: Add error handling. If the exception indicates that there are too many open files
+				# we need to resend.
 				puts e.inspect
 				@last_status_code = 0
 			end

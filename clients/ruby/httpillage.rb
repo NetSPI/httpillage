@@ -3,6 +3,7 @@
 # in the foreground.
 
 require 'mechanize'
+require 'net/http'
 require 'optparse'
 require 'json'
 require 'base64'
