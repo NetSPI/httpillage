@@ -212,12 +212,13 @@
 				http_uri ||= @http_uri
 				http_data ||= @http_data
 				http_headers ||= @http_headers
+				response = nil
+				uri = URI.parse(http_uri)
 
-				uri = URI(http_uri)
 				if @http_method.downcase == "get"
 					Net::HTTP.start(uri.host, uri.port) do |http|
 						http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-						req = Net::HTTP::Get.new(uri)
+						req = Net::HTTP::Get.new(uri.request_uri)
 
 						http_headers.each do |header_key, header_val|
 							req.add_field(header_key, header_val)
@@ -231,7 +232,7 @@
 						http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 						# Convert data from hash -> string
-						req = Net::HTTP::Post.new(uri)
+						req = Net::HTTP::Post.new(uri.request_uri)
 						req.set_form_data(http_data)
 
 						http_headers.each do |header_key, header_val|
