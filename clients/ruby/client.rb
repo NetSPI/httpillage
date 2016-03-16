@@ -89,6 +89,8 @@
 			kick_off_job!
 		end
 
+		# Everything is called via invoke
+		private
 		def request_job
 			endpoint = @server + "/poll/#{@node_id}"
 
@@ -365,11 +367,6 @@
 			end
 		end
 
-		def get_auth_headers
-			# Auth Header
-			headers = { "X-Node-Token" => @node_api_key}
-		end
-
 		def get_charsets
 			# this is a mock for now
 			req = CNC::Request.new(cnc_options)
@@ -391,7 +388,11 @@
 			end
 		end
 
-		private
+		def get_auth_headers
+			# Auth Header
+			headers = { "X-Node-Token" => @node_api_key}
+		end
+
 		def cnc_options
 			{
 				:server 				=> @server,
