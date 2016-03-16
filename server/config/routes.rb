@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 	  get 'health', 														to: 'health#index'
 	  get 'poll(/:nodeid(/:jobid))', 						to: 'dispatcher#poll'
 	  get 'checkin/:nodeid/:jobid/:status_code',to: 'dispatcher#checkin'
+	  get 'charsets',														to: 'charset#index'
 
 	  # Intruder will use the following endpoints to create and manage jobs
 	  post 'job/create', 												to: 'job#create'
@@ -40,6 +41,11 @@ Rails.application.routes.draw do
 	get 'dictionaries/new',				to: 'dictionary#new'
 	post 'dictionaries',					to: 'dictionary#create'
 	delete 'dictionary/:dictionaryid', to: 'dictionary#destroy', as: 'destroy_dictionary'
+
+	get 'charsets',						to: 'charset#index'
+	get 'charsets/new',				to: 'charset#new'
+	post 'charsets',					to: 'charset#create'
+	delete 'charset/:charsetid', to: 'charset#destroy', as: 'destroy_charset'
 
 
 	get 'users',									to: 'user#index', as: 'users'

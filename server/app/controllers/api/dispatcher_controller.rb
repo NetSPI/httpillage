@@ -38,7 +38,8 @@ class Api::DispatcherController < ApiController
 					end
 				elsif job[:attack_type] == "bruteforce"
 					job.next_index = job.next_index.nil? ? 0 : job.next_index
-
+					Bruteforce::initiateKeyspaceDict()
+					
 					bruteforce_status = BruteforceStatus.create({
 						:node_id => active_node.id,
 						:job_id => job.id,

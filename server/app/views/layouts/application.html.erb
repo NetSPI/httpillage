@@ -18,6 +18,7 @@
   			<%= link_to 'Jobs', jobs_path, {:class => 'nav-link link-primary'} %>
   			<%= link_to 'Nodes', nodes_path, {:class => 'nav-link link-primary'} %>
   			<%= link_to 'Dictionaries', dictionaries_path, {:class => 'nav-link link-primary'} %>
+        <%= link_to 'Charsets', charsets_path, {:class => 'nav-link link-primary'} %>
         <%= link_to 'Settings', settings_path, {:class => 'nav-link link-primary'} %>
 
         <% if current_user.try(:admin?) %>

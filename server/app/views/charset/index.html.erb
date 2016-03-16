@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-title">Charsets</h1>
+    <%= link_to '/charset/new' do %>
+      <button class="button-primary page-task-button">New Character Set</button>
+    <% end %>
+  </div>
+</div>
+
+<table class="charset-table table table-striped">
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Val</th>
+  <th>&nbsp;</th>
+</tr>
+</thead>
+<tbody>
+<% @charsets.all.each do |c| %>
+<tr>
+  <td><%= c.key %></td>
+  <td><%= c.val %></td>
+  <td><%= link_to 'X', destroy_charset_path(c), :method => :delete, :class=>:destroy, data: { confirm: 'Are you sure?' } %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<script>
+$(document).ready(function(){
+    $('.charset-table').DataTable();
+});
+</script>

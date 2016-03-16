@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006121706) do
+ActiveRecord::Schema.define(version: 20160313151933) do
 
   create_table "bruteforce_statuses", force: :cascade do |t|
     t.integer  "node_id"
@@ -20,6 +20,13 @@ ActiveRecord::Schema.define(version: 20151006121706) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "charsets", force: :cascade do |t|
+    t.string "key"
+    t.string "val"
+  end
+
+  add_index "charsets", ["key"], name: "index_charsets_on_key"
 
   create_table "dictionaries", force: :cascade do |t|
     t.string   "filename"

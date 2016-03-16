@@ -1,5 +1,6 @@
 	# encoding: utf-8
-	require './bruteforce.rb'
+	require './lib/cnc'
+	require './lib/helpers'
 
 	SLEEP_TIME = 3
 
@@ -69,6 +70,10 @@
 				@attack_payloads 	= parse_work(job["work"])
 			elsif @job_type == "bruteforce"
 				@charset = job["charset"]
+				charsets = get_charsets
+
+				initiateKeyspaceDict(charsets)
+
 				@attack_payloads = generateSubkeyspace(@charset, @bruteforce_index, 50)
 			end
 
@@ -90,11 +95,7 @@
 			headers = get_auth_headers
 			puts "Requesting Job"
 
-			req = Mechanize.new.tap do |r|
-					if @server.match(/^https/)  # enable SSL/TLS
-					  r.agent.ca_file = @cert_path
-					end
-				end
+			req = CNC::Request.new(cnc_options)
 
 			begin
 				response = req.get(endpoint, {}, nil, headers)
@@ -272,11 +273,7 @@
 				:nodeid 					=> @node_id	
 			}
 			begin
-				req = Mechanize.new.tap do |r|
-					if @server.match(/^https/)  # enable SSL/TLS
-					  r.agent.ca_file = @cert_path
-					end
-				end
+				req = CNC::Request.new(cnc_options)
 				response = req.post(endpoint, data, headers)
 			rescue
 				puts "Failed sending response to api"
@@ -296,11 +293,7 @@
 
 			puts "Sending match to server"
 			begin
-				req = Mechanize.new.tap do |r|
-					if @server.match(/^https/)  # enable SSL/TLS
-					  r.agent.ca_file = @cert_path
-					end
-				end
+				req = CNC::Request.new(cnc_options)
 				response = req.post(endpoint, data, headers)
 			rescue
 				puts "Failed sending match to api"
@@ -323,11 +316,7 @@
 			headers = get_auth_headers
 
 			begin
-				req = Mechanize.new.tap do |r|
-					if endpoint.match(/^https/)  # enable SSL/TLS
-					  r.agent.ca_file = @cert_path
-					end
-				end
+				req = CNC::Request.new(cnc_options)
 
 				response = req.get(endpoint, [], nil, headers)
 
@@ -356,15 +345,7 @@
 		end
 
 		def cc_stability_test
-			req = Mechanize.new.tap do |r|
-				if @proxy_host
-					r.set_proxy(@proxy_host, @proxy_port)
-				end
-
-				if @server.match(/^https/)  # enable SSL/TLS
-				  r.agent.ca_file = @cert_path
-				end
-			end
+			req = CNC::Request.new(cnc_options)
 
 			begin
 				response = req.head(@server + "/health")
@@ -389,60 +370,35 @@
 			headers = { "X-Node-Token" => @node_api_key}
 		end
 
-		def parse_work(work)
-			return [] if work.nil?
-
-			return URI.unescape(work).split("\n")
-		end
-
-		# Split data by & and =, returning hash
-		def parse_data(data)
-			# Don't split data if it's xml or json
-			
-			if data.match(/(\A<\?)|({)/)
-				return data
-			end
+		def get_charsets
+			# this is a mock for now
+			req = CNC::Request.new(cnc_options)
 
 			begin
-				URI.decode_www_form(data)
-			rescue
-				return {}
+				response = req.get(@server + "/charsets")
+				charsets = JSON.parse(response.body)
+
+				charsets_hash = { }
+				charsets.each do |charset|
+					charsets_hash[charset["key"]] = charset["val"]
+				end
+
+				return charsets_hash
+			rescue Exception => e
+				puts "#{e.inspect}"
+				puts "(!) Unable to retrive charaset"
+				return false
 			end
 		end
 
-		def parse_headers(headers)
-			header_hash = {}
-
-			lines = headers.split("\n")
-
-			lines.each do |line|
-				split_line = line.split(":", 2)
-
-				# Skip this line if it isn't splittable
-				next if split_line.count < 2
-
-				# Remove trailing whitespace
-				split_line[1].chomp!
-				
-				h = Hash[*split_line]
-				header_hash.merge!(h)
-			end
-
-			return header_hash
-		end
-
-		def mac_address
-		  platform = RUBY_PLATFORM.downcase
-		  output = `#{(platform =~ /win32/) ? 'ipconfig /all' : 'ifconfig'}`
-		  case platform
-		    when /darwin/
-		      $1 if output =~ /en1.*?(([A-F0-9]{2}:){5}[A-F0-9]{2})/im
-		    when /win32/
-		      $1 if output =~ /Physical Address.*?(([A-F0-9]{2}-){5}[A-F0-9]{2})/im
-		    # Cases for other platforms...
-		    when /linux/
-					$1 if output =~ /HWaddr.*?(([A-F0-9]{2}:){5}[A-F0-9]{2})/im
-		    else nil
-		  end
+		private
+		def cnc_options
+			{
+				:server 				=> @server,
+				:proxy_host			=> @proxy_host,
+				:proxy_port 		=> @proxy_port,
+				:cert_path			=> @cert_path,
+				:api_key 				=> @node_api_key
+			}
 		end
 	end

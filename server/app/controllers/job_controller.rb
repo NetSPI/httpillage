@@ -13,6 +13,8 @@ class JobController < ApplicationController
 		if @job.attack_type == "bruteforce"
 			@charset = @job.charset
 
+			Bruteforce::initiateKeyspaceDict()
+
 			# keyspace
 			jobKeyspace = Bruteforce::generateSubkeyspace(@job.charset, @job.next_index, 50)
 
@@ -124,6 +126,7 @@ class JobController < ApplicationController
 	# For API Call
 	def bruteforce_progress
 		job = Job.find(params[:jobid])
+		Bruteforce::initiateKeyspaceDict()
 
 		jobKeyspace = Bruteforce::generateSubkeyspace(job.charset, job.next_index, 50)
 

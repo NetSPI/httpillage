@@ -27,3 +27,13 @@ Dictionary.create({
 
 # Create API token for nodes to use when communicating with api
 Setting.create(:key => 'nodeApi', :val => SecureRandom.base64(64))
+
+Charset.create(:key => 'L', :val => ('a'..'z').to_a.join(""))
+Charset.create(:key => 'U', :val => ('A'..'Z').to_a.join(""))
+Charset.create(:key => 'D', :val => ('0'..'9').to_a.join(""))
+Charset.create(:key => 'S', :val => (
+    (' '..'/').to_a +
+    (':'..'@').to_a +
+    ("[".."`").to_a + 
+    ("{".."~").to_a
+    ).join(""))
