@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $('.dictionaries-table').DataTable();
+    $('.jobs-table').DataTable();
     $(".job-response-code").each(function () {
       $(this).html(formatResponseCode($(this).html()));
     });

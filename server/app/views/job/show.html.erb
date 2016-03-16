@@ -1,3 +1,6 @@
+<%= javascript_include_tag 'job-show.js' %>
+<%= javascript_include_tag 'jobs.js' %>
+
 <input type="hidden" id="current-time" value="<%= DateTime.now %>">
 <input type="hidden" id="job-id" value="<%= @job.id %>">
 <input type="hidden" id="attack-type" value="<%= @job.attack_type%>">

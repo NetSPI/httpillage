@@ -15,3 +15,11 @@
 //= require jquery.dataTables.min.js
 //= require bootstrap.min.js
 //= require_tree .
+// These should be included via layout
+//= stub charsets.js
+//= stub dictionaries.js
+//= stub job-show.js
+//= stub jobs.js
+//= stub nodes.js
+//= stub users.js
+//= stub settings.js
