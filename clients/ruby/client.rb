@@ -1,6 +1,7 @@
 	# encoding: utf-8
 	require './lib/cnc'
 	require './lib/helpers'
+	include Logging
 
 	SLEEP_TIME = 3
 
@@ -44,7 +45,7 @@
 				cc_server_reachable = cc_stability_test
 			end
 
-			puts "(+) Polling for Job..."
+			logger.info "(+) Polling for Job..."
 			while @has_job == false
 				# Poll
 				job = request_job
@@ -81,11 +82,11 @@
 
 			# If the job type is repeat without response_flag_meta, set threads to 100
 			if @job_type == "repeat" && (@response_flag_meta.nil? || @response_flag_meta.count == 0)
-				puts "(+) DoS attack detected. Increasing thread count"
+				logger.info "(+) DoS attack detected. Increasing thread count"
 				@temp_thread_count = 500
 			end
 
-			puts "Work: #{@attack_payloads}"
+			logger.info "Work: #{@attack_payloads}"
 			kick_off_job!
 		end
 
@@ -95,14 +96,16 @@
 			endpoint = @server + "/poll/#{@node_id}"
 
 			headers = get_auth_headers
-			puts "Requesting Job"
+			logger.info "Requesting Job"
 
 			req = CNC::Request.new(cnc_options)
 
 			begin
 				response = req.get(endpoint, {}, nil, headers)
 			rescue Exception => e
-				puts e.inspect
+				logger.error "Unable to connect to CNC"
+				logger.error "Endpoint: \t #{endpoint}"
+				logger.error "Stack trace: \t #{e.inspect}"
 			end
 
 			# Parse response
@@ -115,7 +118,7 @@
 				end
 			end
 			# Failed, but let's sleep
-			puts "Sleeping for #{SLEEP_TIME} seconds"
+			logger.info "Sleeping for #{SLEEP_TIME} seconds"
 			sleep(SLEEP_TIME)
 			return false
 		end
@@ -127,8 +130,8 @@
 				thread_count = @thread_count.to_i
 			end
 
-			puts "(+) Job recieved. Kicking it off with #{thread_count} threads"
-			puts "(+) Currently attacking: #{@http_uri}"
+			logger.info "(+) Job recieved. Kicking it off with #{thread_count} threads"
+			logger.info "(+) Currently attacking: #{@http_uri}"
 
 
 			monitor_thread_id = thread_count + 1
@@ -155,8 +158,8 @@
 
 			job_threads.each {|t| t.join }
 
-			puts "(+) Job has been stopped by C&C"
-			puts "(+) Beginning search for new job"
+			logger.info "(+) Job has been stopped by C&C"
+			logger.info "(+) Beginning search for new job"
 			invoke
 		end
 
@@ -240,8 +243,8 @@
 				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
 			rescue Exception => e
-				puts "Unable to connect"
-				puts e.inspect
+				logger.error "Unable to connect to client"
+				logger.error e.inspect
 				@last_status_code = 0
 			end
 		end
@@ -278,7 +281,9 @@
 				req = CNC::Request.new(cnc_options)
 				response = req.post(endpoint, data, headers)
 			rescue
-				puts "Failed sending response to api"
+				logger.error "Failed sending response to api"
+				logger.error endpoint
+				logger.error data
 			end
 		end
 
@@ -293,12 +298,14 @@
 				:nodeid 					=> @node_id	
 			}
 
-			puts "Sending match to server"
+			logger.error "Sending match to server"
 			begin
 				req = CNC::Request.new(cnc_options)
 				response = req.post(endpoint, data, headers)
 			rescue
-				puts "Failed sending match to api"
+				logger.error "Failed sending match to api"
+				logger.error endpoint
+				logger.error data
 			end
 		end
 
@@ -311,7 +318,7 @@
 			# check status code
 			status_code = @last_status_code
 
-			puts "Checking job status for job #{@job_id} on node #{@node_id}"
+			logger.info "Checking job status for job #{@job_id} on node #{@node_id}"
 
 			# Todo: Refactor this to also send the most previous http status code
 			endpoint = "#{@server}/checkin/#{@node_id}/#{@job_id}/#{status_code}"
@@ -338,8 +345,8 @@
 					return false
 				end
 			rescue Exception => e
-				puts "unable to check status"
-				puts e.inspect
+				logger.error "unable to check status"
+				logger.error e.inspect
 				# Ehh, let it slide for now.
 				# Eventually there should be an error counter that kills
 				# jobs based on a certain number of unsuccessful attempts
@@ -352,17 +359,17 @@
 			begin
 				response = req.head(@server + "/health")
 				if response.code.to_i >= 400
-					puts "(!) Unable to communicate with command and control server"
-					puts "(!) Please confirm address: #{@server}"
-					puts "(!) Code: #{response.code.to_s}"
+					logger.error "(!) Unable to communicate with command and control server"
+					logger.error "(!) Please confirm address: #{@server}"
+					logger.error "(!) Code: #{response.code.to_s}"
 					return false
 				else
 					return true
 				end
 			rescue Exception => e
-				puts "#{e.inspect}"
-				puts "(!) Unable to communicate with command and control server"
-				puts "(!) Please confirm address: #{@server}"
+				logger.error "#{e.inspect}"
+				logger.error "(!) Unable to communicate with command and control server"
+				logger.error "(!) Please confirm address: #{@server}"
 				return false
 			end
 		end
@@ -382,8 +389,8 @@
 
 				return charsets_hash
 			rescue Exception => e
-				puts "#{e.inspect}"
-				puts "(!) Unable to retrive charaset"
+				logger.error "#{e.inspect}"
+				logger.error "(!) Unable to retrive charaset"
 				return false
 			end
 		end

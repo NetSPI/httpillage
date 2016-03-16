@@ -17,6 +17,7 @@ optparse = OptionParser.new do |opts|
 	opts.on('-v', '--verbose', 'Output verbose information pertaining to ' +
 		'the HTTP requests and job status') do
 		options[:verbose] = true
+		# TODO: Refactor this to set logging verbosity level
 	end
 
 	options[:threads] = 5
