@@ -23,10 +23,10 @@
 
 
        </div>
-			<div class="col-lg-4" style="text-align: right; padding-top: 4px;"><%= render "layouts/shared/user_menu" if current_user %></div>
+			<div class="col-lg-4 user-menu"><%= render "layouts/shared/user_menu" if current_user %></div>
 		</nav>
-		<span class="notice" style="padding: 0; margin: 0; border: none"><p class="notification-box"><%= notice %></p></span>
-		<span class="alert" style="padding: 0; margin: 0; border: none"><p class="notification-box"><%= alert %></p></span>
+		<span class="notice notice-container"><p class="notification-box"><%= notice %></p></span>
+		<span class="alert notice-container"><p class="notification-box"><%= alert %></p></span>
 		<%= yield %>
     <center><em>Version: <%=`git rev-parse --abbrev-ref HEAD`%>-<%= `git rev-parse --short HEAD` %></em></center>
 	</div>

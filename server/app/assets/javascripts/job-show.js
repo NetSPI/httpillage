@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
     var lastCheckinTimestamp = $("#current-time").val();
 
@@ -93,13 +92,13 @@ if($("#attack-type").val() == "bruteforce") {
         $(".response-matches tbody").prepend(row);
       }
 
-          // If there was data, delete place holder
-    if (data.count > 0) {
-      $("#response-matches-row-placeholder").remove();
-    }
+      // If there was data, delete place holder
+      if (data.count > 0) {
+        $("#response-matches-row-placeholder").remove();
+      }
 
-    // Chop rows to 5.
-    $(".response-matches tbody").find("tr:gt(4)").remove();
+      // Chop rows to 5.
+      $(".response-matches tbody").find("tr:gt(4)").remove();
     });
   }, 5000)
 

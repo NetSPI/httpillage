@@ -10,7 +10,7 @@
 <%= password_field :user, :password_confirmation, {:class => 'input-field'} %>
 
 <label for="admin">Admin: </label>
-<%= f.check_box :admin, {:style => 'display: inline'} %>
+<%= f.check_box :admin, {:class => 'inline'} %>
 
 <%= submit_tag "Submit", class: 'button-primary' %>
 <% end %>

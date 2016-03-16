@@ -18,7 +18,7 @@
 		<%= link_to edit_job_path(@job) do %>
 			<button class="button-primary page-task-button">Edit Job</button>
 		<% end %>
-		<div style="margin-top:-30px;margin-bottom:30px;">
+		<div class="job-margin-fix">
 		<em><%= @job.description %></em><br /><br />
 		<b><%= @job.http_method %></b> <%= @job.http_uri %> with <%= @job.node_limit.nil? ? "unlimited" : @job.node_limit %> nodes<br /><br />
 
@@ -118,8 +118,8 @@
 		</div>
 	</div>
 
-	<div class="col-lg-6" id="response-container" style="display:none;">
-		<div style="width:100%; float:right">
+	<div class="col-lg-6 hidden" id="response-container">
+		<div class="full right">
 			<b>Viewing response: <span id="response-id"></span></b>
 		</div>
 		<pre id="http-response">
@@ -163,8 +163,8 @@
 		</div>
 	</div>
 
-	<div class="col-lg-6" id="response-container" style="display:none;">
-		<div style="width:100%; float:right">
+	<div class="col-lg-6 hidden" id="response-container">
+		<div class="full right">
 			<b>Viewing flagged response response: <span id="response-id"></span></b>
 		</div>
 		<pre id="http-response">
