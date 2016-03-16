@@ -11,8 +11,6 @@ module Bruteforce
     charsets.each do |k,v|
       @@keyspacedict[k] = v.split(//)
     end
-
-    puts "\n\t\t HERE: #{@@keyspacedict}\n\n"
   end
 
   def self.generateKeys(keyspace,indicies,length)
@@ -21,13 +19,13 @@ module Bruteforce
       key = ""
 
       indicies.count.times do |i|
-        key += @@keyspacedict[keyspace[i]][indicies[i]]
+        key += @@keyspacedict[keyspace[i].upcase][indicies[i]]
       end
       keys.push(key)
 
       indicies.count.times do |i|
         indicies[i] += 1
-        if indicies[i] == @@keyspacedict[keyspace[i]].count
+        if indicies[i] == @@keyspacedict[keyspace[i].upcase].count
           indicies[i] = 0
         else
           break
