@@ -43,7 +43,7 @@ Rails.application.routes.draw do
 	delete 'dictionary/:dictionaryid', to: 'dictionary#destroy', as: 'destroy_dictionary'
 
 	get 'charsets',						to: 'charset#index'
-	get 'charsets/new',				to: 'charset#new'
+	get 'charset/new',				to: 'charset#new'
 	post 'charsets',					to: 'charset#create'
 	delete 'charset/:charsetid', to: 'charset#destroy', as: 'destroy_charset'
 

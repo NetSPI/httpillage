@@ -39,7 +39,7 @@ class Api::DispatcherController < ApiController
 				elsif job[:attack_type] == "bruteforce"
 					job.next_index = job.next_index.nil? ? 0 : job.next_index
 					Bruteforce::initiateKeyspaceDict()
-					
+
 					bruteforce_status = BruteforceStatus.create({
 						:node_id => active_node.id,
 						:job_id => job.id,
@@ -50,6 +50,7 @@ class Api::DispatcherController < ApiController
 					job.save
 
 					# TODO: Mark job complete if next_index > length
+					# TODO: This is a bug
 					keyspace_size = Bruteforce::totalSize(job.charset)
 					if job.next_index > keyspace_size
 						job.status = "completed"

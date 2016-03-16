@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="page-title">Create Characterset</h1>
+  </div>
+</div>
+
+<div class="row">
+  <%= form_for(@charset, :html => {class: 'col-lg-6 create-form'}) do |f| %>
+    <%= f.label     :key %>
+    <%= f.text_field     :key %>
+
+    <%= f.label     :val %>
+    <%= f.text_field :val %>
+
+    <%= f.submit :class => 'button-primary' %>
+  <% end %>
+</div>

@@ -5,8 +5,6 @@
     charsets.each do |k,v|
       $keyspacedict[k] = v.split(//)
     end
-
-    puts "\n\t\t HERE: #{$keyspacedict}\n\n"
   end
 
   def generateKeys(keyspace,indicies,length)
