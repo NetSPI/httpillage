@@ -1,9 +1,11 @@
-  KEYSPACEDICT = {
-    'l' => ('a'..'z').to_a,
-    'u' => ('A'..'Z').to_a,
-    'd' => ('0'..'9').to_a,
-    'a' => ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a
-  }
+  $keyspacedict = { }
+
+  def initiateKeyspaceDict(charsets)
+    # Split string to array
+    charsets.each do |k,v|
+      $keyspacedict[k] = v.split(//)
+    end
+  end
 
   def generateKeys(keyspace,indicies,length)
     keys = []
@@ -11,13 +13,13 @@
       key = ""
 
       indicies.count.times do |i|
-        key += KEYSPACEDICT[keyspace[i]][indicies[i]]
+        key += $keyspacedict[keyspace[i].upcase][indicies[i]]
       end
       keys.push(key)
 
       indicies.count.times do |i|
         indicies[i] += 1
-        if indicies[i] == KEYSPACEDICT[keyspace[i]].count
+        if indicies[i] == $keyspacedict[keyspace[i].upcase].count
           indicies[i] = 0
         else
           break
@@ -29,7 +31,7 @@
 
   def indexToIndicies(keyspace,index)
     indicies = Array.new(keyspace.count, 0)
-    keyspaceLengths = keyspace.map { |k| KEYSPACEDICT[k].count }
+    keyspaceLengths = keyspace.map { |k| $keyspacedict[k.upcase].count }
 
     totalKeyspace  = keyspaceLengths.inject(:*)
 
@@ -62,7 +64,7 @@
 
   # Returns total size of keyspace, used for determinining percentage complete
   def totalSize(keyspace)
-    keyspaceLengths = keyspace.map { |k| KEYSPACEDICT[k].count }
+    keyspaceLengths = keyspace.map { |k| $keyspacedict[k.upcase].count }
 
     totalKeyspace  = keyspaceLengths.inject(:*)
 
