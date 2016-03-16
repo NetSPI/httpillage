@@ -23,7 +23,7 @@
 		<b><%= @job.http_method %></b> <%= @job.http_uri %> with <%= @job.node_limit.nil? ? "unlimited" : @job.node_limit %> nodes<br /><br />
 
 		<% if @job.attack_type == "bruteforce" %>
-		Completion Percentage: <span id="completion-percentage"><%= @bruteforce_percentage %></span>% 
+		Completion Percentage: <span id="completion-percentage"><%= @bruteforce_percentage %></span> 
 			<% unless @keyspace_start_val.nil? %>
 			- Computing <span id="keyspace_start"><%=@keyspace_start_val %></span> to <span id="keyspace_end"><%= @keyspace_end_val %></span>
 			<% end %>
@@ -125,7 +125,6 @@
 		<pre id="http-response">
 		</pre>
 	</div>
-</div>
 
 	<div class="col-lg-6">
 		<div class="item">
@@ -171,4 +170,5 @@
 		<pre id="http-response">
 		</pre>
 	</div>
+</div>
 </div>

@@ -36,25 +36,29 @@ module Bruteforce
   end
 
   def self.indexToIndicies(keyspace,index)
-    indicies = Array.new(keyspace.count, 0)
-    keyspaceLengths = keyspace.map { |k| @@keyspacedict[k.upcase].count }
+    begin
+      indicies = Array.new(keyspace.count, 0)
+      keyspaceLengths = keyspace.map { |k| @@keyspacedict[k.upcase].count }
 
-    totalKeyspace  = keyspaceLengths.inject(:*)
+      totalKeyspace  = keyspaceLengths.inject(:*)
 
-    if index.nil? || index > totalKeyspace
+      if index.nil? || index > totalKeyspace
+        return nil
+      end
+
+      keyspace.count.times do |i|
+        subkeyspace = keyspaceLengths[0...i].inject(:*)
+        if i == 0
+          indicies[i] = index % keyspaceLengths[i]
+        else
+          indicies[i] = (index/subkeyspace).to_i % keyspaceLengths[i]
+        end
+      end
+
+      return indicies
+    rescue Exception => e
       return nil
     end
-
-    keyspace.count.times do |i|
-      subkeyspace = keyspaceLengths[0...i].inject(:*)
-      if i == 0
-        indicies[i] = index % keyspaceLengths[i]
-      else
-        indicies[i] = (index/subkeyspace).to_i % keyspaceLengths[i]
-      end
-    end
-
-    return indicies
   end
 
   def self.generateSubkeyspace(keyspace,index,length)

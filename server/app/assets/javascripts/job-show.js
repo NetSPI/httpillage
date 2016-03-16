@@ -1,4 +1,5 @@
-  $(document).ready(function () {
+
+$(document).ready(function () {
     var lastCheckinTimestamp = $("#current-time").val();
 
   $(".job-response").click(function () {
@@ -101,5 +102,9 @@ if($("#attack-type").val() == "bruteforce") {
     $(".response-matches tbody").find("tr:gt(4)").remove();
     });
   }, 5000)
+
+  $(".job-response-code").each(function () {
+    $(this).html(formatResponseCode($(this).html()));
+  });
 
 });
