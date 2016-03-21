@@ -11,8 +11,7 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
 
   def csp
-    # TODO: Figure out proper directives
-    headers['Content-Security-Policy'] = "script-src localhost:3000"
+    headers['Content-Security-Policy'] = "script-src 'self'; style-src 'self' http://fonts.googleapis.com"
   end
 
   def xframe_options

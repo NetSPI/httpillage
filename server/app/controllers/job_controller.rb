@@ -25,7 +25,7 @@ class JobController < ApplicationController
 				@bruteforce_status = @job.next_index
 				@keyspace_size = Bruteforce::totalSize(@charset)
 
-				@bruteforce_percentage = (@bruteforce_status.to_f / @keyspace_size.to_f * 100.0).to_i + "%"
+				@bruteforce_percentage = ((@bruteforce_status.to_f / @keyspace_size.to_f * 100.0).to_i).to_s + "%"
 			else
 				@bruteforce_percentage = "N/A"
 			end
