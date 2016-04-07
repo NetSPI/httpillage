@@ -27,7 +27,7 @@
 		<span class="notice notice-container"><p class="notification-box"><%= notice %></p></span>
 		<span class="alert notice-container"><p class="notification-box"><%= alert %></p></span>
 		<%= yield %>
-    <center><em>Version: <%=`git rev-parse --abbrev-ref HEAD`%>-<%= `git rev-parse --short HEAD` %></em></center>
+    <center><em>Version: <%= version %></em></center>
 	</div>
 </body>
 </html>

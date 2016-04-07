@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
 
   before_filter :authenticate_user!
 
+  helper_method :version
+
   def csp
     headers['Content-Security-Policy'] = "script-src 'self'; style-src 'self' http://fonts.googleapis.com"
   end
@@ -28,5 +30,13 @@ class ApplicationController < ActionController::Base
       flash[:alert] = "Page requires admin account"
       redirect_to root_path
     end
+  end
+
+  def version
+    version = File.read('config/version')
+    if Rails.env.development?
+      version += " (Branch: #{`git rev-parse --abbrev-ref HEAD`}, Commit: #{`git rev-parse --short HEAD`})"
+    end
+    version
   end
 end
