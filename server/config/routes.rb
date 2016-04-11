@@ -51,7 +51,7 @@ Rails.application.routes.draw do
 	get 'users',									to: 'user#index', as: 'users'
 	get 'user/:userid',						to: 'user#show', as: 'show_user'
 	get 'users/new',							to: 'user#new'
-	post 'users',									to: 'user#create'
+	post 'users',									to: 'user#create', as: 'create_user'
 	get 'users/edit/:userid',			to: 'user#edit',	as: 'edit_user'
 	patch 'users/:userid',				to: 'user#update', as: 'user'
 	delete 'user/:userid', 				to: 'user#destroy', as: 'destroy_user'

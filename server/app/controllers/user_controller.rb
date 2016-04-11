@@ -17,7 +17,11 @@ class UserController < ApplicationController
   end
 
   def create
-    # TODO: verify password's match
+    if params[:user][:password] != params[:user][:password_confirmation]
+      flash[:alert] = "Password and password confirmation did not match"
+      redirect_to create_user_path
+      return
+    end
 
     u = User.new(user_params)
     u.api_token = gen_api_token
@@ -29,8 +33,7 @@ class UserController < ApplicationController
       redirect_to users_path
     else
       flash[:alert] = u.errors.full_messages.join("\n")
-      # TODO: change this to use creation path
-      redirect_to root_path
+      redirect_to create_user_path
     end
   end
 
