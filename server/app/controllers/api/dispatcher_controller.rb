@@ -147,7 +147,8 @@ class Api::DispatcherController < ApiController
 		jobs.each do |job|
 			# Check if job has node_limit, if so, ensure it's not too high
 			node_checkins = NodeStatusCheckin.where("node_id != ?", node_id).checkins_since_timestamp(job.id, 5.minutes.ago.to_s)
-			if job.node_limit != 0 && node_checkins.count > job.node_limit
+
+			if ! job.node_limit.nil? && node_checkins.count > job.node_limit
 				next
 			else
 				return job
