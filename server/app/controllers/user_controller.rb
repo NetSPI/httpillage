@@ -8,7 +8,6 @@ class UserController < ApplicationController
   def show
     @user = User.find(params[:userid])
 
-    # TODO: Display jobs created by users
     @user_jobs = @user.jobs
   end
 
