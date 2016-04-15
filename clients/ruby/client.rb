@@ -238,7 +238,7 @@
 
 				# Let's ignore unless there are matches
 				unless @response_flag_meta.nil?
-					check_response_for_match(response.body, payload)
+					check_response_for_match(response, payload)
 				end
 				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
@@ -249,7 +249,22 @@
 			end
 		end
 
+		# This is used to build the raw HTTP response from mechanize
+		def build_response_from_body_and_headers(headers, body) 
+			header_str = ""
+			headers.each do |header, val|
+				header_str += "#{header}: #{val}\n"
+			end
+
+			return "#{header_str}\n#{body}"
+		end
+
 		def check_response_for_match(response, payload)
+			response_headers = response.header
+			response_body = response.body
+
+			response = build_response_from_body_and_headers(response_headers, response_body)
+
 			@response_flag_meta.each do |metum|
 				match_value = metum["match_value"]
 				match_type = metum["match_type"]
@@ -261,8 +276,12 @@
 				else
 					pattern = Regexp.new(match_value)
 
-					if response.match(pattern)
-						send_match_to_api(response, match_value, payload)
+					matches = response.match(pattern)
+					puts matches.inspect
+
+					while match = response.match(pattern).to_s
+						puts "\t\tMATCH: #{match}"
+						send_match_to_api(response, match, payload, match_value)
 					end
 				end
 			end
@@ -287,13 +306,14 @@
 			end
 		end
 
-		def send_match_to_api(response, match_value, payload=nil) 
+		def send_match_to_api(response, match, payload=nil, match_value) 
 			endpoint = "#{@server}/job/#{@job_id}/saveMatch"
 
 			headers = get_auth_headers
 			data = { 
-				:response 				=> Base64.encode64(response),
-				:match_value			=> match_value,
+				:response 			=> "empty",
+				# :response 				=> Base64.encode64(response),
+				:match_value			=> match,
 				:payload 					=> payload,
 				:nodeid 					=> @node_id	
 			}
