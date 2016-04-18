@@ -240,6 +240,7 @@
 				unless @response_flag_meta.nil?
 					check_response_for_match(response, payload)
 				end
+
 				store_response(response) if @attack_mode == 'store'
 				@last_status_code = response.code.to_i
 			rescue Exception => e
@@ -275,12 +276,9 @@
 					end
 				else
 					pattern = Regexp.new(match_value)
+					matches = response.scan(pattern)
 
-					matches = response.match(pattern)
-					puts matches.inspect
-
-					while match = response.match(pattern).to_s
-						puts "\t\tMATCH: #{match}"
+					matches.each do |match|
 						send_match_to_api(response, match, payload, match_value)
 					end
 				end
@@ -310,15 +308,15 @@
 			endpoint = "#{@server}/job/#{@job_id}/saveMatch"
 
 			headers = get_auth_headers
+			response_string = @attack_mode == 'store' ? response.body : "";
 			data = { 
-				:response 			=> "empty",
-				# :response 				=> Base64.encode64(response),
+				:response 				=> Base64.encode64(response_string),
 				:match_value			=> match,
 				:payload 					=> payload,
 				:nodeid 					=> @node_id	
 			}
 
-			logger.error "Sending match to server"
+			logger.info "Sending match to server"
 			begin
 				req = CNC::Request.new(cnc_options)
 				response = req.post(endpoint, data, headers)
