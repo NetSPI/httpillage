@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160313151933) do
+ActiveRecord::Schema.define(version: 20160420113909) do
 
   create_table "bruteforce_statuses", force: :cascade do |t|
     t.integer  "node_id"
@@ -104,8 +104,9 @@ ActiveRecord::Schema.define(version: 20160313151933) do
     t.integer  "job_id"
     t.string   "match_type"
     t.string   "match_value"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.string   "match_delivery"
   end
 
   add_index "response_flag_meta", ["job_id"], name: "index_response_flag_meta_on_job_id"

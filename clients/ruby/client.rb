@@ -5,6 +5,9 @@
 
 	SLEEP_TIME = 3
 
+	# Limit for match delivery queue
+	QUEUE_LIMIT = 100
+
 	class Client
 		def initialize(server, thread_count, proxy_host, proxy_port, api_key, cert_path)
 			@server = server + "/api"
@@ -36,6 +39,7 @@
 
 			@cert_path = cert_path
 
+			@delivery_queue = []
 		end
 
 		def invoke
@@ -269,20 +273,55 @@
 			@response_flag_meta.each do |metum|
 				match_value = metum["match_value"]
 				match_type = metum["match_type"]
+				match_delivery = metum["match_delivery"]
 
 				if match_type == "string"
 					if response.include?(match_value)
-						send_match_to_api(response, match_value, payload)
+						# Either send directly to API, or queue up
+						if metum["match_delivery"].nil? || metum["match_delivery"] == "instant"
+							send_match_to_api(response, match_value, payload)
+						else
+							# Queue
+							queue_match_for_bulk_delivery(response, match_value, payload)
+						end
 					end
 				else
 					pattern = Regexp.new(match_value)
 					matches = response.scan(pattern)
 
 					matches.each do |match|
-						send_match_to_api(response, match, payload, match_value)
+						if metum["match_delivery"].nil? || metum["match_delivery"] == "instant"
+							send_match_to_api(response, match, payload, match_value)
+						else
+							# Queue
+							queue_match_for_bulk_delivery(nil, match, payload, match_value)
+						end
 					end
 				end
 			end
+		end
+
+		def queue_match_for_bulk_delivery(response, match, payload=nil, match_value=nil)
+			@delivery_queue.push({ 
+				:response => response, 
+				:match => match, 
+				:payload => payload, 
+				:match_value => match_value
+			})
+
+			# Send all results, once queue is over the limit
+			if @delivery_queue.count >= QUEUE_LIMIT
+				# Duplicate it, clean it, and operate on dup
+				queue = @delivery_queue.dup
+				@delivery_queue = []
+				logger.info "Sending bulk matches to server"
+				queue.each do |match|
+					# TODO: this should be a different API endpoint, which handles the bulk submission
+					# 			Not iterating through each, sending a request. Too much overhead.
+					send_match_to_api(match[:response], match[:match], match[:payload], match[:match_value])
+				end
+			end
+
 		end
 
 		def store_response(response)
@@ -304,7 +343,7 @@
 			end
 		end
 
-		def send_match_to_api(response, match, payload=nil, match_value) 
+		def send_match_to_api(response, match, payload=nil, match_value=nil) 
 			endpoint = "#{@server}/job/#{@job_id}/saveMatch"
 
 			headers = get_auth_headers

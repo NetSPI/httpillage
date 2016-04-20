@@ -28,12 +28,18 @@
   <fieldset id="response_flags">
   <% @job.response_flag_meta.each do |rfm| %>
     <input type="hidden" name="job[response_flag_meta][<%= rfm.id %>][id]" value="<%= rfm.id %>">
-    <input class="input-field" type="text" name="job[response_flag_meta][<%= rfm.id %>][match_value]" value="<%= rfm.match_value %>" class="inline">
+    <input class="input-field inline" type="text" name="job[response_flag_meta][<%= rfm.id %>][match_value]" value="<%= rfm.match_value %>" class="inline">
 
     <select name="job[response_flag_meta][<%= rfm.id %>][match_type]" class="inline">
       <option value="string" <%= "SELECTED" if rfm.match_type == "string" %>>String</option>
       <option value="regex" <%= "SELECTED" if rfm.match_type == "regex" %>>Regex</option>
-    </select><br />
+    </select>
+
+    <select name="job[response_flag_meta][<%= rfm.id %>][match_delivery]" class="inline">
+      <option value="instant" <%= "SELECTED" if rfm.match_type == "instant" %>>Instant Delivery</option>
+      <option value="batch" <%= "SELECTED" if rfm.match_type == "batch" %>>Batched Delivery</option>
+    </select>
+    <br />
   <% end %>
   </fieldset>
 

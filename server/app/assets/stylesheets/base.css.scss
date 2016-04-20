@@ -1,6 +1,11 @@
 @charset "utf-8";
 @import "compass/css3";
 
+fieldset { 
+	border: none;
+	padding:none; 
+}
+
 .notification-box {
 	text-align: center;
 	color: white;
@@ -64,7 +69,7 @@
 .job-responses tbody tr { cursor: pointer; }
 .full { width:100%; }
 .right { float:right; }
-.inline { display: inline; }
+.inline { display: inline !IMPORTANT; }
 
 //-- Create Jobs/Dictionary --//
 .create-form {

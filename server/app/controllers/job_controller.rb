@@ -60,6 +60,7 @@ class JobController < ApplicationController
 					flag_meta.job_id = @job.id
 					flag_meta.match_value = rfm[:match_value]
 					flag_meta.match_type = rfm[:match_type]
+					flag_meta.match_delivery = rfm[:match_delivery]
 					flag_meta.save
 				end
 			end
@@ -105,6 +106,7 @@ class JobController < ApplicationController
 				flag_meta.job_id = @job.id
 				flag_meta.match_value = rfm[:match_value]
 				flag_meta.match_type = rfm[:match_type]
+				flag_meta.match_delivery = rfm[:match_delivery]
 				flag_meta.save
 			end
 		end

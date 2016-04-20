@@ -4,7 +4,7 @@ $(document).ready(function(){
   var clicked = 100;
   $("#addNewFlag").click(function () {
     clicked++;
-    row = '<input class="input-field" type="text" name="job[response_flag_meta][' + clicked + '][match_value]" style="display:inline"><select name="job[response_flag_meta][' + clicked + '][match_type]" style="display:inline"><option value="string">String</option><option value="regex">Regex</option></select><br />';
+    row = '<input class="input-field inline" type="text" name="job[response_flag_meta][' + clicked + '][match_value]" style="display:inline"><select name="job[response_flag_meta][' + clicked + '][match_type]" class="inline"><option value="string">String</option><option value="regex">Regex</option></select><select name="job[response_flag_meta][' + clicked + '][match_delivery]" class="inline"><option value="instant">Instant Delivery</option><option value="batch">Batched Delivery</option></select><br />';
 
       $("#response_flags").append(row);
       return false;
