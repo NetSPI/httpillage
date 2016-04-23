@@ -39,6 +39,11 @@ gem 'jquery-rails'
 
 gem 'devise', '>= 3.5.4'
 
+group 'production' do
+  gem 'unicorn'
+  gem 'mysql2'
+end
+
 group :assets do
   gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
   gem 'jquery-ui-rails'
