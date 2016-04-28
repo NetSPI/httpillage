@@ -36,8 +36,8 @@
     </select>
 
     <select name="job[response_flag_meta][<%= rfm.id %>][match_delivery]" class="inline">
-      <option value="instant" <%= "SELECTED" if rfm.match_type == "instant" %>>Instant Delivery</option>
-      <option value="batch" <%= "SELECTED" if rfm.match_type == "batch" %>>Batched Delivery</option>
+      <option value="instant" <%= "SELECTED" if rfm.match_delivery == "instant" %>>Instant Delivery</option>
+      <option value="batch" <%= "SELECTED" if rfm.match_delivery == "batch" %>>Batched Delivery</option>
     </select>
     <br />
   <% end %>

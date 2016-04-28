@@ -1,6 +1,7 @@
 	# encoding: utf-8
 	require './lib/cnc'
 	require './lib/helpers'
+	require 'net/http'
 	include Logging
 
 	SLEEP_TIME = 3
@@ -217,6 +218,7 @@
 		# Currently this does not store any responses
 		#
 		def send_request(http_uri=nil,http_data=nil, http_headers=nil,payload=nil)
+=begin			
 			req = Mechanize.new.tap do |r|
 				if @proxy_host
 					r.set_proxy(@proxy_host, @proxy_port)
@@ -225,6 +227,8 @@
 				# Disabling verification.. we don't really care
 				r.verify_mode = OpenSSL::SSL::VERIFY_NONE
 			end
+=end
+
 
 			# Set these if they weren't passed in...
 			http_uri ||= @http_uri
@@ -233,12 +237,31 @@
 
 			begin
 				if @http_method.downcase == "get"
-					response = req.get(http_uri, [], nil, http_headers)
-				else
-					response = req.post(http_uri, http_data, http_headers)
-				end
+					uri = URI(http_uri)
+					req = Net::HTTP::Get.new(uri.path)
 
-				req.shutdown
+					http_headers.each do |k,v|
+						req[k] = v
+					end
+
+					response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+					  http.request(req)
+					end
+				else
+					uri = URI(http_uri)
+
+					req = Net::HTTP::Post.new(uri.path)
+					req.set_form_data(http_data)
+					
+					http_headers.each do |k,v|
+						req[k] = v
+					end
+
+					response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+					  http.request(req)
+					end
+				end
+				# todo: close request
 
 				# Let's ignore unless there are matches
 				unless @response_flag_meta.nil?
@@ -258,14 +281,21 @@
 		def build_response_from_body_and_headers(headers, body) 
 			header_str = ""
 			headers.each do |header, val|
-				header_str += "#{header}: #{val}\n"
+				header_str += "#{header}: "
+
+				if val.length > 1 
+					header_str += "#{val.join(', ')}"
+				else
+						header_str += "#{val[0]}"
+				end
+				header_str += "\n"
 			end
 
 			return "#{header_str}\n#{body}"
 		end
 
 		def check_response_for_match(response, payload)
-			response_headers = response.header
+			response_headers = response.to_hash
 			response_body = response.body
 
 			response = build_response_from_body_and_headers(response_headers, response_body)
@@ -294,7 +324,6 @@
 							send_match_to_api(response, match, payload, match_value)
 						else
 							# Queue
-							puts "Queuing match"
 							queue_match_for_bulk_delivery(nil, match, payload, match_value)
 						end
 					end
