@@ -236,32 +236,22 @@
 			http_headers ||= @http_headers
 
 			begin
+				uri = URI(http_uri)
+
 				if @http_method.downcase == "get"
-					uri = URI(http_uri)
 					req = Net::HTTP::Get.new(uri.path)
-
-					http_headers.each do |k,v|
-						req[k] = v
-					end
-
-					response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-					  http.request(req)
-					end
 				else
-					uri = URI(http_uri)
-
 					req = Net::HTTP::Post.new(uri.path)
 					req.set_form_data(http_data)
-					
-					http_headers.each do |k,v|
-						req[k] = v
-					end
-
-					response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-					  http.request(req)
-					end
 				end
-				# todo: close request
+
+				http_headers.each do |k,v|
+					req[k] = v
+				end
+
+				response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+				  http.request(req)
+				end
 
 				# Let's ignore unless there are matches
 				unless @response_flag_meta.nil?
