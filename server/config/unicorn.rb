@@ -1,6 +1,6 @@
 
 worker_processes 2
-working_directory "/srv/httpillage/"
+working_directory "/home/ubuntu/httpillage/server/"
  
 # This loads the application in the master process before forking
 # worker processes
@@ -12,13 +12,13 @@ timeout 30
  
 # This is where we specify the socket.
 # We will point the upstream Nginx module to this socket later on
-listen "/srv/httpillage/tmp/sockets/unicorn.sock", :backlog => 64
+listen "/home/ubuntu/httpillage/server/tmp/sockets/unicorn.sock", :backlog => 64
  
-pid "/srv/httpillage/tmp/pids/unicorn.pid"
+pid "/home/ubuntu/httpillage/server/tmp/pids/unicorn.pid"
  
 # Set the path of the log files inside the log folder of the testapp
-stderr_path "/srv/httpillage/log/unicorn.stderr.log"
-stdout_path "/srv/httpillage/log/unicorn.stdout.log"
+stderr_path "/home/ubuntu/httpillage/server/log/unicorn.stderr.log"
+stdout_path "/home/ubuntu/httpillage/server/log/unicorn.stdout.log"
  
 before_fork do |server, worker|
 # This option works in together with preload_app true setting
