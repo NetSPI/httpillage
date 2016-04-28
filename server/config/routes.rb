@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
 	  post 'job/:jobid/saveResponse', to: 'job_response#create'
 	  post 'job/:jobid/saveMatch',		to: 'response_flag#create'
+	  post 'job/:jobid/saveMatchBatch', to: 'response_flag#create_bulk'
 	end
 
 	get 'settings',								to: 'setting#index', as: 'settings'

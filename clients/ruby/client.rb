@@ -294,6 +294,7 @@
 							send_match_to_api(response, match, payload, match_value)
 						else
 							# Queue
+							puts "Queuing match"
 							queue_match_for_bulk_delivery(nil, match, payload, match_value)
 						end
 					end
@@ -306,7 +307,8 @@
 				:response => response, 
 				:match => match, 
 				:payload => payload, 
-				:match_value => match_value
+				:match_value => match_value,
+				:match_time	=> DateTime.now
 			})
 
 			# Send all results, once queue is over the limit
@@ -315,10 +317,21 @@
 				queue = @delivery_queue.dup
 				@delivery_queue = []
 				logger.info "Sending bulk matches to server"
-				queue.each do |match|
-					# TODO: this should be a different API endpoint, which handles the bulk submission
-					# 			Not iterating through each, sending a request. Too much overhead.
-					send_match_to_api(match[:response], match[:match], match[:payload], match[:match_value])
+
+				endpoint = "#{@server}/job/#{@job_id}/saveMatchBatch"
+
+				headers = get_auth_headers
+
+				data = { "matches": queue.to_json }
+
+				logger.info "Sending match to server"
+				begin
+					req = CNC::Request.new(cnc_options)
+					response = req.post(endpoint, data, headers)
+				rescue
+					logger.error "Failed sending bulk matches to api"
+					logger.error endpoint
+					logger.error data
 				end
 			end
 
