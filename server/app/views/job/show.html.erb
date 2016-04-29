@@ -15,9 +15,21 @@
 			</span>
 
 			Job: #<%= @job.id %></h1>
+
 		<%= link_to edit_job_path(@job) do %>
 			<button class="button-primary page-task-button">Edit Job</button>
 		<% end %>
+
+		<% if @job.status == "active" %>
+			<%= link_to stop_job_path(@job), :method => :patch do %>
+				<button class="stop-button button-primary page-task-button">Stop Job</button>
+			<% end %>
+		<% else %>
+			<%= link_to start_job_path(@job), :method => :patch do %>
+				<button class="start-button button-primary page-task-button">Start Job</button>
+			<% end %>
+		<% end %>
+
 		<div class="job-margin-fix">
 		<em><%= @job.description %></em><br /><br />
 		<b><%= @job.http_method %></b> <%= @job.http_uri %> with <%= @job.node_limit.nil? ? "unlimited" : @job.node_limit %> nodes<br /><br />

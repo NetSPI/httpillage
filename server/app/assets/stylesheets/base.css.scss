@@ -17,8 +17,8 @@ fieldset {
 	@include border-radius(4px, 4px);
 }
 
-.alert .notification-box { background-color: #D04B33; }
-.notice .notification-box { background-color: #009900; }
+.alert .notification-box, .stop-button { background-color: #D04B33; }
+.notice .notification-box, .start-button { background-color: #009900; }
 
 .active-job-label, .success-label { color: #009900; }
 .inactive-job-label, .error-label { color: #d04b33; }
