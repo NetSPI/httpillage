@@ -50,7 +50,12 @@
 			    <i class="fa fa-cog"></i>
 			  </button>
 			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-			    <li><%= link_to 'View info', j, :method => :get, :class=>:show %></li>
+			  	<% if j.status == "active" %>
+			  		<li><%= link_to 'Stop', stop_job_path(j), :method => :patch, :class=>:show %></li>
+			  	<% else %>
+				    <li><%= link_to 'Start', start_job_path(j), :method => :patch, :class=>:show %></li>
+				  <% end %>
+
 					<li><%= link_to 'Destroy', j, :method => :delete, :class=>:destroy, data: { confirm: 'Are you sure?' } %></li>
 			  </ul>
 			</div>

@@ -34,8 +34,12 @@ Rails.application.routes.draw do
 	get 'job/matches/:jobid',			to: 'response_flag#index', as: 'export_job_matches'
 	get 'job/statuses/:jobid',		to: 'node_status#index',	as: 'export_node_status'
 
-	get 'nodes', 									to: 'node#index'
+	# For controlling jobs
+	patch 'job/:jobid/start',			to: 'job#start', as: 'start_job'
+	patch 'job/:jobid/stop',			to: 'job#stop',	as: 'stop_job'
 	delete 'job/:jobid', 					to: 'job#destroy', as: 'job'
+
+	get 'nodes', 									to: 'node#index'
 
 	get 'dictionaries',						to: 'dictionary#index'
 	get 'dictionary/:dictionaryid', to: 'dictionary#show', as: 'download_dictionary'

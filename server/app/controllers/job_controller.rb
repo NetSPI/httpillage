@@ -120,6 +120,24 @@ class JobController < ApplicationController
 		end
 	end
 
+	def start
+		@job = Job.find(params[:jobid])
+		@job.status = "active"
+		@job.save
+
+		flash[:notice] = "Job #{@job.id} started"
+		redirect_to action: "index"
+	end
+
+	def stop
+		@job = Job.find(params[:jobid])
+		@job.status = "pending"
+		@job.save
+
+		flash[:notice] = "Job #{@job.id} stopped"
+		redirect_to action: "index"
+	end
+
 	def destroy
 		Job.find(params[:jobid]).destroy
 		redirect_to action: "index"
