@@ -31,7 +31,11 @@
 		<td><%= j.http_method %></td>
 		<td><%= j.http_uri %></td>
 		<td><%= j.description %></td>
-		<td><%= j.status %></td>
+		<td>
+			<span class="<%= j.status == "active" ? "active-job-label" : "inactive-job-label" %>">
+				<%= j.status %> 
+			</span>
+		</td>
 		<td>
 		<% unless j.user.nil? %>
 			<%= link_to j.user.email, show_user_path(j.user) %>
