@@ -140,6 +140,8 @@ class JobController < ApplicationController
 
 	def destroy
 		Job.find(params[:jobid]).destroy
+
+		flash[:notice] = "Job #{params[:jobid]} destroyed"
 		redirect_to action: "index"
 	end
 
