@@ -14,14 +14,14 @@ $(document).ready(function(){
     var attack_type = $(this).val();
     
     if(attack_type == "dictionary") { 
-      $("#dictionary").show();
-      $("#charset").hide();
+      $("#dictionary").removeClass("hidden");
+      $("#charset").addClass("hidden");
     } else if(attack_type == "bruteforce") {
-      $("#charset").show();
-      $("#dictionary").hide();
+      $("#charset").removeClass("hidden");
+      $("#dictionary").addClass("hidden");
     } else {
-      $("#charset").hide();
-      $("#dictionary").hide();
+      $("#charset").addClass("hidden");
+      $("#dictionary").addClass("hidden");
     }
   });
 });
