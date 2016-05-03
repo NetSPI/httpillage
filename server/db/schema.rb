@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160420113909) do
+ActiveRecord::Schema.define(version: 20160503174305) do
 
   create_table "bruteforce_statuses", force: :cascade do |t|
     t.integer  "node_id"
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20160420113909) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.integer  "file_size"
-    t.string   "preview"
+    t.text     "preview"
   end
 
   create_table "dictionary_chunk_allocations", force: :cascade do |t|
