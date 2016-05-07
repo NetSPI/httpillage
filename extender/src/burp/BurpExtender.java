@@ -36,7 +36,7 @@ import org.apache.http.util.EntityUtils;
 import burp.ITab;
 
 public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory, ActionListener {
-    private static final String VERSION = "0.1.0";
+    private static final String VERSION = "1.0.1-beta";
 
     public IBurpExtenderCallbacks mCallbacks;
     private IExtensionHelpers     helpers;
