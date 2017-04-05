@@ -12,14 +12,14 @@ case class Job(
               httpUri: String,
               httpHost: String,
               httpHeaders: String,
-              httpData: String,
+              httpData: Option[String],
               attackType: String,
               attackMode: String,
-              status: String,
-              userId: Long,
-              dictionaryId: Long,          // This should be in a different model
-              bruteforceCharset: String,  // This should be in a different model
-              nextIndex: Long,             // This should be in a different model
+              status: Option[String],
+              owner: Long,
+              dictionaryId: Option[Long],          // This should be in a different model
+              bruteforceCharset: Option[String],  // This should be in a different model
+              nextIndex: Option[Long],             // This should be in a different model
               createdAt: DateTime,
               updatedAt: DateTime
             )

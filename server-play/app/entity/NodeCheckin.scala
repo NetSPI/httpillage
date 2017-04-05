@@ -9,6 +9,5 @@ case class NodeCheckin(id: Long,
                       nodeId: Long,
                       jobId: Long,
                       responseCode: Int,
-                      createdAt: DateTime,
-                      updatedAt: DateTime
+                      createdAt: DateTime
                       )

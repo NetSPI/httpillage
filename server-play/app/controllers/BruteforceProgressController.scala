@@ -9,7 +9,7 @@ import play.api.mvc._
 @Singleton
 class BruteforceProgressController @Inject() extends Controller {
 
-  def getProgress(jobId: Int) = Action {
+  def getProgress(jobId: Long) = Action {
     Ok
   }
 }

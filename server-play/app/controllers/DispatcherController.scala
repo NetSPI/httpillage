@@ -13,15 +13,15 @@ class DispatcherController @Inject() extends Controller {
     Ok(Json.obj("results" -> "NA"))
   }
 
-  def pollFromNode(nodeId: Int) = Action {
+  def pollFromNode(nodeId: Long) = Action {
     Ok
   }
 
-  def pollFromNodeForJob(nodeId: Int, jobId: Int) = Action {
+  def pollFromNodeForJob(nodeId: Long, jobId: Long) = Action {
     Ok
   }
 
-  def checkin(nodeId: Int, jobId: Int, statusCode: Int) = Action {
+  def checkin(nodeId: Long, jobId: Long, statusCode: Long) = Action {
     Ok
   }
 }

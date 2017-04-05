@@ -12,6 +12,10 @@ import dao.NodeDAO
   * Created by jpoulin on 3/28/17.
   */
 class NodeService @Inject()(nodeDAO: NodeDAO) {
+  def getNodes = {
+    nodeDAO.all()
+  }
+
   def getNodeById(id: Long): Future[Option[Node]] = {
     nodeDAO.getNodeById(id)
   }

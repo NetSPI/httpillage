@@ -13,7 +13,7 @@ class DictionaryController @Inject() extends Controller {
     Ok
   }
 
-  def getDictionary(dictionaryId: Int) = Action {
+  def getDictionary(dictionaryId: Long) = Action {
     Ok
   }
 
@@ -21,7 +21,7 @@ class DictionaryController @Inject() extends Controller {
     Ok
   }
 
-  def deleteDictionary(dictionaryId: Int) = Action {
+  def deleteDictionary(dictionaryId: Long) = Action {
     Ok
   }
 }

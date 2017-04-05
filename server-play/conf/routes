@@ -11,36 +11,37 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /health                 controllers.HealthController.index
 
 GET     /poll                       controllers.DispatcherController.poll()
-GET     /poll/:nodeId               controllers.DispatcherController.pollFromNode(nodeId: Int)
-GET     /poll/:nodeId/:jobId        controllers.DispatcherController.pollFromNodeForJob(nodeId: Int, jobId: Int)
+GET     /poll/:nodeId               controllers.DispatcherController.pollFromNode(nodeId: Long)
+GET     /poll/:nodeId/:jobId        controllers.DispatcherController.pollFromNodeForJob(nodeId: Long, jobId: Long)
 
-POST     /checkin/:nodeId/:jobId/:statusCode    controllers.DispatcherController.checkin(nodeId: Int, jobId: Int, statusCode: Int)
+POST     /checkin/:nodeId/:jobId/:statusCode    controllers.DispatcherController.checkin(nodeId: Long, jobId: Long, statusCode: Int)
 
 GET     /jobs                       controllers.JobController.index()
-GET     /jobs/:jobId                    controllers.JobController.getJob(jobId: Int)
+GET     /jobs/:jobId                    controllers.JobController.getJob(jobId: Long)
 POST    /jobs                          controllers.JobController.create()
-PUT     /jobs/:jobId                    controllers.JobController.updateJob(jobId: Int)
-DELETE  /jobs/:jobId                    controllers.JobController.deleteJob(jobId: Int)
+PUT     /jobs/:jobId                    controllers.JobController.updateJob(jobId: Long)
+DELETE  /jobs/:jobId                    controllers.JobController.deleteJob(jobId: Long)
 
 # Get the progress of a bruteforce attack
-GET     /jobs/:jobId/progress           controllers.BruteforceProgressController.getProgress(jobId: Int)
+GET     /jobs/:jobId/progress           controllers.BruteforceProgressController.getProgress(jobId: Long)
 
 # Get job responses
-GET     /jobs/:jobId/responses              controllers.JobResponseController.getResponses(jobId: Int)
-GET     /jobs/:jobId/response/:responseId   controllers.JobResponseController.getResponse(jobId: Int, responseId: Int)
+GET     /jobs/:jobId/responses              controllers.JobResponseController.getResponses(jobId: Long)
+GET     /jobs/:jobId/response/:responseId   controllers.JobResponseController.getResponse(jobId: Long, responseId: Long)
 
-POST    /jobs/:jobId/saveResponse      controllers.JobResponseController.create(jobId: Int)
-POST    /jobs/:jobId/saveMatch         controllers.JobMatchController.create(jobId: Int)
+POST    /jobs/:jobId/saveResponse      controllers.JobResponseController.create(jobId: Long)
+POST    /jobs/:jobId/saveMatch         controllers.JobMatchController.create(jobId: Long)
 
 
 # Grab a list of nodes
 GET     /nodes                          controllers.NodeController.index()
+GET     /nodes/:nodeId                  controllers.NodeController.getNode(nodeId: Long)
 
 # Handle upload / use of dictionary files
 GET     /dictionaries                   controllers.DictionaryController.index()
-GET     /dictionaries/:dictionaryId     controllers.DictionaryController.getDictionary(dictionaryId: Int)
+GET     /dictionaries/:dictionaryId     controllers.DictionaryController.getDictionary(dictionaryId: Long)
 POST    /dictionaries                   controllers.DictionaryController.create()
-DELETE  /dictionaries/:dictionaryId     controllers.DictionaryController.deleteDictionary(dictionaryId: Int)
+DELETE  /dictionaries/:dictionaryId     controllers.DictionaryController.deleteDictionary(dictionaryId: Long)
 
 
 

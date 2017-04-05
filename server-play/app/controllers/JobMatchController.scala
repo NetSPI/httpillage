@@ -9,7 +9,7 @@ import play.api.mvc._
 @Singleton
 class JobMatchController @Inject() extends Controller {
 
-  def create(jobId: Int) = Action {
+  def create(jobId: Long) = Action {
     Ok
   }
 }

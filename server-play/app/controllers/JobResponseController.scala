@@ -9,15 +9,15 @@ import play.api.mvc._
 @Singleton
 class JobResponseController @Inject() extends Controller {
 
-  def create(jobId: Int) = Action {
+  def create(jobId: Long) = Action {
     Ok
   }
 
-  def getResponses(jobId: Int) = Action {
+  def getResponses(jobId: Long) = Action {
     Ok
   }
 
-  def getResponse(jobId: Int, responseId: Int) = Action {
+  def getResponse(jobId: Long, responseId: Long) = Action {
     Ok
   }
 }
