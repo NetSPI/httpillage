@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: com.zaxxer:HikariCP-java6:2.3.7:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.zaxxer/HikariCP-java6/bundles/HikariCP-java6-2.3.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.zaxxer/HikariCP-java6/srcs/HikariCP-java6-2.3.7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
