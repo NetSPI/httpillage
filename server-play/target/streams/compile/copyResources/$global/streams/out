@@ -1,7 +1,0 @@
-[0m[[0mdebug[0m] [0mCopy resource mappings: [0m
-[0m[[0mdebug[0m] [0m	(/Users/jpoulin/dev/httpillage/server-play/conf/application.conf,/Users/jpoulin/dev/httpillage/server-play/target/scala-2.11/classes/application.conf)[0m
-[0m[[0mdebug[0m] [0m	(/Users/jpoulin/dev/httpillage/server-play/conf/evolutions,/Users/jpoulin/dev/httpillage/server-play/target/scala-2.11/classes/evolutions)[0m
-[0m[[0mdebug[0m] [0m	(/Users/jpoulin/dev/httpillage/server-play/conf/logback.xml,/Users/jpoulin/dev/httpillage/server-play/target/scala-2.11/classes/logback.xml)[0m
-[0m[[0mdebug[0m] [0m	(/Users/jpoulin/dev/httpillage/server-play/conf/routes,/Users/jpoulin/dev/httpillage/server-play/target/scala-2.11/classes/routes)[0m
-[0m[[0mdebug[0m] [0m	(/Users/jpoulin/dev/httpillage/server-play/conf/evolutions/default,/Users/jpoulin/dev/httpillage/server-play/target/scala-2.11/classes/evolutions/default)[0m
-[0m[[0mdebug[0m] [0m	(/Users/jpoulin/dev/httpillage/server-play/conf/evolutions/default/1.sql,/Users/jpoulin/dev/httpillage/server-play/target/scala-2.11/classes/evolutions/default/1.sql)[0m
