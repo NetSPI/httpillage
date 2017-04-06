@@ -18,7 +18,7 @@ GET     /checkins                controllers.NodeCheckinsController.getCheckins(
 GET     /checkins/:nodeCheckinId    controllers.NodeCheckinsController.getCheckinById(nodeCheckinId: Long)
 GET     /checkins/byNode/:nodeId    controllers.NodeCheckinsController.getCheckinsByNode(nodeId: Long)
 GET     /checkins/byJob/:jobId      controllers.NodeCheckinsController.getCheckinsByJob(jobId: Long)
-POST     /checkins/:nodeId/:jobId/:statusCode    controllers.NodeCheckinsController.checkin(nodeId: Long, jobId: Long, statusCode: Int)
+POST     /checkin    controllers.NodeCheckinsController.checkin()
 
 GET     /jobs                       controllers.JobController.index()
 GET     /jobs/:jobId                    controllers.JobController.getJob(jobId: Long)
@@ -40,7 +40,7 @@ POST    /jobs/:jobId/saveMatch         controllers.JobMatchController.create(job
 
 # Grab a list of nodes
 GET     /nodes                          controllers.NodeController.index()
-GET     /nodes/:nodeId                  controllers.NodeController.getNode(nodeId: Long)
+GET     /nodes/:nodeId                  controllers.NodeController.getNodeById(nodeId: Long)
 
 # Handle upload / use of dictionary files
 GET     /dictionaries                   controllers.DictionaryController.index()

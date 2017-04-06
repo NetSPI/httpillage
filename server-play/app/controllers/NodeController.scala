@@ -20,7 +20,7 @@ class NodeController @Inject()(nodeService: NodeService) extends Controller {
       Ok(Json.toJson(Await.result(nodeService.getNodes, 5000 milliseconds)))
   }
 
-  def getNode(nodeId: Long) = Action {
+  def getNodeById(nodeId: Long) = Action {
     Ok(Json.toJson(Await.result(nodeService.getNodeById(nodeId), 5000 milliseconds)))
   }
 
