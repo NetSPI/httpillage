@@ -18,4 +18,12 @@ class DictionaryService @Inject()(dictionaryDAO: DictionaryDAO) {
   def getDictionaryById(id: Long): Future[Option[Dictionary]] = {
     dictionaryDAO.getDictionaryById(id)
   }
+
+  def createDictionary(dictionary: Dictionary) = {
+    dictionaryDAO.insert(dictionary)
+  }
+
+  def deleteDictionary(dictionaryId: Long) = {
+    dictionaryDAO.delete(dictionaryId)
+  }
 }

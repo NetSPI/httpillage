@@ -5,7 +5,7 @@ import javax.inject._
 import entity.Dictionary
 import org.joda.time.DateTime
 import play.api._
-import play.api.libs.json.{JsPath, Json, Writes}
+import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.mvc._
 import services.DictionaryService
@@ -24,11 +24,37 @@ class DictionaryController @Inject()(dictionaryService: DictionaryService) exten
     Ok(Json.toJson(Await.result(dictionaryService.getDictionaryById(dictionaryId), 5000 milliseconds)))
   }
 
-  def create = Action {
-    Ok
+  def createDictionary() = Action.async(parse.json) {
+    request =>
+      import scala.concurrent.ExecutionContext.Implicits.global
+
+      val json = request.body.validate[CreateDictionary]
+      json.fold(
+        invalid => {
+          Future(BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(invalid))))
+        },
+        valid => {
+
+          val dictionary = Dictionary(
+            -999,
+            json.get.filename,
+            json.get.originalFilename,
+            json.get.description,
+            json.get.sizeInBytes,
+            DateTime.now,
+            DateTime.now
+          )
+
+          val dictionaryCreated = dictionaryService.createDictionary(dictionary)
+
+          Future(Ok(Json.toJson(Await.result(dictionaryCreated, 5000 milliseconds))))
+        }
+      )
   }
 
   def deleteDictionary(dictionaryId: Long) = Action {
+    dictionaryService.deleteDictionary(dictionaryId)
+
     Ok
   }
 
@@ -41,4 +67,23 @@ class DictionaryController @Inject()(dictionaryService: DictionaryService) exten
       (JsPath \ "createdAt").write[DateTime] and
       (JsPath \ "updatedAt").write[DateTime]
     ) (unlift(Dictionary.unapply))
+
+  implicit val dictionaryWrite: Reads[CreateDictionary] = (
+      (JsPath \ "fileName").read[String] and
+      (JsPath \ "originalFilename").read[String] and
+      (JsPath \ "description").read[String] and
+      (JsPath \ "sizeInBytes").read[Long] and
+      (JsPath \ "createdAt").read[DateTime] and
+      (JsPath \ "updatedAt").read[DateTime]
+    ) (CreateDictionary.apply _)
+
 }
+
+case class CreateDictionary(
+                            filename: String,
+                            originalFilename: String,
+                            description: String,
+                            sizeInBytes: Long,
+                            createdAt: DateTime,
+                            updatedAt: DateTime
+                           )

@@ -25,6 +25,8 @@ class DictionaryDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProv
 
   def insert(dictionary: Dictionary) = db.run(dictionaries returning dictionaries.map(n => (n)) += dictionary)
 
+  def delete(dictionaryId: Long) = db.run(dictionaries.filter(_.id === dictionaryId).delete)
+
   class DictionaryTable(tag: Tag) extends Table[Dictionary](tag, "DICTIONARIES") {
 
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)

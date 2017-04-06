@@ -18,7 +18,7 @@ GET     /checkins                controllers.NodeCheckinsController.getCheckins(
 GET     /checkins/:nodeCheckinId    controllers.NodeCheckinsController.getCheckinById(nodeCheckinId: Long)
 GET     /checkins/byNode/:nodeId    controllers.NodeCheckinsController.getCheckinsByNode(nodeId: Long)
 GET     /checkins/byJob/:jobId      controllers.NodeCheckinsController.getCheckinsByJob(jobId: Long)
-POST     /checkin    controllers.NodeCheckinsController.checkin()
+POST    /checkin    controllers.NodeCheckinsController.checkin()
 
 GET     /jobs                       controllers.JobController.index()
 GET     /jobs/:jobId                    controllers.JobController.getJob(jobId: Long)
@@ -45,7 +45,7 @@ GET     /nodes/:nodeId                  controllers.NodeController.getNodeById(n
 # Handle upload / use of dictionary files
 GET     /dictionaries                   controllers.DictionaryController.index()
 GET     /dictionaries/:dictionaryId     controllers.DictionaryController.getDictionary(dictionaryId: Long)
-POST    /dictionaries                   controllers.DictionaryController.create()
+POST    /dictionaries                   controllers.DictionaryController.createDictionary()
 DELETE  /dictionaries/:dictionaryId     controllers.DictionaryController.deleteDictionary(dictionaryId: Long)
 
 

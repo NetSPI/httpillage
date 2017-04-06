@@ -38,6 +38,7 @@ class NodeCheckinsController @Inject()(checkinService: NodeCheckinService) exten
           val checkinCreated = checkinService.performCheckin(checkin)
 
           Future(Ok(Json.toJson(Await.result(checkinCreated, 5000 milliseconds))))
+
         }
       )
   }
