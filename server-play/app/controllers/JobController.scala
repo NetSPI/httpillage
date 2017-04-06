@@ -21,7 +21,8 @@ class JobController @Inject()(jobService: JobService) extends Controller {
   }
 
   def getJob(jobId: Long) = Action {
-    Ok
+    Ok(Json.toJson(Await.result(jobService.getJobById(jobId), 5000 milliseconds)))
+
   }
 
   def create = Action {

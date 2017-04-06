@@ -2,12 +2,16 @@ package controllers
 
 import javax.inject._
 
+import services.NodeCheckinService
+import org.joda.time.DateTime
 import play.api._
-import play.api.libs.json.Json
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, Writes}
 import play.api.mvc._
 
+
 @Singleton
-class DispatcherController @Inject() extends Controller {
+class DispatcherController @Inject()(checkinService: NodeCheckinService) extends Controller {
 
   def poll = Action {
     Ok(Json.obj("results" -> "NA"))
@@ -21,7 +25,4 @@ class DispatcherController @Inject() extends Controller {
     Ok
   }
 
-  def checkin(nodeId: Long, jobId: Long, statusCode: Long) = Action {
-    Ok
-  }
 }

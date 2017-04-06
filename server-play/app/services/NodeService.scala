@@ -3,7 +3,6 @@ package services
 import entity.Node
 
 import javax.inject.Inject
-import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 import dao.NodeDAO

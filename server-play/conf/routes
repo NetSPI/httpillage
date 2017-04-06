@@ -14,7 +14,11 @@ GET     /poll                       controllers.DispatcherController.poll()
 GET     /poll/:nodeId               controllers.DispatcherController.pollFromNode(nodeId: Long)
 GET     /poll/:nodeId/:jobId        controllers.DispatcherController.pollFromNodeForJob(nodeId: Long, jobId: Long)
 
-POST     /checkin/:nodeId/:jobId/:statusCode    controllers.DispatcherController.checkin(nodeId: Long, jobId: Long, statusCode: Int)
+GET     /checkins                controllers.NodeCheckinsController.getCheckins()
+GET     /checkins/:nodeCheckinId    controllers.NodeCheckinsController.getCheckinById(nodeCheckinId: Long)
+GET     /checkins/byNode/:nodeId    controllers.NodeCheckinsController.getCheckinsByNode(nodeId: Long)
+GET     /checkins/byJob/:jobId      controllers.NodeCheckinsController.getCheckinsByJob(jobId: Long)
+POST     /checkins/:nodeId/:jobId/:statusCode    controllers.NodeCheckinsController.checkin(nodeId: Long, jobId: Long, statusCode: Int)
 
 GET     /jobs                       controllers.JobController.index()
 GET     /jobs/:jobId                    controllers.JobController.getJob(jobId: Long)
@@ -26,8 +30,9 @@ DELETE  /jobs/:jobId                    controllers.JobController.deleteJob(jobI
 GET     /jobs/:jobId/progress           controllers.BruteforceProgressController.getProgress(jobId: Long)
 
 # Get job responses
-GET     /jobs/:jobId/responses              controllers.JobResponseController.getResponses(jobId: Long)
-GET     /jobs/:jobId/response/:responseId   controllers.JobResponseController.getResponse(jobId: Long, responseId: Long)
+GET     /jobResponses                       controllers.JobResponseController.getResponses()
+GET     /jobs/:jobId/responses              controllers.JobResponseController.getResponsesByJobId(jobId: Long)
+GET     /jobs/responses/:responseId     controllers.JobResponseController.getResponseById(responseId: Long)
 
 POST    /jobs/:jobId/saveResponse      controllers.JobResponseController.create(jobId: Long)
 POST    /jobs/:jobId/saveMatch         controllers.JobMatchController.create(jobId: Long)
