@@ -50,10 +50,11 @@ class DictionaryController @Inject()(dictionaryService: DictionaryService) exten
       )
   }
 
-  def deleteDictionary(dictionaryId: Long) = Action {
-    dictionaryService.deleteDictionary(dictionaryId)
+  def deleteDictionary(dictionaryId: Long) = Action.async {
+    request =>
+      import scala.concurrent.ExecutionContext.Implicits.global
 
-    Ok
+      dictionaryService.deleteDictionary(dictionaryId).map(_ => Ok)
   }
 
   implicit val getAllDictionaryWrites: Writes[Dictionary] = (

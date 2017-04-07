@@ -64,9 +64,11 @@ class JobController @Inject()(jobService: JobService) extends Controller {
     Ok
   }
 
-  def deleteJob(jobId: Long) = Action {
-    jobService.deleteJob(jobId)
-    Ok
+  def deleteJob(jobId: Long) = Action.async {
+    request =>
+      import scala.concurrent.ExecutionContext.Implicits.global
+
+      jobService.deleteJob(jobId).map(_ => Ok)
   }
 
   implicit val getAllJobWrites: Writes[Job] = (
