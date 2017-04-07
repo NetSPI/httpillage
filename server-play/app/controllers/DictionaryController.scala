@@ -45,9 +45,7 @@ class DictionaryController @Inject()(dictionaryService: DictionaryService) exten
             DateTime.now
           )
 
-          val dictionaryCreated = dictionaryService.createDictionary(dictionary)
-
-          Future(Ok(Json.toJson(Await.result(dictionaryCreated, 5000 milliseconds))))
+          dictionaryService.createDictionary(dictionary).map(d => Ok(Json.toJson(d)))
         }
       )
   }

@@ -25,6 +25,8 @@ class JobDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) e
 
   def insert(job: Job) = db.run(jobs returning jobs.map(n => (n)) += job)
 
+  def delete(jobId: Long) = db.run(jobs.filter(_.id === jobId).delete)
+
   class JobsTable(tag: Tag) extends Table[Job](tag, "JOBS") {
 
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)

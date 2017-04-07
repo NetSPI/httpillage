@@ -18,4 +18,12 @@ class JobService @Inject()(jobDAO: JobDAO) {
   def getJobById(jobId: Long): Future[Option[Job]] = {
     jobDAO.getJobById(jobId)
   }
+
+  def createJob(job: Job) = {
+    jobDAO.insert(job)
+  }
+
+  def deleteJob(jobId: Long) = {
+    jobDAO.delete(jobId)
+  }
 }

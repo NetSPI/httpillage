@@ -22,7 +22,7 @@ POST    /checkin    controllers.NodeCheckinsController.checkin()
 
 GET     /jobs                       controllers.JobController.index()
 GET     /jobs/:jobId                    controllers.JobController.getJob(jobId: Long)
-POST    /jobs                          controllers.JobController.create()
+POST    /jobs                          controllers.JobController.createJob()
 PUT     /jobs/:jobId                    controllers.JobController.updateJob(jobId: Long)
 DELETE  /jobs/:jobId                    controllers.JobController.deleteJob(jobId: Long)
 
