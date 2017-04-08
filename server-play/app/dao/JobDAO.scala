@@ -8,6 +8,7 @@ import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 import com.github.tototoshi.slick.PostgresJodaSupport._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
@@ -22,6 +23,13 @@ class JobDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) e
   def getJobById(id: Long) = db.run(jobs.filter(_.id === id).result.headOption)
 
   def create = db.run(DBIO.seq(jobs.schema.create))
+
+  def update(job: Job): Future[Option[Job]] = db.run {
+    jobs.filter(_.id === job.id).update(job).map {
+      case 0 => None
+      case _ => Some(job)
+    }
+  }
 
   def insert(job: Job) = db.run(jobs returning jobs.map(n => (n)) += job)
 

@@ -60,8 +60,39 @@ class JobController @Inject()(jobService: JobService) extends Controller {
       )
   }
 
-  def updateJob(jobId: Long) = Action {
-    Ok
+  def updateJob(jobId: Long) = Action.async(parse.json) {
+    request =>
+      import scala.concurrent.ExecutionContext.Implicits.global
+
+      val json = request.body.validate[CreateJob]
+
+      json.fold(
+        invalid => {
+          Future(BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(invalid))))
+        },
+        valid => {
+          val job = Job(
+            jobId,
+            json.get.description,
+            json.get.httpMethod,
+            json.get.httpUri,
+            json.get.httpHost,
+            json.get.httpHeaders,
+            json.get.httpData,
+            json.get.attackType,
+            json.get.attackMode,
+            json.get.status,
+            json.get.owner,
+            json.get.dictionaryId,
+            json.get.bruteforceCharset,
+            json.get.nextIndex,
+            json.get.createdAt,   // Figure out how to make this pull from the current record... this is "insecure"
+            DateTime.now
+          )
+
+          jobService.updateJob(job).map(j => Ok(Json.toJson(j)))
+        }
+      )
   }
 
   def deleteJob(jobId: Long) = Action.async {

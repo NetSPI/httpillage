@@ -26,4 +26,8 @@ class JobService @Inject()(jobDAO: JobDAO) {
   def deleteJob(jobId: Long) = {
     jobDAO.delete(jobId)
   }
+
+  def updateJob(job: Job) = {
+    jobDAO.update(job)
+  }
 }
